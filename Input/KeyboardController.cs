@@ -7,18 +7,35 @@ using asd;
 
 namespace Nac.Altseed.Input
 {
-	class KeyboardController<AbstractKey> : Controller<AbstractKey>
+	public class KeyboardController<TAbstractKey> : Controller<TAbstractKey>
 	{
-		private Dictionary<AbstractKey, Keys> binding;
+		private Dictionary<TAbstractKey, Keys> binding;
 
-		public void BindKey(Keys key, AbstractKey abstractKey)
+		public override IEnumerable<TAbstractKey> Keys
+		{
+			get { return binding.Keys; }
+		}
+
+		public KeyboardController()
+		{
+			binding = new Dictionary<TAbstractKey, Keys>();
+		}
+
+		public void BindKey(Keys key, TAbstractKey abstractKey)
 		{
 			binding[abstractKey] = key;
 		}
 
-		public override KeyState GetState(AbstractKey key)
+		public override InputState? GetState(TAbstractKey key)
 		{
-			return Engine.Keyboard.GetKeyState(binding[key]);
+			if (binding.ContainsKey(key))
+			{
+				return (InputState)Engine.Keyboard.GetKeyState(binding[key]);
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 }

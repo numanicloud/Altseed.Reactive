@@ -7,8 +7,19 @@ using asd;
 
 namespace Nac.Altseed.Input
 {
-	abstract class Controller<AbstractKey>
+	public enum InputState
 	{
-		public abstract KeyState GetState(AbstractKey key);
+		Push, Release, Hold, Free
+	}
+
+	public abstract class Controller<TAbstractKey>
+	{
+		public abstract	IEnumerable<TAbstractKey> Keys { get; }
+
+		public abstract InputState? GetState(TAbstractKey key);
+
+		public virtual void Update()
+		{
+		}
 	}
 }
