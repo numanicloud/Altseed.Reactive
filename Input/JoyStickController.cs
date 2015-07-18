@@ -7,7 +7,7 @@ using asd;
 
 namespace Nac.Altseed.Input
 {
-	public enum AxesDirection
+	public enum AxisDirection
 	{
 		Negative, Positive
 	}
@@ -38,57 +38,37 @@ namespace Nac.Altseed.Input
 			}
 		}
 
-		class AxesInput : JoystickInput
+		class AxisInput : JoystickInput
 		{
-			private int axesIndex;
+			private int axisIndex;
 			private int direction;
-			private int inputTime;
+			private bool previousState;
+			private bool currentState;
 
-			public AxesInput(int axesIndex, AxesDirection direction)
+			public AxisInput(int axisIndex, AxisDirection direction)
 			{
-				this.axesIndex = axesIndex;
-				this.direction = direction == AxesDirection.Positive ? 1 : -1;
-				inputTime = 0;
+				this.axisIndex = axisIndex;
+				this.direction = direction == AxisDirection.Positive ? 1 : -1;
+				previousState = false;
+				currentState = false;
 			}
 
 			public override JoystickButtonState GetState(Joystick joystick)
 			{
-				if (inputTime == -1)
+				if (currentState)
 				{
-					return JoystickButtonState.Release;
-				}
-				else if (inputTime == 0)
-				{
-					return JoystickButtonState.Free;
-				}
-				else if (inputTime == 1)
-				{
-					return JoystickButtonState.Push;
+					return previousState ? JoystickButtonState.Hold : JoystickButtonState.Push;
 				}
 				else
 				{
-					return JoystickButtonState.Hold;
+					return previousState ? JoystickButtonState.Release : JoystickButtonState.Free;
 				}
 			}
 
 			public override void Update(Joystick joystick)
 			{
-				if (joystick.GetAxisState(axesIndex) == direction)
-				{
-					if (inputTime == -1)
-					{
-						inputTime = 0;
-					}
-					++inputTime;
-				}
-				else if (inputTime == -1)
-				{
-					inputTime = 0;
-				}
-				else if(inputTime > 0)
-				{
-					inputTime = -1;
-				}
+				previousState = currentState;
+				currentState = joystick.GetAxisState(axisIndex) == direction;
 			}
 		}
 
@@ -116,9 +96,9 @@ namespace Nac.Altseed.Input
 			binding[abstractKey] = new ButtonInput(buttonIndex);
 		}
 
-		public void BindAxes(int axesIndex, AxesDirection direction, TAbstractKey abstractKey)
+		public void BindAxis(int axisIndex, AxisDirection direction, TAbstractKey abstractKey)
 		{
-			binding[abstractKey] = new AxesInput(axesIndex, direction);
+			binding[abstractKey] = new AxisInput(axisIndex, direction);
 		}
 
 		public override InputState? GetState(TAbstractKey key)
