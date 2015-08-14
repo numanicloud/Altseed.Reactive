@@ -23,7 +23,7 @@ namespace Nac.Altseed.Input
 
 			public void Update(InputState? state)
 			{
-				if (state == InputState.Push || state == InputState.Hold)
+				if(state == InputState.Push || state == InputState.Hold)
 				{
 					inputTime++;
 				}
@@ -47,6 +47,8 @@ namespace Nac.Altseed.Input
 			get { return controller.Keys; }
 		}
 
+		public bool IsChildUpdated { get; set; }
+
 		public SteppingController(Controller<TAbstract> controller)
 		{
 			this.controller = controller;
@@ -60,13 +62,13 @@ namespace Nac.Altseed.Input
 
 		public override InputState? GetState(TAbstract key)
 		{
-			if (!managers.ContainsKey(key))
+			if(!managers.ContainsKey(key))
 			{
 				return controller.GetState(key);
 			}
 			else
 			{
-				if (managers[key].IsPush())
+				if(managers[key].IsPush())
 				{
 					return InputState.Push;
 				}
@@ -79,10 +81,13 @@ namespace Nac.Altseed.Input
 
 		public override void Update()
 		{
-			controller.Update();
-			foreach (var item in managers)
+			foreach(var item in managers)
 			{
 				item.Value.Update(controller.GetState(item.Key));
+			}
+			if(IsChildUpdated)
+			{
+				controller.Update();
 			}
 		}
 	}

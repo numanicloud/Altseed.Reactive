@@ -15,6 +15,8 @@ namespace Nac.Altseed.Input
 			get { return controllers.SelectMany(x => x.Keys).ToArray(); }
 		}
 
+		public bool IsChildrenUpdated { get; set; }
+
 		public BundleController(params Controller<TAbstractKey>[] controllers)
 		{
 			this.controllers = controllers.ToList();
@@ -27,9 +29,12 @@ namespace Nac.Altseed.Input
 
 		public override void Update()
 		{
-			foreach (var item in controllers)
+			if (IsChildrenUpdated)
 			{
-				item.Update();
+				foreach (var item in controllers)
+				{
+					item.Update();
+				}
 			}
 		}
 

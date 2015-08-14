@@ -24,6 +24,16 @@
             起動時に自動的に生成されるシーンとレイヤーの種類
             </summary>
         </member>
+        <member name="P:asd.Engine.CurrentScene">
+            <summary>
+            現在描画対象となっているシーンを表す asd.Scene クラスのインスタンスを取得します。
+            </summary>
+        </member>
+        <member name="P:asd.Engine.ProfilerIsVisible">
+            <summary>
+            プロファイリング結果を画面に表示するかどうかを表す真偽値を取得または設定する。
+            </summary>
+        </member>
         <member name="M:asd.Engine.Initialize(System.String,System.Int32,System.Int32,asd.EngineOption)">
             <summary>
             初期化を行う。
@@ -109,19 +119,26 @@
         </member>
         <member name="M:asd.Engine.TakeScreenshot(System.String)">
             <summary>
-            スクリーンショットをpngとして保存する。
+            スクリーンショットを保存する。
             </summary>
             <param name="path">出力先</param>
+            <remarks>
+            Windowsの場合、pngとjpg形式の保存に対応している。他のOSではpng形式の保存に対応している。
+            形式の種類は出力先の拡張子で判断する。
+            </remarks>
         </member>
-        <member name="P:asd.Engine.CurrentScene">
+        <member name="M:asd.Engine.CaptureScreenAsGifAnimation(System.String,System.Int32,System.Single,System.Single)">
             <summary>
-            現在描画対象となっているシーンを表す asd.Scene クラスのインスタンスを取得します。
+            スクリーンショットをgifアニメーションとして録画する。
             </summary>
-        </member>
-        <member name="P:asd.Engine.ProfilerIsVisible">
-            <summary>
-            プロファイリング結果を画面に表示するかどうかを表す真偽値を取得または設定する。
-            </summary>
+            <param name="path">出力先</param>
+            <param name="frame">録画フレーム数</param>
+            <param name="frequency_rate">録画頻度(例えば、1だと1フレームに1回保存、0.5だと2フレームに1回保存)</param>
+            <param name="scale">ウインドウサイズに対する画像サイズの拡大率(ウインドウサイズが320の場合、0.5を指定すると160の画像が出力される)</param>
+            <remarks>
+            実行してから一定時間の間、録画を続ける。
+            録画が終了するまでにアプリケーションが終了された場合、終了した時点までの録画結果が出力される。
+            </remarks>
         </member>
         <member name="P:asd.Engine.DeltaTime">
             <summary>
@@ -177,6 +194,24 @@
         <member name="M:asd.GarbageCollector.Collect">
             <summary>
             インスタンスを破棄する。
+            </summary>
+        </member>
+        <member name="T:asd.GC.GenerationType">
+            <summary>
+            C++のインスタンスの生成及び取得方法
+            </summary>
+        </member>
+        <member name="F:asd.GC.GenerationType.Create">
+            <summary>
+            ファイルパス等からC++のインスタンスが生成された場合
+            生成時に使い回しをしている場合、カウンタを増やしているので、
+            使い回しと判定した場合、カウンタを減らす
+            </summary>
+        </member>
+        <member name="F:asd.GC.GenerationType.Get">
+            <summary>
+            C++のインスタンスを取得した場合、
+            新規の場合はC#側でC++のインスタンスを保持するのでカウンタを増やす
             </summary>
         </member>
         <member name="M:asd.GC.GenerateSoundSource(asd.swig.SoundSource,asd.GC.GenerationType)">
@@ -288,37 +323,19 @@
             <param name="type"></param>
             <returns></returns>
         </member>
-        <member name="T:asd.GC.GenerationType">
-            <summary>
-            C++のインスタンスの生成及び取得方法
-            </summary>
-        </member>
-        <member name="F:asd.GC.GenerationType.Create">
-            <summary>
-            ファイルパス等からC++のインスタンスが生成された場合
-            生成時に使い回しをしている場合、カウンタを増やしているので、
-            使い回しと判定した場合、カウンタを減らす
-            </summary>
-        </member>
-        <member name="F:asd.GC.GenerationType.Get">
-            <summary>
-            C++のインスタンスを取得した場合、
-            新規の場合はC#側でC++のインスタンスを保持するのでカウンタを増やす
-            </summary>
-        </member>
         <member name="T:asd.IDestroy">
             <summary>
             破棄可能なインスタンス
             </summary>
         </member>
-        <member name="M:asd.IDestroy.Destroy">
-            <summary>
-            破棄する。
-            </summary>
-        </member>
         <member name="P:asd.IDestroy.IsDestroyed">
             <summary>
             破棄されているか？
+            </summary>
+        </member>
+        <member name="M:asd.IDestroy.Destroy">
+            <summary>
+            破棄する。
             </summary>
         </member>
         <member name="T:asd.AnimationClip">
@@ -341,6 +358,11 @@
             アニメーションの元データのクラス
             </summary>
         </member>
+        <member name="P:asd.AnimationSource.Length">
+            <summary>
+            アニメーションの長さ(60フレーム単位)を取得する。
+            </summary>
+        </member>
         <member name="M:asd.AnimationSource.AddAnimation(asd.KeyframeAnimation)">
             <summary>
             ボーンごとのアニメーションを追加する。
@@ -352,11 +374,6 @@
             ボーンごとのアニメーションを削除する。
             </summary>
             <param name="keyframeAnimation">アニメーション</param>
-        </member>
-        <member name="P:asd.AnimationSource.Length">
-            <summary>
-            アニメーションの長さ(60フレーム単位)を取得する。
-            </summary>
         </member>
         <member name="T:asd.AnimationSystem">
             <summary>
@@ -386,6 +403,11 @@
             キーフレームで指定するアニメーションのクラス
             </summary>
         </member>
+        <member name="P:asd.KeyframeAnimation.Name">
+            <summary>
+            名称を取得、または設定する。
+            </summary>
+        </member>
         <member name="M:asd.KeyframeAnimation.AddKeyframe(asd.FCurveKeyframe)">
             <summary>
             キーフレームを追加する。
@@ -398,11 +420,6 @@
             </summary>
             <param name="time">時間</param>
             <returns>値</returns>
-        </member>
-        <member name="P:asd.KeyframeAnimation.Name">
-            <summary>
-            名称を取得、または設定する。
-            </summary>
         </member>
         <member name="T:asd.Chip2D">
             <summary>
@@ -525,6 +542,11 @@
             </summary>
         </member>
         <member name="M:asd.Deformer.AddBone(System.String,System.Int32,asd.RotationOrder,asd.Matrix44)">
+            			@brief	
+            			@param	name	
+            			@param	rotationOrder	
+            			@param	localMat	
+            			@param	globalMatInv	
             <summary>
             ボーンを追加する。
             </summary>
@@ -706,6 +728,23 @@
             <param name="path">パス</param>
             <returns>フォント</returns>
         </member>
+        <member name="M:asd.Graphics.CreateDynamicFont(System.String,System.Int32,asd.Color,System.Int32,asd.Color)">
+            <summary>
+            必要に応じて動的に生成されるフォントを生成する。
+            </summary>
+            <param name="font">フォント名/フォントパス</param>
+            <param name="fontSize">フォントサイズ</param>
+            <param name="color">フォントの色</param>
+            <param name="outlineSize">外枠の太さ</param>
+            <param name="outlineColor">外枠の色</param>
+            <returns>フォント</returns>
+            <remarks>
+            文字を表示する時に必要な文字の分だけフォントを生成するフォントクラスを生成する。
+            fontには、フォント名、もしくはフォントファイルへのパスを指定する。
+            何もfontに文字を指定しない、もしくはnullだと標準フォントが使用される。
+            事前に専用のフォントファイルを用意する必要はないが、アプリケーションを実行する環境に指定したフォントが存在する必要がある。
+            </remarks>
+        </member>
         <member name="M:asd.Graphics.CreateImagePackage(System.String)">
             <summary>
             画像パッケージを生成する。
@@ -749,6 +788,11 @@
             <param name="index">インデックス</param>
             <returns>画像</returns>
         </member>
+        <member name="P:asd.ImagePackage.ImageCount">
+            <summary>
+            格納されている画像の枚数を取得する。
+            </summary>
+        </member>
         <member name="M:asd.ImagePackage.GetImageName(System.Int32)">
             <summary>
             格納されている画像の名称を取得する。 
@@ -763,11 +807,6 @@
             <param name="index">インデックス </param>
             <returns>領域 </returns>
         </member>
-        <member name="P:asd.ImagePackage.ImageCount">
-            <summary>
-            格納されている画像の枚数を取得する。
-            </summary>
-        </member>
         <member name="T:asd.MassModel">
             <summary>
             大量描画が可能な3Dモデルクラス
@@ -781,6 +820,11 @@
             材質を設定する。
             </summary>
             <param name="material">材質</param>
+        </member>
+        <member name="P:asd.MassModel.AnimationCount">
+            <summary>
+            モデルが持つアニメーションの個数を取得する。
+            </summary>
         </member>
         <member name="M:asd.MassModel.GetAnimationName(System.Int32)">
             <summary>
@@ -809,11 +853,6 @@
             </summary>
             <param name="name">アニメーション名 </param>
             <param name="isLoopingMode"></param>
-        </member>
-        <member name="P:asd.MassModel.AnimationCount">
-            <summary>
-            モデルが持つアニメーションの個数を取得する。
-            </summary>
         </member>
         <member name="T:asd.Material2D">
             <summary>
@@ -1074,6 +1113,9 @@
             </summary>
             <param name="materialIndex">材質のインデックス </param>
             <param name="texture"></param>
+            <remarks>
+            AddMaterialCountを実行した後でないと無効になる。 
+            </remarks>
         </member>
         <member name="M:asd.Mesh.SetNormalTexture(System.Int32,asd.Texture2D)">
             <summary>
@@ -1081,6 +1123,9 @@
             </summary>
             <param name="materialIndex">材質のインデックス </param>
             <param name="texture"></param>
+            <remarks>
+            AddMaterialCountを実行した後でないと無効になる。 
+            </remarks>
         </member>
         <member name="M:asd.Mesh.SetMetalnessTexture(System.Int32,asd.Texture2D)">
             <summary>
@@ -1088,6 +1133,9 @@
             </summary>
             <param name="materialIndex">材質のインデックス </param>
             <param name="texture"></param>
+            <remarks>
+            AddMaterialCountを実行した後でないと無効になる。 
+            </remarks>
         </member>
         <member name="M:asd.Mesh.SetSmoothnessTexture(System.Int32,asd.Texture2D)">
             <summary>
@@ -1095,6 +1143,9 @@
             </summary>
             <param name="materialIndex">材質のインデックス </param>
             <param name="texture"></param>
+            <remarks>
+            AddMaterialCountを実行した後でないと無効になる。 
+            </remarks>
         </member>
         <member name="T:asd.Model">
             <summary>
@@ -1118,13 +1169,6 @@
             <param name="index">メッシュのインデックス</param>
             <returns></returns>
         </member>
-        <member name="M:asd.Model.GetAnimationClipName(System.Int32)">
-            <summary>
-            モデルが持つアニメーションクリップの名称を取得する。 
-            </summary>
-            <param name="index">アニメーションクリップのインデックス </param>
-            <returns>アニメーションクリップの名称 </returns>
-        </member>
         <member name="P:asd.Model.MeshCount">
             <summary>
             モデルが持つメッシュの個数を取得する。
@@ -1135,44 +1179,12 @@
             モデルが持つアニメーションクリップの個数を取得する。
             </summary>
         </member>
-        <member name="T:asd.Texture2D">
+        <member name="M:asd.Model.GetAnimationClipName(System.Int32)">
             <summary>
-            
+            モデルが持つアニメーションクリップの名称を取得する。 
             </summary>
-        </member>
-        <member name="M:asd.Texture2D.Lock(asd.TextureLockInfomation)">
-            <summary>
-            テクスチャをロックし編集可能にする。
-            </summary>
-            <param name="info">テクスチャ情報</param>
-            <returns>成否</returns>
-        </member>
-        <member name="M:asd.Texture2D.Save(System.String)">
-            <summary>
-            テクスチャをファイルに保存する。 
-            </summary>
-            <param name="path">出力先 </param>
-            <returns>成否 </returns>
-        </member>
-        <member name="M:asd.Texture2D.Unlock">
-            <summary>
-            テクスチャをアンロックする。 
-            </summary>
-        </member>
-        <member name="P:asd.Texture2D.Size">
-            <summary>
-            テクスチャのサイズを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Texture2D.Format">
-            <summary>
-            テクスチャのフォーマットを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Texture2D.Type">
-            <summary>
-            テクスチャのクラスの種類を取得する。
-            </summary>
+            <param name="index">アニメーションクリップのインデックス </param>
+            <returns>アニメーションクリップの名称 </returns>
         </member>
         <member name="T:asd.Shader2D">
             <summary>
@@ -1197,6 +1209,27 @@
             材質を設定する。
             </summary>
             <param name="material">材質</param>
+        </member>
+        <member name="M:asd.Terrain3D.LoadFromMemory(System.Byte[])">
+            <summary>
+            メモリから地形のデータを読み込む。
+            </summary>
+            <param name="buffer">バッファ</param>
+            <remarks>
+            テクスチャのパスは保存されないので、読み込んだ後にAddSurfaceする必要がある。
+            </remarks>
+        </member>
+        <member name="M:asd.Terrain3D.SaveToMemory">
+            <summary>
+            メモリに地形のデータを保存する。
+            </summary>
+            <returns>地形のデータ</returns>
+        </member>
+        <member name="M:asd.Terrain3D.Commit">
+            <summary>
+            マップに対する変更を適用してメッシュを生成する。 
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:asd.Terrain3D.New(System.Single,System.Int32,System.Int32)">
             <summary>
@@ -1234,7 +1267,7 @@
             <param name="value">割り当てる値(-255～255) </param>
             <param name="fallout">周囲のぼかし(0～1) </param>
         </member>
-        <member name="M:asd.Terrain3D.RaiseWithCircle(System.Single,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:asd.Terrain3D.RaiseHeightWithCircle(System.Single,System.Single,System.Single,System.Single,System.Single)">
             <summary>
             円形に地形を上下させる。 
             </summary>
@@ -1242,6 +1275,26 @@
             <param name="y">円形の中心座標 </param>
             <param name="radius">円形の半径 </param>
             <param name="value">値 </param>
+            <param name="fallout">周囲のぼかし(0～1) </param>
+        </member>
+        <member name="M:asd.Terrain3D.ChangeHeightWithCircle(System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            円形に地形を指定した高度に設定する。 
+            </summary>
+            <param name="x">円形の中心座標 </param>
+            <param name="y">円形の中心座標 </param>
+            <param name="radius">円形の半径 </param>
+            <param name="value">高度 </param>
+            <param name="fallout">周囲のぼかし(0～1) </param>
+        </member>
+        <member name="M:asd.Terrain3D.SmoothHeightWithCircle(System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            円形に地形を平滑化させる。 
+            </summary>
+            <param name="x">円形の中心座標 </param>
+            <param name="y">円形の中心座標 </param>
+            <param name="radius">円形の半径 </param>
+            <param name="value">平滑度 </param>
             <param name="fallout">周囲のぼかし(0～1) </param>
         </member>
         <member name="M:asd.Terrain3D.ChangeCliffesWithCircle(System.Single,System.Single,System.Single,System.Int32)">
@@ -1261,6 +1314,45 @@
             <param name="to">光線を飛ばす先の位置 </param>
             <returns>光線が地形に衝突した位置。衝突しない場合、NaNを返す。 </returns>
         </member>
+        <member name="T:asd.Texture2D">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:asd.Texture2D.Lock(asd.TextureLockInfomation)">
+            <summary>
+            テクスチャをロックし編集可能にする。
+            </summary>
+            <param name="info">テクスチャ情報</param>
+            <returns>成否</returns>
+        </member>
+        <member name="P:asd.Texture2D.Size">
+            <summary>
+            テクスチャのサイズを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Texture2D.Format">
+            <summary>
+            テクスチャのフォーマットを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Texture2D.Type">
+            <summary>
+            テクスチャのクラスの種類を取得する。
+            </summary>
+        </member>
+        <member name="M:asd.Texture2D.Save(System.String)">
+            <summary>
+            テクスチャをファイルに保存する。 
+            </summary>
+            <param name="path">出力先 </param>
+            <returns>成否 </returns>
+        </member>
+        <member name="M:asd.Texture2D.Unlock">
+            <summary>
+            テクスチャをアンロックする。 
+            </summary>
+        </member>
         <member name="T:asd.Joystick">
             <summary>
             指定したコンポーネントをこのインスタンスに追加する。 
@@ -1271,20 +1363,6 @@
             コンストラクタ
             </summary>
             <param name="js">ネイティブインタフェース</param>
-        </member>
-        <member name="M:asd.Joystick.GetButtonState(System.Int32)">
-            <summary>
-            指定したボタンの押し状態を返す 
-            </summary>
-            <param name="at">何番目のボタンの押し状態を取得するか </param>
-            <returns>押し状態 </returns>
-        </member>
-        <member name="M:asd.Joystick.GetAxisState(System.Int32)">
-            <summary>
-            指定した軸の倒し具合を返す 
-            </summary>
-            <param name="at">何番目の軸配列の倒し具合を取得するか </param>
-            <returns>倒し具合 </returns>
         </member>
         <member name="P:asd.Joystick.JoystickName">
             <summary>
@@ -1300,6 +1378,20 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:asd.Joystick.GetButtonState(System.Int32)">
+            <summary>
+            指定したボタンの押し状態を返す 
+            </summary>
+            <param name="at">何番目のボタンの押し状態を取得するか </param>
+            <returns>押し状態 </returns>
+        </member>
+        <member name="M:asd.Joystick.GetAxisState(System.Int32)">
+            <summary>
+            指定した軸の倒し具合を返す 
+            </summary>
+            <param name="at">何番目の軸配列の倒し具合を取得するか </param>
+            <returns>倒し具合 </returns>
         </member>
         <member name="T:asd.JoystickContainer">
             <summary>
@@ -1490,21 +1582,20 @@
             一括してファイルを読み込むクラス 
             </summary>
         </member>
-        <member name="M:asd.StaticFile.Destroy">
+        <member name="P:asd.StaticFile.IsDestroyed">
             <summary>
             
             </summary>
         </member>
-        <member name="P:asd.StaticFile.IsDestroyed">
+        <member name="M:asd.StaticFile.Destroy">
             <summary>
             
             </summary>
         </member>
         <member name="P:asd.StaticFile.Buffer">
             <summary>
-            
+            読み込まれたバッファを取得する。
             </summary>
-            <returns></returns>
         </member>
         <member name="P:asd.StaticFile.FullPath">
             <summary>
@@ -1523,7 +1614,7 @@
         </member>
         <member name="P:asd.StaticFile.IsInPackage">
             <summary>
-            
+            パッケージ内からファイルが読み込まれているかを取得する。
             </summary>
         </member>
         <member name="T:asd.StreamFile">
@@ -1531,12 +1622,12 @@
             部分的にファイルを読み込むクラス 
             </summary>
         </member>
-        <member name="M:asd.StreamFile.Destroy">
+        <member name="P:asd.StreamFile.IsDestroyed">
             <summary>
             
             </summary>
         </member>
-        <member name="P:asd.StreamFile.IsDestroyed">
+        <member name="M:asd.StreamFile.Destroy">
             <summary>
             
             </summary>
@@ -1564,6 +1655,16 @@
             Logクラスをインスタンス化します。
             </summary>
             <param name="log">ネイティブのラッパー</param>
+        </member>
+        <member name="P:asd.Log.IsValid">
+            <summary>
+            ログの出力が可能であるかどうかを表す真偽値を取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Log.OutputLevel">
+            <summary>
+            ログの出力レベルを設定する。
+            </summary>
         </member>
         <member name="M:asd.Log.Write(System.String,asd.LogLevel)">
             <summary>
@@ -1683,16 +1784,6 @@
         <member name="M:asd.Log.ChangeColumn">
             <summary>
             表形式での出力において、新しい列に移動する。 
-            </summary>
-        </member>
-        <member name="P:asd.Log.IsValid">
-            <summary>
-            ログの出力が可能であるかどうかを表す真偽値を取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Log.OutputLevel">
-            <summary>
-            ログの出力レベルを設定する。
             </summary>
         </member>
         <member name="T:asd.Matrix33">
@@ -1939,15 +2030,6 @@
             縦幅
             </summary>
         </member>
-        <member name="M:asd.RectF.#ctor(System.Single,System.Single,System.Single,System.Single)">
-            <summary>
-            コンストラクタ
-            </summary>
-            <param name="x">左上X座標</param>
-            <param name="y">左上Y座標</param>
-            <param name="width">横幅</param>
-            <param name="height">縦幅</param>
-        </member>
         <member name="P:asd.RectF.Position">
             <summary>
             左上座標を取得する。
@@ -1962,6 +2044,15 @@
             <summary>
             四隅の座標を(X,Y)、(X+Width,Y)、(X+Width,Y+Height)、(X,Y+Height)の順に配列として取得する。
             </summary>
+        </member>
+        <member name="M:asd.RectF.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="x">左上X座標</param>
+            <param name="y">左上Y座標</param>
+            <param name="width">横幅</param>
+            <param name="height">縦幅</param>
         </member>
         <member name="T:asd.RectI">
             <summary>
@@ -1988,15 +2079,6 @@
             縦幅
             </summary>
         </member>
-        <member name="M:asd.RectI.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            コンストラクタ
-            </summary>
-            <param name="x">左上X座標</param>
-            <param name="y">左上Y座標</param>
-            <param name="width">横幅</param>
-            <param name="height">縦幅</param>
-        </member>
         <member name="P:asd.RectI.Position">
             <summary>
             左上座標を取得する。
@@ -2011,6 +2093,15 @@
             <summary>
             四隅の座標を(X,Y)、(X+Width,Y)、(X+Width,Y+Height)、(X,Y+Height)の順に配列として取得する。
             </summary>
+        </member>
+        <member name="M:asd.RectI.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="x">左上X座標</param>
+            <param name="y">左上Y座標</param>
+            <param name="width">横幅</param>
+            <param name="height">縦幅</param>
         </member>
         <member name="T:asd.Vector2DF">
             <summary>
@@ -2034,9 +2125,34 @@
             Y成分
             </summary>
         </member>
+        <member name="P:asd.Vector2DF.Length">
+            <summary>
+            ベクトルの長さを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Vector2DF.SquaredLength">
+            <summary>
+            ベクトルの長さの二乗を取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Vector2DF.Normal">
+            <summary>
+            このベクトルの単位ベクトルを取得する。
+            </summary>
+        </member>
         <member name="M:asd.Vector2DF.Normalize">
             <summary>
             このベクトルを単位ベクトル化する。
+            </summary>
+        </member>
+        <member name="P:asd.Vector2DF.Radian">
+            <summary>
+            ベクトルの向きを弧度法で取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Vector2DF.Degree">
+            <summary>
+            ベクトルの向きを度数法で取得または設定する。
             </summary>
         </member>
         <member name="M:asd.Vector2DF.Cross(asd.Vector2DF,asd.Vector2DF)">
@@ -2062,31 +2178,6 @@
             <param name="v1">v1ベクトル</param>
             <param name="v2">v2ベクトル</param>
             <returns>距離</returns>
-        </member>
-        <member name="P:asd.Vector2DF.Length">
-            <summary>
-            ベクトルの長さを取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Vector2DF.SquaredLength">
-            <summary>
-            ベクトルの長さの二乗を取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Vector2DF.Normal">
-            <summary>
-            このベクトルの単位ベクトルを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Vector2DF.Radian">
-            <summary>
-            ベクトルの向きを弧度法で取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Vector2DF.Degree">
-            <summary>
-            ベクトルの向きを度数法で取得または設定する。
-            </summary>
         </member>
         <member name="T:asd.Vector2DI">
             <summary>
@@ -2138,6 +2229,21 @@
             <param name="y">Y成分</param>
             <param name="z">Z成分</param>
         </member>
+        <member name="P:asd.Vector3DF.Length">
+            <summary>
+            ベクトルの長さを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Vector3DF.SquaredLength">
+            <summary>
+            ベクトルの長さの二乗を取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Vector3DF.Normal">
+            <summary>
+            このベクトルの単位ベクトルを取得する。
+            </summary>
+        </member>
         <member name="M:asd.Vector3DF.Normalize">
             <summary>
             このベクトルを単位ベクトル化する。
@@ -2169,21 +2275,6 @@
             <param name="v1">v1ベクトル</param>
             <param name="v2">v2ベクトル</param>
             <returns>v1とv2の距離</returns>
-        </member>
-        <member name="P:asd.Vector3DF.Length">
-            <summary>
-            ベクトルの長さを取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Vector3DF.SquaredLength">
-            <summary>
-            ベクトルの長さの二乗を取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Vector3DF.Normal">
-            <summary>
-            このベクトルの単位ベクトルを取得する。
-            </summary>
         </member>
         <member name="T:asd.Vector4DF">
             <summary>
@@ -2219,6 +2310,21 @@
             <param name="z">Z成分</param>
             <param name="w">W成分</param>
         </member>
+        <member name="P:asd.Vector4DF.Length">
+            <summary>
+            ベクトルの長さを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Vector4DF.SquaredLength">
+            <summary>
+            ベクトルの長さの二乗を取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Vector4DF.Normal">
+            <summary>
+            このベクトルの単位ベクトルを取得する。
+            </summary>
+        </member>
         <member name="M:asd.Vector4DF.Normalize">
             <summary>
             このベクトルを単位ベクトル化する。
@@ -2240,24 +2346,712 @@
             <param name="v2">v2ベクトル</param>
             <returns>v1とv2の距離</returns>
         </member>
-        <member name="P:asd.Vector4DF.Length">
-            <summary>
-            ベクトルの長さを取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Vector4DF.SquaredLength">
-            <summary>
-            ベクトルの長さの二乗を取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Vector4DF.Normal">
-            <summary>
-            このベクトルの単位ベクトルを取得する。
-            </summary>
-        </member>
         <member name="T:asd.CameraObject2D">
             <summary>
             2Dレイヤーの一部を描画するためのカメラ
+            </summary>
+        </member>
+        <member name="P:asd.CameraObject2D.Src">
+            <summary>
+            描画元の領域を取得、または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.CameraObject2D.Dst">
+            <summary>
+            描画先の領域を取得、または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.EffectObject2D.Effect">
+            <summary>
+            描画に使用するエフェクトを取得、または設定する。
+            </summary>
+        </member>
+        <member name="M:asd.EffectObject2D.Play">
+            <summary>
+            設定されている全てのエフェクトを再生する。
+            </summary>
+        </member>
+        <member name="M:asd.EffectObject2D.Stop">
+            <summary>
+            このオブジェクトから再生されたエフェクトを全て停止する。
+            </summary>
+        </member>
+        <member name="M:asd.EffectObject2D.StopRoot">
+            <summary>
+            このオブジェクトから再生されたエフェクトのルートを全て停止する。
+            </summary>
+        </member>
+        <member name="P:asd.EffectObject2D.IsPlaying">
+            <summary>
+            このオブジェクトから再生されたエフェクトが再生中か取得する。
+            </summary>
+            <returns>再生中か?</returns>
+        </member>
+        <member name="P:asd.EffectObject2D.SyncEffects">
+            <summary>
+            このオブジェクトから再生されたエフェクトをオブジェクトに合わせて移動させるか取得、または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.EffectObject2D.EffectRotation">
+            <summary>
+            このオブジェクトから再生されるエフェクトの向き(度)を指定する。
+            </summary>
+            <remarks>
+            2D表示だとエフェクトが画面に対して前後に表示されるように作成されていた場合、予期せぬ見た目で表示されてしまうことがある。
+            そのため、Y軸を中心にエフェクトを回転させ2Dとして違和感のない表示ができるようにする。
+            </remarks>
+        </member>
+        <member name="P:asd.EffectObject2D.DrawingPriority">
+            <summary>
+            この2Dオブジェクトを描画する際の描画優先度を取得または設定する。描画優先度が高いほど手前に描画される。
+            </summary>
+        </member>
+        <member name="T:asd.GeometryObject2D">
+            <summary>
+            図形の描画を扱うクラス。
+            </summary>
+        </member>
+        <member name="M:asd.GeometryObject2D.#ctor">
+            <summary>
+            asd.GeometryObject2D の新しいインスタンスを初期化します。
+            </summary>
+        </member>
+        <member name="P:asd.GeometryObject2D.Shape">
+            <summary>
+            この2Dオブジェクトの描画に使用する図形を取得または設定します。
+            </summary>
+        </member>
+        <member name="P:asd.GeometryObject2D.Texture">
+            <summary>
+            この2Dオブジェクトの描画に使用するテクスチャを取得または設定します。
+            </summary>
+        </member>
+        <member name="P:asd.GeometryObject2D.CenterPosition">
+            <summary>
+            この2Dオブジェクトを描画する際の描画原点を取得または設定します。描画原点は拡大・回転・描画の中心となる、画像データ内での座標です。
+            </summary>
+        </member>
+        <member name="P:asd.GeometryObject2D.Color">
+            <summary>
+            この2Dオブジェクトを描画する際に合成する色を取得または設定します。
+            </summary>
+        </member>
+        <member name="P:asd.GeometryObject2D.DrawingPriority">
+            <summary>
+            この2Dオブジェクトを描画する際の描画優先度を取得または設定します。描画優先度が高いほど手前に描画されます。
+            </summary>
+        </member>
+        <member name="P:asd.GeometryObject2D.AlphaBlend">
+            <summary>
+            この2Dオブジェクトを描画する際のブレンドモードを取得または設定します。
+            </summary>
+        </member>
+        <member name="P:asd.GeometryObject2D.TextureFilterType">
+            <summary>
+             この2Dオブジェクトを描画する際のテクスチャフィルタを取得または設定する。
+             </summary>
+        </member>
+        <member name="T:asd.MapObject2D">
+            <summary>
+            テクスチャをチップとして高速に描画するクラス。
+            </summary>
+        </member>
+        <member name="P:asd.MapObject2D.CenterPosition">
+            <summary>
+            この2Dオブジェクトを描画する際の描画原点を取得または設定する。描画原点は拡大・回転・描画の中心となる、画像データ内での座標。
+            </summary>
+        </member>
+        <member name="P:asd.MapObject2D.DrawingPriority">
+            <summary>
+            この2Dオブジェクトを描画する際の描画優先度を取得または設定する。描画優先度が高いほど手前に描画される。
+            </summary>
+        </member>
+        <member name="M:asd.MapObject2D.AddChip(asd.Chip2D)">
+            <summary>
+            この2Dオブジェクトにチップを追加する。
+            </summary>
+        </member>
+        <member name="P:asd.MapObject2D.Chips">
+            <summary>
+            このオブジェクトが保有しているチップを全て取得する。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:asd.MapObject2D.RemoveChip(asd.Chip2D)">
+            <summary>
+            この2Dオブジェクトからチップを削除する。
+            </summary>
+        </member>
+        <member name="M:asd.MapObject2D.Clear">
+            <summary>
+            この2Dオブジェクトに追加されている全てのチップを削除する。
+            </summary>
+        </member>
+        <member name="T:asd.TextObject2D">
+            <summary>
+            文字列の描画を扱うクラス。
+            </summary>
+        </member>
+        <member name="P:asd.TextObject2D.Font">
+            <summary>
+            この2Dオブジェクトの描画に使用するフォントを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.TextObject2D.Text">
+            <summary>
+            描画する文字列を取得または設定する。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:asd.TextObject2D.WritingDirection">
+            <summary>
+            文字列の描画方向を指定する。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:asd.TextObject2D.LetterSpacing">
+            <summary>
+            テキストを描画する際の文字間値を取得または設定する。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:asd.TextObject2D.LineSpacing">
+            <summary>
+            テキストを描画する際の行間値を取得または設定する。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:asd.TextObject2D.CenterPosition">
+            <summary>
+            この2Dオブジェクトを描画する際の描画原点を取得または設定する。描画原点は拡大・回転・描画の中心となる、画像データ内での座標。
+            </summary>
+        </member>
+        <member name="P:asd.TextObject2D.Color">
+            <summary>
+            この2Dオブジェクトを描画する際に合成する色を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.TextObject2D.TurnLR">
+            <summary>
+            この2Dオブジェクトを描画する際に左右反転するかどうかの真偽値を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.TextObject2D.TurnUL">
+            <summary>
+            この2Dオブジェクトを描画する際に上下反転するかどうかの真偽値を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.TextObject2D.DrawingPriority">
+            <summary>
+            この2Dオブジェクトを描画する際の描画優先度を取得または設定する。描画優先度が高いほど手前に描画される。
+            </summary>
+        </member>
+        <member name="P:asd.TextObject2D.AlphaBlend">
+            <summary>
+            この2Dオブジェクトを描画する際のブレンドモードを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.TextObject2D.TextureFilterType">
+            <summary>
+             この2Dオブジェクトを描画する際のテクスチャフィルタを取得または設定する。
+             </summary>
+        </member>
+        <member name="T:asd.CameraObject3D">
+            <summary>
+            カメラの機能を提供するクラス
+            </summary>
+        </member>
+        <member name="P:asd.CameraObject3D.HDRMode">
+            <summary>
+            描画先がHDRかどうか、取得、または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.CameraObject3D.WindowSize">
+            <summary>
+            画面サイズを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.CameraObject3D.Focus">
+            <summary>
+            カメラが見る座標を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.CameraObject3D.FieldOfView">
+            <summary>
+            画角を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.CameraObject3D.ZFar">
+            <summary>
+            描画する最遠距離を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.CameraObject3D.ZNear">
+            <summary>
+            描画する最近距離を取得または設定する。
+            </summary>
+        </member>
+        <member name="M:asd.CameraObject3D.AddPostEffect(asd.PostEffect)">
+            <summary>
+            ポストエフェクトを追加する。
+            </summary>
+            <param name="postEffect">ポストエフェクト</param>
+        </member>
+        <member name="M:asd.CameraObject3D.ClearPostEffects">
+            <summary>
+            ポストエフェクトを全て消去する。
+            </summary>
+        </member>
+        <member name="T:asd.DirectionalLightObject3D">
+            <summary>
+            無限遠光源の機能を提供するクラス
+            </summary>
+        </member>
+        <member name="P:asd.DirectionalLightObject3D.Color">
+            <summary>
+            光源の色を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.DirectionalLightObject3D.Intensity">
+            <summary>
+            光源の強さを取得または設定する。
+            </summary>
+            <remarks>
+            デフォルトは1.0である。
+            </remarks>
+        </member>
+        <member name="T:asd.EffectObject3D">
+            <summary>
+            エフェクトの機能を提供するクラス
+            </summary>
+        </member>
+        <member name="M:asd.EffectObject3D.SetEffect(asd.Effect)">
+            <summary>
+            描画に使用するエフェクトを設定する。
+            </summary>
+            <param name="effect">エフェクト</param>
+        </member>
+        <member name="M:asd.EffectObject3D.Play">
+            <summary>
+            設定されている全てのエフェクトを再生する。
+            </summary>
+        </member>
+        <member name="M:asd.EffectObject3D.Stop">
+            <summary>
+            このオブジェクトから再生されたエフェクトを全て停止する。
+            </summary>
+        </member>
+        <member name="M:asd.EffectObject3D.StopRoot">
+            <summary>
+            このオブジェクトから再生されたエフェクトのルートを全て停止する。
+            </summary>
+        </member>
+        <member name="P:asd.EffectObject3D.IsPlaying">
+            <summary>
+            このオブジェクトから再生されたエフェクトが再生中か取得する。
+            </summary>
+            <returns>再生中か?</returns>
+        </member>
+        <member name="P:asd.EffectObject3D.SyncEffects">
+            <summary>
+            このオブジェクトから再生されたエフェクトをオブジェクトに合わせて移動させるか取得、または設定する。
+            </summary>
+        </member>
+        <member name="T:asd.Layer3D">
+            <summary>
+            3Dオブジェクトの更新と描画を管理するレイヤーの機能を提供するクラス
+            </summary>
+        </member>
+        <member name="M:asd.Layer3D.#ctor(asd.RenderSettings)">
+            <summary>
+            コンストラクタ
+            </summary>
+        </member>
+        <member name="P:asd.Layer3D.Objects">
+            <summary>
+            このレイヤーが管理している3Dオブジェクトのコレクションを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Layer3D.Settings">
+            <summary>
+            描画設定を取得、設定する。
+            </summary>
+        </member>
+        <member name="M:asd.Layer3D.AddObject(asd.Object3D)">
+            <summary>
+            このレイヤーに指定した3Dオブジェクトを追加する。
+            </summary>
+            <param name="object3D">追加する3Dオブジェクト</param>
+        </member>
+        <member name="M:asd.Layer3D.RemoveObject(asd.Object3D)">
+            <summary>
+            このレイヤーから指定した3Dオブジェクトを削除する。
+            </summary>
+            <param name="object3D">削除される3Dオブジェクト</param>
+        </member>
+        <member name="M:asd.Layer3D.DrawSpriteAdditionally(asd.Vector3DF,asd.Vector3DF,asd.Vector3DF,asd.Vector3DF,asd.Color,asd.Color,asd.Color,asd.Color,asd.Vector2DF,asd.Vector2DF,asd.Vector2DF,asd.Vector2DF,asd.Texture2D,asd.AlphaBlendMode,System.Boolean,System.Boolean)">
+            <summary>
+            通常の描画に加えてテクスチャを描画する。
+            </summary>
+            <param name="upperLeftPos">テクスチャの左上の描画位置</param>
+            <param name="upperRightPos">テクスチャの右上の描画位置</param>
+            <param name="lowerRightPos">テクスチャの右下の描画位置</param>
+            <param name="lowerLeftPos">テクスチャの左下の描画位置</param>
+            <param name="upperLeftCol">テクスチャの左上の頂点色</param>
+            <param name="upperRightCol">テクスチャの右上の頂点色</param>
+            <param name="lowerRightCol">テクスチャの右下の頂点色</param>
+            <param name="lowerLeftCol">テクスチャの左下の頂点色</param>
+            <param name="upperLeftUV">テクスチャの左上のUV値</param>
+            <param name="upperRightUV">テクスチャの右上のUV値</param>
+            <param name="lowerRightUV">テクスチャの右下のUV値</param>
+            <param name="lowerLeftUV">テクスチャの左下のUV値</param>
+            <param name="texture">描画するテクスチャ</param>
+            <param name="alphaBlend">アルファブレンドの種類</param>
+            <param name="depthWrite">深度を比較するか?</param>
+            <param name="depthTest">深度を書き込むか?</param>
+            <remarks>OnDrawAdditionallyの中以外では実行してはいけない。</remarks>
+        </member>
+        <member name="M:asd.Layer3D.SetAmbientColorIntensity(System.Single)">
+            <summary>
+            環境光の強さを設定する。
+            </summary>
+            <param name="ambientColorIntensity">環境光の強さ</param>
+            <remarks>
+            デフォルトは1.0である。
+            </remarks>
+        </member>
+        <member name="M:asd.Layer3D.SetSkyAmbientColor(asd.Color)">
+            <summary>
+            空方向の環境光の色を設定する。
+            </summary>
+            <param name="color">色</param>
+        </member>
+        <member name="M:asd.Layer3D.SetGroundAmbientColor(asd.Color)">
+            <summary>
+            地面方向の環境光の色を設定する。
+            </summary>
+            <param name="color">色</param>
+        </member>
+        <member name="M:asd.Layer3D.SetEnvironmentColorIntensity(System.Single,System.Single)">
+            <summary>
+            テクスチャによる環境の色の強さを設定する。
+            </summary>
+            <param name="environmentDiffuseColorIntensity">拡散色の強さ</param>
+            <param name="environmentSpecularColorIntensity">スペキュラ色の強さ</param>
+            <remarks>
+            デフォルトは1.0である。
+            </remarks>
+        </member>
+        <member name="M:asd.Layer3D.SetEnvironmentColor(asd.CubemapTexture,asd.CubemapTexture)">
+            <summary>
+            テクスチャによる環境の色を設定する。
+            </summary>
+            <param name="diffuseColor">拡散色</param>
+            <param name="specularColor">スペキュラ色</param>
+        </member>
+        <member name="P:asd.Layer3D.SSAO_Radius">
+            <summary>
+            SSAOのサンプリングする半径
+            </summary>
+        </member>
+        <member name="P:asd.Layer3D.SSAO_Bias">
+            <summary>
+            SSAOのバイアス
+            </summary>
+        </member>
+        <member name="P:asd.Layer3D.SSAO_Intensity">
+            <summary>
+            SSAOの強さ
+            </summary>
+        </member>
+        <member name="P:asd.Layer3D.SSAO_FarPlain">
+            <summary>
+            SSAOの最大距離
+            </summary>
+        </member>
+        <member name="T:asd.MassModelObject3D">
+            <summary>
+            大量にメッシュを表示する3Dオブジェクトの機能を提供するクラス
+            </summary>
+        </member>
+        <member name="M:asd.MassModelObject3D.SetModel(asd.MassModel)">
+            <summary>
+            描画に使用するモデルを設定する。
+            </summary>
+            <param name="model">モデル</param>
+        </member>
+        <member name="M:asd.MassModelObject3D.PlayAnimation(System.String)">
+            <summary>
+            アニメーションを再生する。
+            </summary>
+            <param name="name">アニメーションの名称</param>
+        </member>
+        <member name="M:asd.MassModelObject3D.StopAnimation">
+            <summary>
+            アニメーションを停止する。
+            </summary>
+        </member>
+        <member name="M:asd.MassModelObject3D.CrossFadeAnimation(System.String,System.Single)">
+            <summary>
+            アニメーションをクロスフェードで再生する。
+            </summary>
+            <param name="name">アニメーションの名称</param>
+            <param name="time">クロスフェードにかかる時間(秒)</param>
+        </member>
+        <member name="P:asd.MassModelObject3D.IsAnimationPlaying">
+            <summary>
+            アニメーションが再生中か取得する。
+            </summary>
+            <returns>再生中か?</returns>
+        </member>
+        <member name="M:asd.MassModelObject3D.SetMaterialPropertyBlock(asd.MaterialPropertyBlock)">
+            <summary>
+            材質個別に描画時のパラメーターを設定する。
+            </summary>
+            <param name="block">プロパティ</param>
+            <remarks>
+            通常描画する場合、材質に設定されたパラメーターを元に描画するがモデルごとに個別のパラメーターを使用する場合、この関数を使用する。
+            </remarks>
+        </member>
+        <member name="T:asd.ModelObject3D">
+            <summary>
+            メッシュを表示する3Dオブジェクトの機能を提供するクラス
+            </summary>
+        </member>
+        <member name="M:asd.ModelObject3D.SetModel(asd.Model)">
+            <summary>
+            描画に使用するモデルを設定する。
+            </summary>
+            <param name="model">モデル</param>
+        </member>
+        <member name="M:asd.ModelObject3D.AddMesh(asd.Mesh)">
+            <summary>
+            描画に使用するメッシュを追加する。
+            </summary>
+            <param name="mesh">メッシュ</param>
+        </member>
+        <member name="M:asd.ModelObject3D.SetDeformer(asd.Deformer)">
+            <summary>
+            描画に使用するデフォーマーを設定する。
+            </summary>
+            <param name="deformer">デフォーマー</param>
+        </member>
+        <member name="M:asd.ModelObject3D.GetAnimationClip(System.String)">
+            <summary>
+            アニメーションクリップを取得する。
+            </summary>
+            <param name="name">アニメーションクリップの名称</param>
+            <returns>アニメーションクリップ</returns>
+        </member>
+        <member name="M:asd.ModelObject3D.PlayAnimation(System.Int32,System.String)">
+            <summary>
+            アニメーションを再生する。
+            </summary>
+            <param name="index">対象のインデックス</param>
+            <param name="name">アニメーションの名称</param>
+        </member>
+        <member name="M:asd.ModelObject3D.StopAnimation(System.Int32)">
+            <summary>
+            アニメーションを停止する。
+            </summary>
+            <param name="index">対象のインデックス</param>
+        </member>
+        <member name="M:asd.ModelObject3D.SetAnimationWeight(System.Int32,System.Single)">
+            <summary>
+            アニメーションの合成比率を設定する。
+            </summary>
+            <param name="index">対象のインデックス</param>
+            <param name="weight">合成比率</param>
+        </member>
+        <member name="M:asd.ModelObject3D.CrossFadeAnimation(System.Int32,System.String,System.Single)">
+            <summary>
+            アニメーションをクロスフェードで再生する。
+            </summary>
+            <param name="index">対象のインデックス</param>
+            <param name="name">アニメーションの名称</param>
+            <param name="time">クロスフェードにかかる時間(秒)</param>
+        </member>
+        <member name="M:asd.ModelObject3D.IsAnimationPlaying(System.Int32)">
+            		@brief	アニメーションが再生中か取得する。
+            		@param	index	対象のインデックス
+            		@return	再生中か?
+        </member>
+        <member name="M:asd.ModelObject3D.SetMaterialPropertyBlock(System.Int32,System.Int32,asd.MaterialPropertyBlock)">
+            <summary>
+            材質個別に描画時のパラメーターを設定する。
+            </summary>
+            <param name="meshIndex">メッシュのインデックス</param>
+            <param name="materialIndex">材質のインデックス</param>
+            <param name="block">プロパティ</param>
+            <remarks>
+            通常描画する場合、材質に設定されたパラメーターを元に描画するがモデルごとに個別のパラメーターを使用する場合、この関数を使用する。
+            </remarks>
+        </member>
+        <member name="T:asd.Object3D">
+            <summary>
+            更新・描画処理を行う単位となる3Dオブジェクトの機能を提供するクラス
+            </summary>
+        </member>
+        <member name="P:asd.Object3D.IsUpdated">
+            <summary>
+            オブジェクトの更新を実行するかどうか取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Object3D.IsDrawn">
+            <summary>
+            オブジェクトを描画するかどうか取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Object3D.IsAlive">
+            <summary>
+            オブジェクトが生存しているか取得する。
+            </summary>
+        </member>
+        <member name="M:asd.Object3D.Vanish">
+            <summary>
+            オブジェクトを破棄する。
+            </summary>
+        </member>
+        <member name="M:asd.Object3D.OnUpdateInternal">
+            <summary>
+            ユーザーはオーバーライドしてはいけない。
+            </summary>
+        </member>
+        <member name="M:asd.Object3D.OnStart">
+            <summary>
+            オーバーライドして、この3Dオブジェクトの初期化処理を記述することができる。
+            </summary>
+        </member>
+        <member name="M:asd.Object3D.OnUpdate">
+            <summary>
+            オーバーライドして、この3Dオブジェクトの更新処理を記述することができる。
+            </summary>
+        </member>
+        <member name="M:asd.Object3D.OnDrawAdditionally">
+            <summary>
+            オーバーライドして、この3Dオブジェクトに関する追加の描画処理を記述できる。
+            </summary>
+        </member>
+        <member name="M:asd.Object3D.OnVanish">
+            <summary>
+            オーバーライドして、この3DオブジェクトがVanishメソッドによって破棄される時の処理を記述できる。
+            </summary>
+        </member>
+        <member name="M:asd.Object3D.OnDispose">
+            <summary>
+            オーバーライドして、この3Dオブジェクトが破棄されるときの処理を記述できる。
+            </summary>
+        </member>
+        <member name="P:asd.Object3D.Layer">
+            <summary>
+            このインスタンスを管理している asd.Layer3D クラスのインスタンスを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Object3D.Position">
+            <summary>
+            このインスタンスの親に対する現在の座標を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Object3D.Rotation">
+            <summary>
+            このインスタンスの親に対する現在の角度を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Object3D.Scale">
+            <summary>
+            このインスタンスの親に対する現在の拡大率を取得または設定する。
+            </summary>
+        </member>
+        <member name="M:asd.Object3D.DrawSpriteAdditionally(asd.Vector3DF,asd.Vector3DF,asd.Vector3DF,asd.Vector3DF,asd.Color,asd.Color,asd.Color,asd.Color,asd.Vector2DF,asd.Vector2DF,asd.Vector2DF,asd.Vector2DF,asd.Texture2D,asd.AlphaBlendMode,System.Boolean,System.Boolean)">
+            <summary>
+            通常の描画に加えてテクスチャを描画する。
+            </summary>
+            <param name="upperLeftPos">テクスチャの左上の描画位置</param>
+            <param name="upperRightPos">テクスチャの右上の描画位置</param>
+            <param name="lowerRightPos">テクスチャの右下の描画位置</param>
+            <param name="lowerLeftPos">テクスチャの左下の描画位置</param>
+            <param name="upperLeftCol">テクスチャの左上の頂点色</param>
+            <param name="upperRightCol">テクスチャの右上の頂点色</param>
+            <param name="lowerRightCol">テクスチャの右下の頂点色</param>
+            <param name="lowerLeftCol">テクスチャの左下の頂点色</param>
+            <param name="upperLeftUV">テクスチャの左上のUV値</param>
+            <param name="upperRightUV">テクスチャの右上のUV値</param>
+            <param name="lowerRightUV">テクスチャの右下のUV値</param>
+            <param name="lowerLeftUV">テクスチャの左下のUV値</param>
+            <param name="texture">描画するテクスチャ</param>
+            <param name="alphaBlend">アルファブレンドの種類</param>
+            <param name="depthTest">深度を書き込むか?</param>
+            <param name="depthWrite">深度を比較するか?</param>
+            <remarks>OnDrawAdditionallyの中以外では実行してはいけない。</remarks>
+        </member>
+        <member name="T:asd.TerrainObject3D">
+            <summary>
+            地形を描画するクラス
+            </summary>
+        </member>
+        <member name="M:asd.TerrainObject3D.SetTerrain(asd.Terrain3D)">
+            <summary>
+            地形を設定する。
+            </summary>
+            <param name="terrain">地形</param>
+        </member>
+        <member name="M:asd.TerrainObject3D.SetMaterialPropertyBlock(asd.MaterialPropertyBlock)">
+            <summary>
+            材質個別に描画時のパラメーターを設定する。
+            </summary>
+            <param name="block">プロパティ</param>
+            <remarks>
+            通常描画する場合、材質に設定されたパラメーターを元に描画するがモデルごとに個別のパラメーターを使用する場合、この関数を使用する。
+            </remarks>
+        </member>
+        <member name="T:asd.Layer2DComponent">
+            <summary>
+            asd.Layer2D クラスに登録することができるコンポーネント クラス。
+            </summary>
+        </member>
+        <member name="M:asd.Layer2DComponent.#ctor">
+            <summary>
+            コンストラクタ
+            </summary>
+        </member>
+        <member name="P:asd.Layer2DComponent.Owner">
+            <summary>
+            このコンポーネントを保持しているレイヤー クラスのインスタンスを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Layer2DComponent.IsUpdated">
+            <summary>
+            このコンポーネントが更新されるかどうかを取得する。
+            </summary>
+        </member>
+        <member name="M:asd.Layer2DComponent.OnUpdated">
+            <summary>
+            オーバーライドして、このコンポーネントの Update時の処理を記述できる。
+            </summary>
+        </member>
+        <member name="T:asd.Object2DComponent">
+            <summary>
+            asd.Object2D クラスに登録できるコンポーネント クラス。
+            </summary>
+        </member>
+        <member name="M:asd.Object2DComponent.#ctor">
+            <summary>
+            コンストラクタ
+            </summary>
+        </member>
+        <member name="P:asd.Object2DComponent.Owner">
+            <summary>
+            このコンポーネントを保持している2Dオブジェクトのインスタンスを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Object2DComponent.IsUpdated">
+            <summary>
+            このコンポーネントが更新されるかどうかを取得または設定する。
+            </summary>
+        </member>
+        <member name="M:asd.Object2DComponent.OnUpdate">
+            <summary>
+            オーバーライドして、このコンポーネントの Update時の処理を記述できる。
             </summary>
         </member>
         <member name="T:asd.Object2D">
@@ -2268,6 +3062,46 @@
         <member name="M:asd.Object2D.#ctor">
             <summary>
             コンストラクタ
+            </summary>
+        </member>
+        <member name="P:asd.Object2D.IsUpdated">
+            <summary>
+            このオブジェクトが更新されるかどうかを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Object2D.IsDrawn">
+            <summary>
+            このオブジェクトが描画されるかどうかを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Object2D.IsAlive">
+            <summary>
+            このオブジェクトが実行中かどうかを取得する。Vanishメソッドにより削除された時に false を返す。
+            </summary>
+        </member>
+        <member name="P:asd.Object2D.Layer">
+            <summary>
+            このインスタンスを管理している asd.Layer2D クラスのインスタンスを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Object2D.Children">
+            <summary>
+            このオブジェクトが持っている子オブジェクトのコレクションを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.Object2D.Position">
+            <summary>
+            この2Dオブジェクトを描画する位置を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Object2D.Angle">
+            <summary>
+            この2Dオブジェクトを描画する際の回転角度を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.Object2D.Scale">
+            <summary>
+            この2Dオブジェクトを描画する際の拡大率を取得または設定する。
             </summary>
         </member>
         <member name="M:asd.Object2D.GetGlobalPosition">
@@ -2376,480 +3210,35 @@
             オーバーライドして、この2Dオブジェクトが破棄される際の処理を記述できる。
             </summary>
         </member>
-        <member name="P:asd.Object2D.IsUpdated">
+        <member name="T:asd.Component`1">
             <summary>
-            このオブジェクトが更新されるかどうかを取得または設定する。
+            コンポーネント クラスの基底クラス。
             </summary>
+            <typeparam name="TOwner">コンポーネントの追加先とできる型。</typeparam>
         </member>
-        <member name="P:asd.Object2D.IsDrawn">
+        <member name="P:asd.Component`1.Owner">
             <summary>
-            このオブジェクトが描画されるかどうかを取得または設定する。
+            このコンポーネントを保持しているインスタンスを取得する。
             </summary>
         </member>
-        <member name="P:asd.Object2D.IsAlive">
+        <member name="P:asd.Component`1.IsAlive">
             <summary>
-            このオブジェクトが実行中かどうかを取得する。Vanishメソッドにより削除された時に false を返す。
+            このコンポーネントが実行中かどうかを取得する。Vanishメソッドによって破棄された時に false を返す。
             </summary>
         </member>
-        <member name="P:asd.Object2D.Layer">
+        <member name="M:asd.Component`1.#ctor">
             <summary>
-            このインスタンスを管理している asd.Layer2D クラスのインスタンスを取得する。
+            コンストラクタ
             </summary>
         </member>
-        <member name="P:asd.Object2D.Children">
+        <member name="M:asd.Component`1.Vanish">
             <summary>
-            このオブジェクトが持っている子オブジェクトのコレクションを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Object2D.Position">
-            <summary>
-            この2Dオブジェクトを描画する位置を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Object2D.Angle">
-            <summary>
-            この2Dオブジェクトを描画する際の回転角度を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Object2D.Scale">
-            <summary>
-            この2Dオブジェクトを描画する際の拡大率を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.CameraObject2D.Src">
-            <summary>
-            描画元の領域を取得、または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.CameraObject2D.Dst">
-            <summary>
-            描画先の領域を取得、または設定する。
-            </summary>
-        </member>
-        <member name="M:asd.EffectObject2D.Play">
-            <summary>
-            設定されている全てのエフェクトを再生する。
-            </summary>
-        </member>
-        <member name="M:asd.EffectObject2D.Stop">
-            <summary>
-            このオブジェクトから再生されたエフェクトを全て停止する。
-            </summary>
-        </member>
-        <member name="M:asd.EffectObject2D.StopRoot">
-            <summary>
-            このオブジェクトから再生されたエフェクトのルートを全て停止する。
-            </summary>
-        </member>
-        <member name="P:asd.EffectObject2D.Effect">
-            <summary>
-            描画に使用するエフェクトを取得、または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.EffectObject2D.IsPlaying">
-            <summary>
-            このオブジェクトから再生されたエフェクトが再生中か取得する。
-            </summary>
-            <returns>再生中か?</returns>
-        </member>
-        <member name="P:asd.EffectObject2D.SyncEffects">
-            <summary>
-            このオブジェクトから再生されたエフェクトをオブジェクトに合わせて移動させるか取得、または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.EffectObject2D.EffectRotation">
-            <summary>
-            このオブジェクトから再生されるエフェクトの向き(度)を指定する。
-            </summary>
-            <remarks>
-            2D表示だとエフェクトが画面に対して前後に表示されるように作成されていた場合、予期せぬ見た目で表示されてしまうことがある。
-            そのため、Y軸を中心にエフェクトを回転させ2Dとして違和感のない表示ができるようにする。
-            </remarks>
-        </member>
-        <member name="P:asd.EffectObject2D.DrawingPriority">
-            <summary>
-            この2Dオブジェクトを描画する際の描画優先度を取得または設定する。描画優先度が高いほど手前に描画される。
-            </summary>
-        </member>
-        <member name="T:asd.GeometryObject2D">
-            <summary>
-            図形の描画を扱うクラス。
-            </summary>
-        </member>
-        <member name="M:asd.GeometryObject2D.#ctor">
-            <summary>
-            asd.GeometryObject2D の新しいインスタンスを初期化します。
-            </summary>
-        </member>
-        <member name="P:asd.GeometryObject2D.Shape">
-            <summary>
-            この2Dオブジェクトの描画に使用する図形を取得または設定します。
-            </summary>
-        </member>
-        <member name="P:asd.GeometryObject2D.Texture">
-            <summary>
-            この2Dオブジェクトの描画に使用するテクスチャを取得または設定します。
-            </summary>
-        </member>
-        <member name="P:asd.GeometryObject2D.CenterPosition">
-            <summary>
-            この2Dオブジェクトを描画する際の描画原点を取得または設定します。描画原点は拡大・回転・描画の中心となる、画像データ内での座標です。
-            </summary>
-        </member>
-        <member name="P:asd.GeometryObject2D.Color">
-            <summary>
-            この2Dオブジェクトを描画する際に合成する色を取得または設定します。
-            </summary>
-        </member>
-        <member name="P:asd.GeometryObject2D.DrawingPriority">
-            <summary>
-            この2Dオブジェクトを描画する際の描画優先度を取得または設定します。描画優先度が高いほど手前に描画されます。
-            </summary>
-        </member>
-        <member name="P:asd.GeometryObject2D.AlphaBlend">
-            <summary>
-            この2Dオブジェクトを描画する際のブレンドモードを取得または設定します。
-            </summary>
-        </member>
-        <member name="P:asd.GeometryObject2D.TextureFilterType">
-            <summary>
-             この2Dオブジェクトを描画する際のテクスチャフィルタを取得または設定する。
-             </summary>
-        </member>
-        <member name="T:asd.MapObject2D">
-            <summary>
-            テクスチャをチップとして高速に描画するクラス。
-            </summary>
-        </member>
-        <member name="M:asd.MapObject2D.AddChip(asd.Chip2D)">
-            <summary>
-            この2Dオブジェクトにチップを追加する。
-            </summary>
-        </member>
-        <member name="M:asd.MapObject2D.RemoveChip(asd.Chip2D)">
-            <summary>
-            この2Dオブジェクトからチップを削除する。
-            </summary>
-        </member>
-        <member name="M:asd.MapObject2D.Clear">
-            <summary>
-            この2Dオブジェクトに追加されている全てのチップを削除する。
-            </summary>
-        </member>
-        <member name="P:asd.MapObject2D.CenterPosition">
-            <summary>
-            この2Dオブジェクトを描画する際の描画原点を取得または設定する。描画原点は拡大・回転・描画の中心となる、画像データ内での座標。
-            </summary>
-        </member>
-        <member name="P:asd.MapObject2D.DrawingPriority">
-            <summary>
-            この2Dオブジェクトを描画する際の描画優先度を取得または設定する。描画優先度が高いほど手前に描画される。
-            </summary>
-        </member>
-        <member name="T:asd.TextObject2D">
-            <summary>
-            文字列の描画を扱うクラス。
-            </summary>
-        </member>
-        <member name="P:asd.TextObject2D.Font">
-            <summary>
-            この2Dオブジェクトの描画に使用するフォントを取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.TextObject2D.Text">
-            <summary>
-            描画する文字列を取得または設定する。
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:asd.TextObject2D.WritingDirection">
-            <summary>
-            文字列の描画方向を指定する。
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:asd.TextObject2D.CenterPosition">
-            <summary>
-            この2Dオブジェクトを描画する際の描画原点を取得または設定する。描画原点は拡大・回転・描画の中心となる、画像データ内での座標。
-            </summary>
-        </member>
-        <member name="P:asd.TextObject2D.Color">
-            <summary>
-            この2Dオブジェクトを描画する際に合成する色を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.TextObject2D.TurnLR">
-            <summary>
-            この2Dオブジェクトを描画する際に左右反転するかどうかの真偽値を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.TextObject2D.TurnUL">
-            <summary>
-            この2Dオブジェクトを描画する際に上下反転するかどうかの真偽値を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.TextObject2D.DrawingPriority">
-            <summary>
-            この2Dオブジェクトを描画する際の描画優先度を取得または設定する。描画優先度が高いほど手前に描画される。
-            </summary>
-        </member>
-        <member name="P:asd.TextObject2D.AlphaBlend">
-            <summary>
-            この2Dオブジェクトを描画する際のブレンドモードを取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.TextObject2D.TextureFilterType">
-            <summary>
-             この2Dオブジェクトを描画する際のテクスチャフィルタを取得または設定する。
-             </summary>
-        </member>
-        <member name="T:asd.CameraObject3D">
-            <summary>
-            カメラの機能を提供するクラス
-            </summary>
-        </member>
-        <member name="T:asd.Object3D">
-            <summary>
-            更新・描画処理を行う単位となる3Dオブジェクトの機能を提供するクラス
-            </summary>
-        </member>
-        <member name="M:asd.Object3D.Vanish">
-            <summary>
-            オブジェクトを破棄する。
-            </summary>
-        </member>
-        <member name="M:asd.Object3D.OnUpdateInternal">
-            <summary>
-            ユーザーはオーバーライドしてはいけない。
-            </summary>
-        </member>
-        <member name="M:asd.Object3D.OnStart">
-            <summary>
-            オーバーライドして、この3Dオブジェクトの初期化処理を記述することができる。
-            </summary>
-        </member>
-        <member name="M:asd.Object3D.OnUpdate">
-            <summary>
-            オーバーライドして、この3Dオブジェクトの更新処理を記述することができる。
-            </summary>
-        </member>
-        <member name="M:asd.Object3D.OnDrawAdditionally">
-            <summary>
-            オーバーライドして、この3Dオブジェクトに関する追加の描画処理を記述できる。
-            </summary>
-        </member>
-        <member name="M:asd.Object3D.OnVanish">
-            <summary>
-            オーバーライドして、この3DオブジェクトがVanishメソッドによって破棄される時の処理を記述できる。
-            </summary>
-        </member>
-        <member name="M:asd.Object3D.OnDispose">
-            <summary>
-            オーバーライドして、この3Dオブジェクトが破棄されるときの処理を記述できる。
-            </summary>
-        </member>
-        <member name="M:asd.Object3D.DrawSpriteAdditionally(asd.Vector3DF,asd.Vector3DF,asd.Vector3DF,asd.Vector3DF,asd.Color,asd.Color,asd.Color,asd.Color,asd.Vector2DF,asd.Vector2DF,asd.Vector2DF,asd.Vector2DF,asd.Texture2D,asd.AlphaBlendMode,System.Boolean,System.Boolean)">
-            <summary>
-            通常の描画に加えてテクスチャを描画する。
-            </summary>
-            <param name="upperLeftPos">テクスチャの左上の描画位置</param>
-            <param name="upperRightPos">テクスチャの右上の描画位置</param>
-            <param name="lowerRightPos">テクスチャの右下の描画位置</param>
-            <param name="lowerLeftPos">テクスチャの左下の描画位置</param>
-            <param name="upperLeftCol">テクスチャの左上の頂点色</param>
-            <param name="upperRightCol">テクスチャの右上の頂点色</param>
-            <param name="lowerRightCol">テクスチャの右下の頂点色</param>
-            <param name="lowerLeftCol">テクスチャの左下の頂点色</param>
-            <param name="upperLeftUV">テクスチャの左上のUV値</param>
-            <param name="upperRightUV">テクスチャの右上のUV値</param>
-            <param name="lowerRightUV">テクスチャの右下のUV値</param>
-            <param name="lowerLeftUV">テクスチャの左下のUV値</param>
-            <param name="texture">描画するテクスチャ</param>
-            <param name="alphaBlend">アルファブレンドの種類</param>
-            <param name="depthTest">深度を書き込むか?</param>
-            <param name="depthWrite">深度を比較するか?</param>
-            <remarks>OnDrawAdditionallyの中以外では実行してはいけない。</remarks>
-        </member>
-        <member name="P:asd.Object3D.IsUpdated">
-            <summary>
-            オブジェクトの更新を実行するかどうか取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Object3D.IsDrawn">
-            <summary>
-            オブジェクトを描画するかどうか取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Object3D.IsAlive">
-            <summary>
-            オブジェクトが生存しているか取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Object3D.Layer">
-            <summary>
-            このインスタンスを管理している asd.Layer3D クラスのインスタンスを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Object3D.Position">
-            <summary>
-            このインスタンスの親に対する現在の座標を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Object3D.Rotation">
-            <summary>
-            このインスタンスの親に対する現在の角度を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Object3D.Scale">
-            <summary>
-            このインスタンスの親に対する現在の拡大率を取得または設定する。
-            </summary>
-        </member>
-        <member name="M:asd.CameraObject3D.AddPostEffect(asd.PostEffect)">
-            <summary>
-            ポストエフェクトを追加する。
-            </summary>
-            <param name="postEffect">ポストエフェクト</param>
-        </member>
-        <member name="M:asd.CameraObject3D.ClearPostEffects">
-            <summary>
-            ポストエフェクトを全て消去する。
-            </summary>
-        </member>
-        <member name="P:asd.CameraObject3D.HDRMode">
-            <summary>
-            描画先がHDRかどうか、取得、または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.CameraObject3D.WindowSize">
-            <summary>
-            画面サイズを取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.CameraObject3D.Focus">
-            <summary>
-            カメラが見る座標を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.CameraObject3D.FieldOfView">
-            <summary>
-            画角を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.CameraObject3D.ZFar">
-            <summary>
-            描画する最遠距離を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.CameraObject3D.ZNear">
-            <summary>
-            描画する最近距離を取得または設定する。
-            </summary>
-        </member>
-        <member name="T:asd.DirectionalLightObject3D">
-            <summary>
-            無限遠光源の機能を提供するクラス
-            </summary>
-        </member>
-        <member name="P:asd.DirectionalLightObject3D.Color">
-            <summary>
-            光源の色を取得または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.DirectionalLightObject3D.Intensity">
-            <summary>
-            光源の強さを取得または設定する。
-            </summary>
-            <remarks>
-            デフォルトは1.0である。
-            </remarks>
-        </member>
-        <member name="T:asd.EffectObject3D">
-            <summary>
-            エフェクトの機能を提供するクラス
-            </summary>
-        </member>
-        <member name="M:asd.EffectObject3D.SetEffect(asd.Effect)">
-            <summary>
-            描画に使用するエフェクトを設定する。
-            </summary>
-            <param name="effect">エフェクト</param>
-        </member>
-        <member name="M:asd.EffectObject3D.Play">
-            <summary>
-            設定されている全てのエフェクトを再生する。
-            </summary>
-        </member>
-        <member name="M:asd.EffectObject3D.Stop">
-            <summary>
-            このオブジェクトから再生されたエフェクトを全て停止する。
-            </summary>
-        </member>
-        <member name="M:asd.EffectObject3D.StopRoot">
-            <summary>
-            このオブジェクトから再生されたエフェクトのルートを全て停止する。
-            </summary>
-        </member>
-        <member name="P:asd.EffectObject3D.IsPlaying">
-            <summary>
-            このオブジェクトから再生されたエフェクトが再生中か取得する。
-            </summary>
-            <returns>再生中か?</returns>
-        </member>
-        <member name="P:asd.EffectObject3D.SyncEffects">
-            <summary>
-            このオブジェクトから再生されたエフェクトをオブジェクトに合わせて移動させるか取得、または設定する。
-            </summary>
-        </member>
-        <member name="T:asd.Layer3D">
-            <summary>
-            3Dオブジェクトの更新と描画を管理するレイヤーの機能を提供するクラス
+            このコンポーネントを破棄する。
             </summary>
         </member>
         <member name="T:asd.Layer">
             <summary>
             オブジェクトの更新と描画を管理するレイヤーの機能を提供する抽象クラス
-            </summary>
-        </member>
-        <member name="M:asd.Layer.OnUpdating">
-            <summary>
-            オーバーライドして、このレイヤーが更新される前の処理を記述できる。
-            </summary>
-        </member>
-        <member name="M:asd.Layer.OnUpdated">
-            <summary>
-            オーバーライドして、このレイヤーが更新された後の処理を記述できる。
-            </summary>
-        </member>
-        <member name="M:asd.Layer.OnDrawAdditionally">
-            <summary>
-            オーバーライドして、このレイヤーの追加の描画処理を記述できる。
-            </summary>
-        </member>
-        <member name="M:asd.Layer.OnVanish">
-            <summary>
-            オーバーライドして、このレイヤーがVansihメソッドによって破棄されるときの処理を記述できる。
-            </summary>
-        </member>
-        <member name="M:asd.Layer.OnDispose">
-            <summary>
-            オーバーライドして、このレイヤーが破棄されるときの処理を記述できる。
-            </summary>
-        </member>
-        <member name="M:asd.Layer.AddPostEffect(asd.PostEffect)">
-            <summary>
-            ポストエフェクトを追加する。
-            </summary>
-            <param name="postEffect">ポストエフェクト</param>
-        </member>
-        <member name="M:asd.Layer.ClearPostEffects">
-            <summary>
-            ポストエフェクトを全て消去する。
-            </summary>
-        </member>
-        <member name="M:asd.Layer.Vanish">
-            <summary>
-            このレイヤーを破棄する。
             </summary>
         </member>
         <member name="P:asd.Layer.IsAlive">
@@ -2892,330 +3281,55 @@
             このレイヤーの描画優先度を取得または設定する。この値が大きいほど手前に描画される。
             </summary>
         </member>
+        <member name="M:asd.Layer.OnStart">
+            <summary>
+            オーバーライドして、このレイヤーの初期化処理を記述できる。
+            </summary>
+        </member>
+        <member name="M:asd.Layer.OnUpdating">
+            <summary>
+            オーバーライドして、このレイヤーが更新される前の処理を記述できる。
+            </summary>
+        </member>
+        <member name="M:asd.Layer.OnUpdated">
+            <summary>
+            オーバーライドして、このレイヤーが更新された後の処理を記述できる。
+            </summary>
+        </member>
+        <member name="M:asd.Layer.OnDrawAdditionally">
+            <summary>
+            オーバーライドして、このレイヤーの追加の描画処理を記述できる。
+            </summary>
+        </member>
+        <member name="M:asd.Layer.OnVanish">
+            <summary>
+            オーバーライドして、このレイヤーがVanishメソッドによって破棄されるときの処理を記述できる。
+            </summary>
+        </member>
+        <member name="M:asd.Layer.OnDispose">
+            <summary>
+            オーバーライドして、このレイヤーが破棄されるときの処理を記述できる。
+            </summary>
+        </member>
+        <member name="M:asd.Layer.AddPostEffect(asd.PostEffect)">
+            <summary>
+            ポストエフェクトを追加する。
+            </summary>
+            <param name="postEffect">ポストエフェクト</param>
+        </member>
+        <member name="M:asd.Layer.ClearPostEffects">
+            <summary>
+            ポストエフェクトを全て消去する。
+            </summary>
+        </member>
+        <member name="M:asd.Layer.Vanish">
+            <summary>
+            このレイヤーを破棄する。
+            </summary>
+        </member>
         <member name="P:asd.Layer.LayerType">
             <summary>
             レイヤーの種類を取得する。
-            </summary>
-        </member>
-        <member name="M:asd.Layer3D.#ctor(asd.RenderSettings)">
-            <summary>
-            コンストラクタ
-            </summary>
-        </member>
-        <member name="M:asd.Layer3D.AddObject(asd.Object3D)">
-            <summary>
-            このレイヤーに指定した3Dオブジェクトを追加する。
-            </summary>
-            <param name="object3D">追加する3Dオブジェクト</param>
-        </member>
-        <member name="M:asd.Layer3D.RemoveObject(asd.Object3D)">
-            <summary>
-            このレイヤーから指定した3Dオブジェクトを削除する。
-            </summary>
-            <param name="object3D">削除される3Dオブジェクト</param>
-        </member>
-        <member name="M:asd.Layer3D.DrawSpriteAdditionally(asd.Vector3DF,asd.Vector3DF,asd.Vector3DF,asd.Vector3DF,asd.Color,asd.Color,asd.Color,asd.Color,asd.Vector2DF,asd.Vector2DF,asd.Vector2DF,asd.Vector2DF,asd.Texture2D,asd.AlphaBlendMode,System.Boolean,System.Boolean)">
-            <summary>
-            通常の描画に加えてテクスチャを描画する。
-            </summary>
-            <param name="upperLeftPos">テクスチャの左上の描画位置</param>
-            <param name="upperRightPos">テクスチャの右上の描画位置</param>
-            <param name="lowerRightPos">テクスチャの右下の描画位置</param>
-            <param name="lowerLeftPos">テクスチャの左下の描画位置</param>
-            <param name="upperLeftCol">テクスチャの左上の頂点色</param>
-            <param name="upperRightCol">テクスチャの右上の頂点色</param>
-            <param name="lowerRightCol">テクスチャの右下の頂点色</param>
-            <param name="lowerLeftCol">テクスチャの左下の頂点色</param>
-            <param name="upperLeftUV">テクスチャの左上のUV値</param>
-            <param name="upperRightUV">テクスチャの右上のUV値</param>
-            <param name="lowerRightUV">テクスチャの右下のUV値</param>
-            <param name="lowerLeftUV">テクスチャの左下のUV値</param>
-            <param name="texture">描画するテクスチャ</param>
-            <param name="alphaBlend">アルファブレンドの種類</param>
-            <param name="depthWrite">深度を比較するか?</param>
-            <param name="depthTest">深度を書き込むか?</param>
-            <remarks>OnDrawAdditionallyの中以外では実行してはいけない。</remarks>
-        </member>
-        <member name="M:asd.Layer3D.SetAmbientColorIntensity(System.Single)">
-            <summary>
-            環境光の強さを設定する。
-            </summary>
-            <param name="ambientColorIntensity">環境光の強さ</param>
-            <remarks>
-            デフォルトは1.0である。
-            </remarks>
-        </member>
-        <member name="M:asd.Layer3D.SetSkyAmbientColor(asd.Color)">
-            <summary>
-            空方向の環境光の色を設定する。
-            </summary>
-            <param name="color">色</param>
-        </member>
-        <member name="M:asd.Layer3D.SetGroundAmbientColor(asd.Color)">
-            <summary>
-            地面方向の環境光の色を設定する。
-            </summary>
-            <param name="color">色</param>
-        </member>
-        <member name="M:asd.Layer3D.SetEnvironmentColorIntensity(System.Single,System.Single)">
-            <summary>
-            テクスチャによる環境の色の強さを設定する。
-            </summary>
-            <param name="environmentDiffuseColorIntensity">拡散色の強さ</param>
-            <param name="environmentSpecularColorIntensity">スペキュラ色の強さ</param>
-            <remarks>
-            デフォルトは1.0である。
-            </remarks>
-        </member>
-        <member name="M:asd.Layer3D.SetEnvironmentColor(asd.CubemapTexture,asd.CubemapTexture)">
-            <summary>
-            テクスチャによる環境の色を設定する。
-            </summary>
-            <param name="diffuseColor">拡散色</param>
-            <param name="specularColor">スペキュラ色</param>
-        </member>
-        <member name="P:asd.Layer3D.Objects">
-            <summary>
-            このレイヤーが管理している3Dオブジェクトのコレクションを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Layer3D.Settings">
-            <summary>
-            描画設定を取得、設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Layer3D.SSAO_Radius">
-            <summary>
-            SSAOのサンプリングする半径
-            </summary>
-        </member>
-        <member name="P:asd.Layer3D.SSAO_Bias">
-            <summary>
-            SSAOのバイアス
-            </summary>
-        </member>
-        <member name="P:asd.Layer3D.SSAO_Intensity">
-            <summary>
-            SSAOの強さ
-            </summary>
-        </member>
-        <member name="P:asd.Layer3D.SSAO_FarPlain">
-            <summary>
-            SSAOの最大距離
-            </summary>
-        </member>
-        <member name="T:asd.MassModelObject3D">
-            <summary>
-            大量にメッシュを表示する3Dオブジェクトの機能を提供するクラス
-            </summary>
-        </member>
-        <member name="M:asd.MassModelObject3D.SetModel(asd.MassModel)">
-            <summary>
-            描画に使用するモデルを設定する。
-            </summary>
-            <param name="model">モデル</param>
-        </member>
-        <member name="M:asd.MassModelObject3D.PlayAnimation(System.String)">
-            <summary>
-            アニメーションを再生する。
-            </summary>
-            <param name="name">アニメーションの名称</param>
-        </member>
-        <member name="M:asd.MassModelObject3D.StopAnimation">
-            <summary>
-            アニメーションを停止する。
-            </summary>
-        </member>
-        <member name="M:asd.MassModelObject3D.CrossFadeAnimation(System.String,System.Single)">
-            <summary>
-            アニメーションをクロスフェードで再生する。
-            </summary>
-            <param name="name">アニメーションの名称</param>
-            <param name="time">クロスフェードにかかる時間(秒)</param>
-        </member>
-        <member name="M:asd.MassModelObject3D.SetMaterialPropertyBlock(asd.MaterialPropertyBlock)">
-            <summary>
-            材質個別に描画時のパラメーターを設定する。
-            </summary>
-            <param name="block">プロパティ</param>
-            <remarks>
-            通常描画する場合、材質に設定されたパラメーターを元に描画するがモデルごとに個別のパラメーターを使用する場合、この関数を使用する。
-            </remarks>
-        </member>
-        <member name="P:asd.MassModelObject3D.IsAnimationPlaying">
-            <summary>
-            アニメーションが再生中か取得する。
-            </summary>
-            <returns>再生中か?</returns>
-        </member>
-        <member name="T:asd.ModelObject3D">
-            <summary>
-            メッシュを表示する3Dオブジェクトの機能を提供するクラス
-            </summary>
-        </member>
-        <member name="M:asd.ModelObject3D.SetModel(asd.Model)">
-            <summary>
-            描画に使用するモデルを設定する。
-            </summary>
-            <param name="model">モデル</param>
-        </member>
-        <member name="M:asd.ModelObject3D.AddMesh(asd.Mesh)">
-            <summary>
-            描画に使用するメッシュを追加する。
-            </summary>
-            <param name="mesh">メッシュ</param>
-        </member>
-        <member name="M:asd.ModelObject3D.SetDeformer(asd.Deformer)">
-            <summary>
-            描画に使用するデフォーマーを設定する。
-            </summary>
-            <param name="deformer">デフォーマー</param>
-        </member>
-        <member name="M:asd.ModelObject3D.GetAnimationClip(System.String)">
-            <summary>
-            アニメーションクリップを取得する。
-            </summary>
-            <param name="name">アニメーションクリップの名称</param>
-            <returns>アニメーションクリップ</returns>
-        </member>
-        <member name="M:asd.ModelObject3D.PlayAnimation(System.Int32,System.String)">
-            <summary>
-            アニメーションを再生する。
-            </summary>
-            <param name="index">対象のインデックス</param>
-            <param name="name">アニメーションの名称</param>
-        </member>
-        <member name="M:asd.ModelObject3D.StopAnimation(System.Int32)">
-            <summary>
-            アニメーションを停止する。
-            </summary>
-            <param name="index">対象のインデックス</param>
-        </member>
-        <member name="M:asd.ModelObject3D.SetAnimationWeight(System.Int32,System.Single)">
-            <summary>
-            アニメーションの合成比率を設定する。
-            </summary>
-            <param name="index">対象のインデックス</param>
-            <param name="weight">合成比率</param>
-        </member>
-        <member name="M:asd.ModelObject3D.CrossFadeAnimation(System.Int32,System.String,System.Single)">
-            <summary>
-            アニメーションをクロスフェードで再生する。
-            </summary>
-            <param name="index">対象のインデックス</param>
-            <param name="name">アニメーションの名称</param>
-            <param name="time">クロスフェードにかかる時間(秒)</param>
-        </member>
-        <member name="M:asd.ModelObject3D.IsAnimationPlaying(System.Int32)">
-            		@brief	アニメーションが再生中か取得する。
-            		@param	index	対象のインデックス
-            		@return	再生中か?
-        </member>
-        <member name="M:asd.ModelObject3D.SetMaterialPropertyBlock(System.Int32,System.Int32,asd.MaterialPropertyBlock)">
-            <summary>
-            材質個別に描画時のパラメーターを設定する。
-            </summary>
-            <param name="meshIndex">メッシュのインデックス</param>
-            <param name="materialIndex">材質のインデックス</param>
-            <param name="block">プロパティ</param>
-            <remarks>
-            通常描画する場合、材質に設定されたパラメーターを元に描画するがモデルごとに個別のパラメーターを使用する場合、この関数を使用する。
-            </remarks>
-        </member>
-        <member name="T:asd.TerrainObject3D">
-            <summary>
-            地形を描画するクラス
-            </summary>
-        </member>
-        <member name="M:asd.TerrainObject3D.SetTerrain(asd.Terrain3D)">
-            <summary>
-            地形を設定する。
-            </summary>
-            <param name="terrain">地形</param>
-        </member>
-        <member name="M:asd.TerrainObject3D.SetMaterialPropertyBlock(asd.MaterialPropertyBlock)">
-            <summary>
-            材質個別に描画時のパラメーターを設定する。
-            </summary>
-            <param name="block">プロパティ</param>
-            <remarks>
-            通常描画する場合、材質に設定されたパラメーターを元に描画するがモデルごとに個別のパラメーターを使用する場合、この関数を使用する。
-            </remarks>
-        </member>
-        <member name="T:asd.Layer2DComponent">
-            <summary>
-            asd.Layer2D クラスに登録することができるコンポーネント クラス。
-            </summary>
-        </member>
-        <member name="T:asd.Component`1">
-            <summary>
-            コンポーネント クラスの基底クラス。
-            </summary>
-            <typeparam name="TOwner">コンポーネントの追加先とできる型。</typeparam>
-        </member>
-        <member name="M:asd.Component`1.#ctor">
-            <summary>
-            コンストラクタ
-            </summary>
-        </member>
-        <member name="M:asd.Component`1.Vanish">
-            <summary>
-            このコンポーネントを破棄する。
-            </summary>
-        </member>
-        <member name="P:asd.Component`1.Owner">
-            <summary>
-            このコンポーネントを保持しているインスタンスを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Component`1.IsAlive">
-            <summary>
-            このコンポーネントが実行中かどうかを取得する。Vanishメソッドによって破棄された時に false を返す。
-            </summary>
-        </member>
-        <member name="M:asd.Layer2DComponent.#ctor">
-            <summary>
-            コンストラクタ
-            </summary>
-        </member>
-        <member name="M:asd.Layer2DComponent.OnUpdated">
-            <summary>
-            オーバーライドして、このコンポーネントの Update時の処理を記述できる。
-            </summary>
-        </member>
-        <member name="P:asd.Layer2DComponent.Owner">
-            <summary>
-            このコンポーネントを保持しているレイヤー クラスのインスタンスを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Layer2DComponent.IsUpdated">
-            <summary>
-            このコンポーネントが更新されるかどうかを取得する。
-            </summary>
-        </member>
-        <member name="T:asd.Object2DComponent">
-            <summary>
-            asd.Object2D クラスに登録できるコンポーネント クラス。
-            </summary>
-        </member>
-        <member name="M:asd.Object2DComponent.#ctor">
-            <summary>
-            コンストラクタ
-            </summary>
-        </member>
-        <member name="M:asd.Object2DComponent.OnUpdate">
-            <summary>
-            オーバーライドして、このコンポーネントの Update時の処理を記述できる。
-            </summary>
-        </member>
-        <member name="P:asd.Object2DComponent.Owner">
-            <summary>
-            このコンポーネントを保持している2Dオブジェクトのインスタンスを取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Object2DComponent.IsUpdated">
-            <summary>
-            このコンポーネントが更新されるかどうかを取得または設定する。
             </summary>
         </member>
         <member name="T:asd.Layer2D">
@@ -3226,6 +3340,11 @@
         <member name="M:asd.Layer2D.#ctor">
             <summary>
             コンストラクタ
+            </summary>
+        </member>
+        <member name="P:asd.Layer2D.Objects">
+            <summary>
+            このレイヤーが管理している2Dオブジェクトのコレクションを取得する。
             </summary>
         </member>
         <member name="M:asd.Layer2D.AddObject(asd.Object2D)">
@@ -3301,11 +3420,6 @@
             <remarks>
             OnDrawAdditionallyの中以外では実行してはいけない。
             </remarks>
-        </member>
-        <member name="P:asd.Layer2D.Objects">
-            <summary>
-            このレイヤーが管理している2Dオブジェクトのコレクションを取得する。
-            </summary>
         </member>
         <member name="M:asd.ObjectSystemFactory.#ctor(asd.swig.ObjectSystemFactory)">
             <summary>
@@ -3499,6 +3613,11 @@
             コンストラクタ
             </summary>
         </member>
+        <member name="P:asd.Scene.HDRMode">
+            <summary>
+            描画先がHDRかどうか、取得、または設定する。
+            </summary>
+        </member>
         <member name="M:asd.Scene.AddLayer(asd.Layer)">
             <summary>
             指定したレイヤーをこのシーンに追加する。
@@ -3531,6 +3650,23 @@
             </summary>
             <param name="key">削除するコンポーネントを示すキー</param>
         </member>
+        <member name="P:asd.Scene.EffectedScreen">
+            <summary>
+            全てのレイヤーとポストエフェクトが描画され終わった画面をテクスチャとして取得する。
+            </summary>
+            <returns>画面</returns>
+            <remarks>テクスチャの内容はシーンが描画されるたびに変わる。主にシーン遷移の際に使用する。</remarks>
+        </member>
+        <member name="P:asd.Scene.Layers">
+            <summary>
+            所属しているレイヤーを取得する。
+            </summary>
+        </member>
+        <member name="M:asd.Scene.OnStart">
+            <summary>
+            オーバーライドして、このシーンを初期化処理を記述できる。
+            </summary>
+        </member>
         <member name="M:asd.Scene.OnUpdating">
             <summary>
             オーバーライドして、Updateの直前に実行する処理を記述する。
@@ -3561,23 +3697,6 @@
             オーバーライドして、このシーンが無条件に破棄される際に実行される処理を記述する。
             </summary>
         </member>
-        <member name="P:asd.Scene.HDRMode">
-            <summary>
-            描画先がHDRかどうか、取得、または設定する。
-            </summary>
-        </member>
-        <member name="P:asd.Scene.EffectedScreen">
-            <summary>
-            全てのレイヤーとポストエフェクトが描画され終わった画面をテクスチャとして取得する。
-            </summary>
-            <returns>画面</returns>
-            <remarks>テクスチャの内容はシーンが描画されるたびに変わる。主にシーン遷移の際に使用する。</remarks>
-        </member>
-        <member name="P:asd.Scene.Layers">
-            <summary>
-            所属しているレイヤーを取得する。
-            </summary>
-        </member>
         <member name="T:asd.SceneComponent">
             <summary>
             asd.Scene クラスに登録することができるコンポーネント。
@@ -3588,11 +3707,6 @@
             コンストラクタ
             </summary>
         </member>
-        <member name="M:asd.SceneComponent.OnUpdated">
-            <summary>
-            オーバーライドして、このコンポーネントの Update時の処理を記述できる。
-            </summary>
-        </member>
         <member name="P:asd.SceneComponent.Owner">
             <summary>
             このインスタンスを保持しているシーン クラスを取得する。
@@ -3601,6 +3715,11 @@
         <member name="P:asd.SceneComponent.IsUpdated">
             <summary>
             このコンポーネントが更新されるかどうかを取得または設定する。
+            </summary>
+        </member>
+        <member name="M:asd.SceneComponent.OnUpdated">
+            <summary>
+            オーバーライドして、このコンポーネントの Update時の処理を記述できる。
             </summary>
         </member>
         <member name="T:asd.TextureObject2D">
@@ -3668,9 +3787,19 @@
             オーバーライドして、このオブジェクトの更新処理を記述できる。
             </summary>
         </member>
+        <member name="P:asd.Transition.IsSceneChanged">
+            <summary>
+            シーンが切り替わっているか取得する。
+            </summary>
+        </member>
         <member name="M:asd.Transition.ChangeScene">
             <summary>
             実際にシーンを次のシーンに切り替える。
+            </summary>
+        </member>
+        <member name="P:asd.Transition.IsFinished">
+            <summary>
+            シーン遷移処理が終了したか取得する。
             </summary>
         </member>
         <member name="M:asd.Transition.Finish">
@@ -3744,16 +3873,6 @@
             <param name="lowerLeftUV">左下のUV値(0～1)</param>
             <remarks>ChangeSceneを実行すると前のシーンの描画は停止し、静止画として扱われる。</remarks>
         </member>
-        <member name="P:asd.Transition.IsSceneChanged">
-            <summary>
-            シーンが切り替わっているか取得する。
-            </summary>
-        </member>
-        <member name="P:asd.Transition.IsFinished">
-            <summary>
-            シーン遷移処理が終了したか取得する。
-            </summary>
-        </member>
         <member name="T:asd.TransitionFade">
             <summary>
             フェードしながらシーン遷移する効果を適用するクラス
@@ -3788,23 +3907,6 @@
             図形としての弧を扱うクラス。
             </summary>
         </member>
-        <member name="T:asd.Shape">
-            <summary>
-            当たり判定や図形描画に用いられる図形を扱う抽象クラス。
-            </summary>
-        </member>
-        <member name="M:asd.Shape.GetIsCollidedWith(asd.Shape)">
-            <summary>
-            指定した図形と衝突しているか否かを調べる。
-            </summary>
-            <param name="shape">衝突を調べる図形</param>
-            <returns>衝突したか否か</returns>
-        </member>
-        <member name="P:asd.Shape.ShapeType">
-            <summary>
-            図形のタイプを取得する。
-            </summary>
-        </member>
         <member name="P:asd.ArcShape.Position">
             <summary>
             弧の中心座標を取得または設定する。
@@ -3830,8 +3932,8 @@
             弧の外周、内周上の曲がり角（滑らかさ）の数を取得または設定する。
             </summary>
         </member>
-        <!-- 正しくない形式の XML コメントがメンバー "P:asd.ArcShape.StartingCorner" で無視されました -->
-        <!-- 正しくない形式の XML コメントがメンバー "P:asd.ArcShape.EndingCorner" で無視されました -->
+        <!-- Badly formed XML comment ignored for member "P:asd.ArcShape.StartingCorner" -->
+        <!-- Badly formed XML comment ignored for member "P:asd.ArcShape.EndingCorner" -->
         <member name="T:asd.CircleShape">
             <summary>
             図形としての円を扱うクラス。
@@ -3928,6 +4030,23 @@
             <summary>
             矩形の回転の際の中心座標を取得もしくは設定する。
             </summary>
+        </member>
+        <member name="T:asd.Shape">
+            <summary>
+            当たり判定や図形描画に用いられる図形を扱う抽象クラス。
+            </summary>
+        </member>
+        <member name="P:asd.Shape.ShapeType">
+            <summary>
+            図形のタイプを取得する。
+            </summary>
+        </member>
+        <member name="M:asd.Shape.GetIsCollidedWith(asd.Shape)">
+            <summary>
+            指定した図形と衝突しているか否かを調べる。
+            </summary>
+            <param name="shape">衝突を調べる図形</param>
+            <returns>衝突したか否か</returns>
         </member>
         <member name="T:asd.TriangleShape">
             <summary>
@@ -4043,6 +4162,17 @@
             <param name="id">ID </param>
             <param name="second">フェードアウトに使用する時間(秒) </param>
         </member>
+        <member name="M:asd.Sound.Fade(System.Int32,System.Single,System.Single)">
+            <summary>
+            任意の音量に音量を一定時間かけて変更する。 
+            </summary>
+            <param name="id">音のID </param>
+            <param name="second">変更にかかる時間(秒) </param>
+            <param name="targetedVolume">変更先の音量(0.0～1.0) </param>
+            <remarks>
+            この指定される音量はSetVolumeに指定される音量とは異なり、FadeIn、FadeOutに使用される音量と共通である。 つまり、このメソッドはFadeIn、FadeOutの任意音量指定版と言える。 
+            </remarks>
+        </member>
         <member name="T:asd.SoundSource">
             <summary>
             音源のクラス
@@ -4070,6 +4200,12 @@
             <summary>
             音の長さを取得する。
             </summary>
+        </member>
+        <member name="T:asd.swig.VectorUint8.VectorUint8Enumerator">
+            Note that the IEnumerator documentation requires an InvalidOperationException to be thrown
+            whenever the collection is modified. This has been done for changes in the size of the
+            collection but not when one of the elements of the collection is modified as it is a bit
+            tricky to detect unmanaged code that modifies the collection under our feet.
         </member>
         <member name="T:asd.IG">
             <summary>

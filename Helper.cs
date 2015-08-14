@@ -13,5 +13,12 @@ namespace Nac.Altseed
 		{
 			return new Vector2DF(v.X, v.Y);
 		}
+
+		public static RectF ToFloat(this RectI r)
+		{
+			var pos = r.Position;
+			var size = r.Size;
+			return new RectF(pos.X, pos.Y, size.X, size.Y);
+		}
 	}
 }

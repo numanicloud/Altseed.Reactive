@@ -26,6 +26,14 @@ namespace Nac.Altseed.Input
 			binding[abstractKey] = key;
 		}
 
+		public void BindDirection(TAbstractKey left, TAbstractKey right, TAbstractKey up, TAbstractKey down)
+		{
+			binding[left] = asd.Keys.Left;
+			binding[right] = asd.Keys.Right;
+			binding[up] = asd.Keys.Up;
+			binding[down] = asd.Keys.Down;
+		}
+
 		public override InputState? GetState(TAbstractKey key)
 		{
 			if (binding.ContainsKey(key))

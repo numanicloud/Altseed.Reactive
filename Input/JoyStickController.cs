@@ -101,6 +101,14 @@ namespace Nac.Altseed.Input
 			binding[abstractKey] = new AxisInput(axisIndex, direction);
 		}
 
+		public void BindDirection(TAbstractKey left, TAbstractKey right, TAbstractKey up, TAbstractKey down)
+		{
+			BindAxis(0, AxisDirection.Negative, left);
+			BindAxis(0, AxisDirection.Positive, right);
+			BindAxis(1, AxisDirection.Negative, up);
+			BindAxis(1, AxisDirection.Positive, down);
+		}
+
 		public override InputState? GetState(TAbstractKey key)
 		{
 			if (binding.ContainsKey(key))
