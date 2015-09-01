@@ -20,5 +20,13 @@ namespace Nac.Altseed
 			var size = r.Size;
 			return new RectF(pos.X, pos.Y, size.X, size.Y);
 		}
+
+		public static void AddComponentWithDummy(this Layer2D layer, Object2DComponent component, string key)
+		{
+			var dummy = new TextureObject2D();
+			dummy.IsDrawn = false;
+			layer.AddObject(dummy);
+			dummy.AddComponent(component, key);
+		}
 	}
 }
