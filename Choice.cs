@@ -39,8 +39,8 @@ namespace Nac.Altseed
 					throw new Exception("Sizeは0以上である必要があります。");
 				}
 				size_ = value;
-				if (SelectedIndex > size_)
-					SelectedIndex = size_;
+				if (SelectedIndex >= size_)
+					SelectedIndex = size_ - 1;
 			}
 		}
         /// <summary>
