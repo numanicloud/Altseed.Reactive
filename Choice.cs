@@ -34,9 +34,9 @@ namespace Nac.Altseed
 			get { return size_; }
 			set
 			{
-				if (value <= 0)
+				if (value < 0)
 				{
-					throw new Exception("Sizeは1以上である必要があります。");
+					throw new Exception("Sizeは0以上である必要があります。");
 				}
 				size_ = value;
 				if (SelectedIndex > size_)
@@ -144,7 +144,7 @@ namespace Nac.Altseed
 			}
 			foreach (TAbstractKey item in controlls.Keys)
 			{
-				if (controller.GetState(item) == InputState.Push)
+				if (Size > 0 && controller.GetState(item) == InputState.Push)
 				{
 					ChoiceControll controll = controlls[item];
 					switch (controll)
