@@ -117,11 +117,16 @@ namespace Nac.Altseed
         /// <summary>
         /// 指定したキーを指定した選択肢の操作に割り当てます。
         /// </summary>
-        /// <param name="keycode">操作に割り当てるキー コード。</param>
+        /// <param name="key">操作に割り当てるキー コード。</param>
         /// <param name="controll">キーに割り当てる操作。</param>
-		public void BindKey(TAbstractKey keycode, ChoiceControll controll)
+		public void BindKey(TAbstractKey key, ChoiceControll controll)
 		{
-			controlls[keycode] = controll;
+			controlls[key] = controll;
+		}
+
+		public void DisbindKey(TAbstractKey key)
+		{
+			controlls.Remove(key);
 		}
 
         /// <summary>
@@ -210,7 +215,7 @@ namespace Nac.Altseed
 
 			if(choices.Any())
 			{
-				SelectedIndex = choices.First();
+				selectedIndex_ = choices.First();
 				return true;
 			}
 			else
@@ -236,7 +241,7 @@ namespace Nac.Altseed
 
 			if(choices.Any())
 			{
-				SelectedIndex = choices.Last();
+				selectedIndex_ = choices.Last();
 				return true;
 			}
 			else

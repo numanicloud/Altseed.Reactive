@@ -21,6 +21,11 @@ namespace Nac.Altseed
 			return new RectF(pos.X, pos.Y, size.X, size.Y);
 		}
 
+		public static Vector2DF ExchangeXY(this Vector2DF v)
+		{
+			return new Vector2DF(v.Y, v.X);
+		}
+
 		public static void AddComponentWithDummy(this Layer2D layer, Object2DComponent component, string key)
 		{
 			var dummy = new TextureObject2D();
