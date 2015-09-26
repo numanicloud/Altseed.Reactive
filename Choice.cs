@@ -34,13 +34,20 @@ namespace Nac.Altseed
 			get { return size_; }
 			set
 			{
-				if (value <= 0)
+				if (value < 0)
 				{
-					throw new Exception("Sizeは1以上である必要があります。");
+					throw new Exception("Sizeは0以上である必要があります。");
 				}
 				size_ = value;
-				if (SelectedIndex >= size_)
-					SelectedIndex = size_ - 1;
+				if(SelectedIndex >= size_)
+				{
+					var prev = SelectedIndex;
+					var result = SelectPreviousIndex();
+					if(result)
+					{
+						OnSelectionChanged?.Invoke(prev, SelectedIndex);
+					}
+				}
 			}
 		}
         /// <summary>
@@ -51,7 +58,8 @@ namespace Nac.Altseed
 			get { return selectedIndex_; }
 			set
 			{
-				selectedIndex_ = value;
+				var prev = selectedIndex_;
+                selectedIndex_ = value;
 				if(selectedIndex_ < 0)
 				{
 					selectedIndex_ = 0;
@@ -64,6 +72,10 @@ namespace Nac.Altseed
 				{
 					throw new ArgumentException("スキップされるよう設定されている選択肢は指定できません。");
 				}
+				if(prev != selectedIndex_)
+				{
+					OnSelectionChanged?.Invoke(prev, selectedIndex_);
+				}
 			}
 		}
         /// <summary>
@@ -72,6 +84,7 @@ namespace Nac.Altseed
 		public bool Loop { get; set; }
 		public bool IsControllerUpdated { get; set; }
 
+		public event Action<int, int> OnSelectionChanged;
 		/// <summary>
 		/// 選択肢間の移動が起きたときに発生するイベント。第１引数は移動前のインデックス、第２引数は移動後のインデックス。
 		/// </summary>
@@ -104,11 +117,16 @@ namespace Nac.Altseed
         /// <summary>
         /// 指定したキーを指定した選択肢の操作に割り当てます。
         /// </summary>
-        /// <param name="keycode">操作に割り当てるキー コード。</param>
+        /// <param name="key">操作に割り当てるキー コード。</param>
         /// <param name="controll">キーに割り当てる操作。</param>
-		public void BindKey(TAbstractKey keycode, ChoiceControll controll)
+		public void BindKey(TAbstractKey key, ChoiceControll controll)
 		{
-			controlls[keycode] = controll;
+			controlls[key] = controll;
+		}
+
+		public void DisbindKey(TAbstractKey key)
+		{
+			controlls.Remove(key);
 		}
 
         /// <summary>
@@ -121,16 +139,30 @@ namespace Nac.Altseed
 			{
 				throw new ArgumentException("indexの範囲が不正です index=" + index, "index");
 			}
-			if (Size - 1 == skippedIndex.Count)
-			{
-				throw new InvalidOperationException("すべての選択肢をスキップするようには設定できません。");
-			}
 			skippedIndex.Add(index);
-			
+
             while (skippedIndex.Contains(SelectedIndex))
             {
-                ++SelectedIndex;
+				var prev = SelectedIndex;
+				var successToMove = SelectNextIndex();
+				if(!successToMove)
+				{
+					successToMove = SelectPreviousIndex();
+				}
+				if(successToMove)
+				{
+					OnSelectionChanged?.Invoke(prev, SelectedIndex);
+				}
             }
+		}
+
+		public void RemoveSkippedIndex(int index)
+		{
+			if(index >= Size || index < 0)
+			{
+				throw new ArgumentException("indexの範囲が不正です index=" + index, "index");
+			}
+			skippedIndex.Remove(index);
 		}
 
         /// <summary>
@@ -166,52 +198,93 @@ namespace Nac.Altseed
 			}
 		}
 
-		private void MoveNext()
+		private bool SelectNextIndex()
 		{
-			var prev = SelectedIndex;
-
+			if(Size == 0)
+			{
+				return false;
+			}
+			
 			var range = Enumerable.Range(0, Size);
 			var choices = range.Skip(SelectedIndex + 1);
-			if (Loop)
+			if(Loop)
 			{
 				choices = choices.Concat(range.Take(SelectedIndex + 1));
 			}
 			choices = choices.Except(skippedIndex);
-			if (choices.Any())
+
+			if(choices.Any())
 			{
-				SelectedIndex = choices.First();
+				selectedIndex_ = choices.First();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private bool SelectPreviousIndex()
+		{
+			if(Size == 0)
+			{
+				return false;
+			}
+
+			var range = Enumerable.Range(0, Size);
+			var choices = range.Take(SelectedIndex);
+			if(Loop)
+			{
+				choices = range.Skip(SelectedIndex).Concat(choices);
+			}
+			choices = choices.Except(skippedIndex);
+
+			if(choices.Any())
+			{
+				selectedIndex_ = choices.Last();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private void MoveNext()
+		{
+			var prev = SelectedIndex;
+			var result = SelectNextIndex();
+			if(result)
+			{
 				OnMove?.Invoke(prev, SelectedIndex);
+				OnSelectionChanged?.Invoke(prev, SelectedIndex);
 			}
 		}
 
 		private void MovePrevious()
 		{
 			var prev = SelectedIndex;
-
-			var range = Enumerable.Range(0, Size);
-			var choices = range.Take(SelectedIndex);
-			if (Loop)
+			var result = SelectPreviousIndex();
+			if(result)
 			{
-				choices = range.Skip(SelectedIndex).Concat(choices);
-			}
-			choices = choices.Except(skippedIndex);
-			if (choices.Any())
-			{
-				SelectedIndex = choices.Last();
 				OnMove?.Invoke(prev, SelectedIndex);
+				OnSelectionChanged?.Invoke(prev, SelectedIndex);
 			}
 		}
 
 		private void Decide()
 		{
-			if (OnDecide != null)
-				OnDecide(SelectedIndex);
+			if(Size - skippedIndex.Count == 0)
+			{
+				return;
+			}
+			
+			OnDecide?.Invoke(SelectedIndex);
 		}
 
 		private void Cancel()
 		{
-			if (OnCancel != null)
-				OnCancel(SelectedIndex);
+			OnCancel.Invoke(SelectedIndex);
 		}
 	}
 }
