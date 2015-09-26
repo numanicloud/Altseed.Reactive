@@ -126,7 +126,7 @@ namespace Nac.Altseed
 				throw new InvalidOperationException("すべての選択肢をスキップするようには設定できません。");
 			}
 			skippedIndex.Add(index);
-
+			
             while (skippedIndex.Contains(SelectedIndex))
             {
                 ++SelectedIndex;
