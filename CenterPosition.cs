@@ -26,6 +26,11 @@ namespace Nac.Altseed
         /// <param name="centerPosition">画像上のどの位置を描画原点に指定するか。</param>
 		public static void SetCenterPosition(this TextureObject2D obj, CenterPosition centerPosition)
 		{
+			if(obj.Texture == null)
+			{
+				Console.WriteLine("テクスチャが無効なオブジェクトの中心点を求めようとしました。");
+				return;
+			}
 			obj.CenterPosition = GetPosition(obj.Texture.Size, centerPosition);
 		}
 
@@ -36,6 +41,11 @@ namespace Nac.Altseed
         /// <param name="centerPosition">文字列上のどの位置を描画原点に指定するか。</param>
 		public static void SetCenterPosition(this TextObject2D obj, CenterPosition centerPosition)
 		{
+			if(obj.Font == null)
+			{
+				Console.WriteLine("フォントが無効なオブジェクトの中心点を求めようとしました。");
+				return;
+			}
 			var size = obj.Font.CalcTextureSize(obj.Text, obj.WritingDirection);
 			obj.CenterPosition = GetPosition(size, centerPosition);
 		}
@@ -45,13 +55,13 @@ namespace Nac.Altseed
 			switch(centerPosition)
 			{
 			case CenterPosition.TopLeft: return new Vector2DF(0, 0);
-			case CenterPosition.TopCenter: return new Vector2DF(size.X / 2, 0);
+			case CenterPosition.TopCenter: return new Vector2DF((float)size.X / 2, 0);
 			case CenterPosition.TopRight: return new Vector2DF(size.X, 0);
-			case CenterPosition.CenterLeft: return new Vector2DF(0, size.Y / 2);
-			case CenterPosition.CenterCenter: return new Vector2DF(size.X / 2, size.Y / 2);
-			case CenterPosition.CenterRight: return new Vector2DF(size.X, size.Y / 2);
+			case CenterPosition.CenterLeft: return new Vector2DF(0, (float)size.Y / 2);
+			case CenterPosition.CenterCenter: return new Vector2DF((float)size.X / 2, (float)size.Y / 2);
+			case CenterPosition.CenterRight: return new Vector2DF(size.X, (float)size.Y / 2);
 			case CenterPosition.BottomLeft: return new Vector2DF(0, size.Y);
-			case CenterPosition.BottomCenter: return new Vector2DF(size.X / 2, size.Y);
+			case CenterPosition.BottomCenter: return new Vector2DF((float)size.X / 2, size.Y);
 			case CenterPosition.BottomRight: return new Vector2DF(size.X, size.Y);
 			default: throw new Exception();
 			}
