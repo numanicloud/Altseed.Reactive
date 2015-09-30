@@ -141,7 +141,7 @@ namespace Nac.Altseed
 			}
 			skippedIndex.Add(index);
 
-            if (skippedIndex.Contains(SelectedIndex))
+            while (skippedIndex.Contains(SelectedIndex))
             {
 				var prev = SelectedIndex;
 				var successToMove = SelectNextIndex();
