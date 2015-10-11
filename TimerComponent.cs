@@ -23,7 +23,7 @@ namespace Nac.Altseed
 			time -= Engine.DeltaTime;
 			if(time <= 0)
 			{
-				callback();
+				callback?.Invoke();
 				Vanish();
 			}
 		}

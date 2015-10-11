@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EasingCameraComponent.cs" />
     <Compile Include="CenterPosition.cs" />
     <Compile Include="Choice.cs" />
     <Compile Include="Easing.cs" />
