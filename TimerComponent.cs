@@ -9,21 +9,21 @@ namespace Nac.Altseed
 {
 	public class TimerComponent : Object2DComponent
 	{ 
-		private float time;
-		private Action callback;
+		protected float Time { get; set; }
+		protected Action Callback { get; private set; }
 
 		public TimerComponent(float time, Action callback)
 		{
-			this.time = time;
-			this.callback = callback;
+			this.Time = time;
+			this.Callback = callback;
 		}
 
 		protected override void OnUpdate()
 		{
-			time -= Engine.DeltaTime;
-			if(time <= 0)
+			Time -= Engine.DeltaTime;
+			if(Time <= 0)
 			{
-				callback?.Invoke();
+				Callback?.Invoke();
 				Vanish();
 			}
 		}
