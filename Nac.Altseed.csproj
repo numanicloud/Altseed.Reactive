@@ -48,6 +48,7 @@
     <Compile Include="Choice.cs" />
     <Compile Include="Easing.cs" />
     <Compile Include="EasingComponent.cs" />
+    <Compile Include="EasingComponent2.cs" />
     <Compile Include="EasingComponent2D.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Input\BundleController.cs" />
