@@ -22,6 +22,11 @@ namespace Nac.Altseed.Input
 			this.controllers = controllers.ToList();
 		}
 
+		public void AddController(Controller<TAbstractKey> controller)
+		{
+			controllers.Add(controller);
+		}
+
 		public override InputState? GetState(TAbstractKey key)
 		{
 			return Merge(controllers.Select(x => x.GetState(key)).ToArray());

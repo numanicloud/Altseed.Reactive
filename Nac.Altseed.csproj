@@ -43,13 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EasingCameraComponent.cs" />
+    <Compile Include="Component\EasingCameraComponent.cs" />
     <Compile Include="CenterPosition.cs" />
     <Compile Include="Choice.cs" />
-    <Compile Include="Easing.cs" />
-    <Compile Include="EasingComponent.cs" />
-    <Compile Include="EasingComponent2.cs" />
-    <Compile Include="EasingComponent2D.cs" />
+    <Compile Include="Component\Easing.cs" />
+    <Compile Include="Component\EasingComponent.cs" />
+    <Compile Include="Component\EasingComponent2.cs" />
+    <Compile Include="Component\EasingComponent2D.cs" />
+    <Compile Include="Component\EasingComponent2D2.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Input\BundleController.cs" />
     <Compile Include="Input\Controller.cs" />
@@ -57,9 +58,9 @@
     <Compile Include="Input\KeyboardController.cs" />
     <Compile Include="Input\SteppingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TimeAnimationComponent.cs" />
-    <Compile Include="TimerComponent.cs" />
-    <Compile Include="TimerSceneComponent.cs" />
+    <Compile Include="Component\TimeAnimationComponent.cs" />
+    <Compile Include="Component\TimerComponent.cs" />
+    <Compile Include="Component\TimerSceneComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Altseed_core.dll">
