@@ -36,6 +36,22 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,28 +60,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CenterPosition.cs" />
-    <Compile Include="Components\Object2DComponentFactory.cs" />
-    <Compile Include="Components\CoroutineComponent.cs" />
-    <Compile Include="Components\ShortWiggleComponent.cs" />
-    <Compile Include="Inputs\Choice.cs" />
-    <Compile Include="Components\Easing.cs" />
-    <Compile Include="Components\EasingComponent.cs" />
-    <Compile Include="Components\EasingComponent2D.cs" />
+    <Compile Include="Object2DComponents\CoroutineComponent.cs" />
+    <Compile Include="Object2DComponents\Object2DComponentFactory.cs" />
+    <Compile Include="SceneComponents\PushingCoroutineComponent.cs" />
+    <Compile Include="Object2DComponents\ShortWiggleComponent.cs" />
+    <Compile Include="Input\Choice.cs" />
+    <Compile Include="Object2DComponents\Easing.cs" />
+    <Compile Include="Object2DComponents\EasingComponent.cs" />
+    <Compile Include="Object2DComponents\EasingComponent2D.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="Inputs\BundleController.cs" />
-    <Compile Include="Inputs\Controller.cs" />
-    <Compile Include="Inputs\JoystickController.cs" />
-    <Compile Include="Inputs\KeyboardController.cs" />
-    <Compile Include="Inputs\SteppingController.cs" />
+    <Compile Include="Input\BundleController.cs" />
+    <Compile Include="Input\Controller.cs" />
+    <Compile Include="Input\JoystickController.cs" />
+    <Compile Include="Input\KeyboardController.cs" />
+    <Compile Include="Input\SteppingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Components\TimeAnimationComponent.cs" />
-    <Compile Include="Components\TimerSceneComponent.cs" />
+    <Compile Include="Object2DComponents\TimeAnimationComponent.cs" />
+    <Compile Include="SceneComponents\TimerComponent.cs" />
+    <Compile Include="UI\MessageWindow.cs" />
     <Compile Include="Unit.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Altseed_core.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nac.Altseed.Components
+namespace Nac.Altseed.Object2DComponents
 {
-	class ShortWiggleComponent : Object2DComponent
+	public class ShortWiggleComponent : Object2DComponent
 	{
 		private Vector2DF amplitude;
 		private Vector2DF frequency;
@@ -37,8 +37,10 @@ namespace Nac.Altseed.Components
 
 		protected override void OnUpdate()
 		{
-			var x = (float)Math.Sin(timeCount / Math.PI * frequency.X) * amplitude.X * (time - timeCount);
-			var y = (float)Math.Sin(timeCount / Math.PI * frequency.Y) * amplitude.Y * (time - timeCount);
+			double phaseT = timeCount * Math.PI * 2;
+            float amplitudeT = 1 - (timeCount / time);
+			var x = (float)Math.Sin(phaseT * frequency.X) * amplitude.X * amplitudeT;
+			var y = (float)Math.Sin(phaseT * frequency.Y) * amplitude.Y * amplitudeT;
 			Owner.Position = Center + new Vector2DF(x, y);
 
 			timeCount += Engine.DeltaTime;

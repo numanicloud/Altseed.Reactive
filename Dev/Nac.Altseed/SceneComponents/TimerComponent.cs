@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 
-namespace Nac.Altseed.Components
+namespace Nac.Altseed.SceneComponents
 {
-    public class TimerSceneComponent : SceneComponent
+    public class TimerComponent : SceneComponent
     {
         private float time;
         private Action callback;
 
-        public TimerSceneComponent(float time, Action callback)
+        public TimerComponent(float time, Action callback)
         {
             this.time = time;
             this.callback = callback;

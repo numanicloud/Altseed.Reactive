@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 
-namespace Nac.Altseed.Components
+namespace Nac.Altseed.Object2DComponents
 {
 	public class TimeAnimationComponent : Object2DComponent
 	{

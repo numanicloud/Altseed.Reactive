@@ -19,6 +19,7 @@ namespace Nac.Altseed.Test
 		public void Run()
 		{
 			Engine.Initialize(name, 640, 480, new EngineOption());
+			Engine.File.AddRootDirectory("Resources");
 
 			OnInitialize();
 

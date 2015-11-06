@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 
-namespace Nac.Altseed.Components
+namespace Nac.Altseed.Object2DComponents
 {
-	static class Object2DComponentFactory
+	public static class Object2DComponentFactory
 	{
 		public static EasingComponent2D<Object2D> CreatePositionEasing(Vector2DF goal, EasingStart start, EasingEnd end, int count, Action callback = null)
 		{

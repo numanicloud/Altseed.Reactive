@@ -9,7 +9,7 @@ namespace Nac.Altseed.Input
     /// <summary>
     /// 選択肢に対する操作を表す列挙体。
     /// </summary>
-	public enum ChoiceControll
+	public enum ChoiceControl
 	{
 		Next, Previous, Decide, Cancel
 	}
@@ -20,11 +20,10 @@ namespace Nac.Altseed.Input
 	/// <typeparam name="TKeyCode">キーの識別子となる型。</typeparam>
 	public class Choice<TAbstractKey>
 	{
-		int size_, selectedIndex_;
-		
-		Controller<TAbstractKey> controller { get; set; }
-		Dictionary<TAbstractKey, ChoiceControll> controlls { get; set; }
-		IList<int> skippedIndex { get; set; }
+		private int size_, selectedIndex_;
+		private Controller<TAbstractKey> controller { get; set; }
+		private Dictionary<TAbstractKey, ChoiceControl> controlls { get; set; }
+		private IList<int> skippedIndex { get; set; }
 
 		/// <summary>
 		/// 選択肢の項目数を取得または設定します。
@@ -87,9 +86,12 @@ namespace Nac.Altseed.Input
 		/// </summary>
 		public bool IsControllerUpdated { get; set; }
 
-		public event Action<int, int> OnSelectionChanged;
 		/// <summary>
 		/// 選択肢間の移動が起きたときに発生するイベント。第１引数は移動前のインデックス、第２引数は移動後のインデックス。
+		/// </summary>
+		public event Action<int, int> OnSelectionChanged;
+		/// <summary>
+		/// ユーザーの操作によって選択肢間の移動が起きたときに発生するイベント。第１引数は移動前のインデックス、第２引数は移動後のインデックス。
 		/// </summary>
 		public event Action<int, int> OnMove;
         /// <summary>
@@ -112,7 +114,7 @@ namespace Nac.Altseed.Input
 			Size = size;
 			this.controller = controller;
 			Loop = false;
-			controlls = new Dictionary<TAbstractKey, ChoiceControll>();
+			controlls = new Dictionary<TAbstractKey, ChoiceControl>();
 			skippedIndex = new List<int>();
             SelectedIndex = 0;
 		}
@@ -120,13 +122,18 @@ namespace Nac.Altseed.Input
         /// <summary>
         /// 指定したキーを指定した選択肢の操作に割り当てます。
         /// </summary>
-        /// <param name="key">操作に割り当てるキー コード。</param>
+        /// <param name="key">操作に割り当てるキー。</param>
         /// <param name="controll">キーに割り当てる操作。</param>
-		public void BindKey(TAbstractKey key, ChoiceControll controll)
+		/// <remarks>同じキーに異なる操作を割り当てると、最後の割り当てで上書きされます。</remarks>
+		public void BindKey(TAbstractKey key, ChoiceControl controll)
 		{
 			controlls[key] = controll;
 		}
 
+		/// <summary>
+		/// 指定したキーへの選択肢の操作の割り当てを解除します。
+		/// </summary>
+		/// <param name="key">割り当てを解除するキー。</param>
 		public void DisbindKey(TAbstractKey key)
 		{
 			controlls.Remove(key);
@@ -159,6 +166,10 @@ namespace Nac.Altseed.Input
             }
 		}
 
+		/// <summary>
+		/// 選択肢の移動の際にスキップする選択肢のインデックスを削除します。
+		/// </summary>
+		/// <param name="index">スキップしないようにする選択肢のインデックス。</param>
 		public void RemoveSkippedIndex(int index)
 		{
 			if(index >= Size || index < 0)
@@ -181,25 +192,26 @@ namespace Nac.Altseed.Input
 			{
 				if (controller.GetState(item) == InputState.Push)
 				{
-					ChoiceControll controll = controlls[item];
+					ChoiceControl controll = controlls[item];
 					switch (controll)
 					{
-						case ChoiceControll.Next:
+						case ChoiceControl.Next:
 							MoveNext();
 							break;
-						case ChoiceControll.Previous:
+						case ChoiceControl.Previous:
 							MovePrevious();
 							break;
-						case ChoiceControll.Decide:
+						case ChoiceControl.Decide:
 							Decide();
 							break;
-						case ChoiceControll.Cancel:
+						case ChoiceControl.Cancel:
 							Cancel();
 							break;
 					}
 				}
 			}
 		}
+
 
 		private bool SelectNextIndex()
 		{
