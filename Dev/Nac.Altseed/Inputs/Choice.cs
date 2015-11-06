@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Nac.Altseed
+namespace Nac.Altseed.Input
 {
     /// <summary>
     /// 選択肢に対する操作を表す列挙体。
@@ -82,6 +82,9 @@ namespace Nac.Altseed
         /// 選択肢間の移動操作をループできるようにするかどうかの真偽値を取得または設定します。
         /// </summary>
 		public bool Loop { get; set; }
+		/// <summary>
+		/// 登録したコントローラーを自動的にUpdateするかどうかの真偽値を取得または設定します。
+		/// </summary>
 		public bool IsControllerUpdated { get; set; }
 
 		public event Action<int, int> OnSelectionChanged;

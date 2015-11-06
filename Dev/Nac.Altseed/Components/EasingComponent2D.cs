@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 
-namespace Nac.Altseed
+namespace Nac.Altseed.Components
 {
-	public class EasingComponent2D2<TObject> : Object2DComponent where TObject : Object2D
+	public class EasingComponent2D<TObject> : Object2DComponent where TObject : Object2D
 	{
 		private TObject typedOwner;
 		private Func<TObject, Vector2DF> getter;
@@ -17,7 +17,14 @@ namespace Nac.Altseed
 		private float[] easing;
 		private Action callback;
 
-		public EasingComponent2D2(Func<TObject, Vector2DF> getter, Action<TObject, Vector2DF> setter, Vector2DF goal, EasingStart start, EasingEnd end, int count, Action callback)
+		public EasingComponent2D(
+			Func<TObject, Vector2DF> getter,
+			Action<TObject, Vector2DF> setter,
+			Vector2DF goal,
+			EasingStart start,
+			EasingEnd end,
+			int count,
+			Action callback = null)
 		{
 			easing = Easing.GetEasingFunction(start, end);
 			lastValue = goal;

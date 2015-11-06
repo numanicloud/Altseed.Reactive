@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 
-namespace Nac.Altseed
+namespace Nac.Altseed.Components
 {
-	public class EasingComponent2<TObject> : Object2DComponent where TObject : Object2D
+	public class EasingComponent<TObject> : Object2DComponent where TObject : Object2D
 	{
-		int count, maxCount;
-		float lastValue;
-		float[] easing;
-		Func<TObject, float> getter;
-		Action<TObject, float> setter;
-		Action callback;
+		private int count, maxCount;
+		private float lastValue;
+		private float[] easing;
+		private Func<TObject, float> getter;
+		private Action<TObject, float> setter;
+		private Action callback;
 
-		public EasingComponent2(
+		public EasingComponent(
 			Func<TObject, float> getter,
 			Action<TObject, float> setter,
 			float goal,
@@ -48,18 +48,6 @@ namespace Nac.Altseed
 				}
 				Vanish();
 			}
-		}
-
-		public static EasingComponent2<Object2D> CreateXEasing(float goal, EasingStart start, EasingEnd end, int count, Action callback = null)
-		{
-			return new EasingComponent2<Object2D>(
-				o => o.Position.X,
-				(o, v) => o.Position = new Vector2DF(v, o.Position.Y),
-				goal,
-				start,
-				end,
-				count,
-				callback);
 		}
 	}
 }

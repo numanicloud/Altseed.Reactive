@@ -43,24 +43,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\EasingCameraComponent.cs" />
     <Compile Include="CenterPosition.cs" />
-    <Compile Include="Choice.cs" />
-    <Compile Include="Component\Easing.cs" />
-    <Compile Include="Component\EasingComponent.cs" />
-    <Compile Include="Component\EasingComponent2.cs" />
-    <Compile Include="Component\EasingComponent2D.cs" />
-    <Compile Include="Component\EasingComponent2D2.cs" />
+    <Compile Include="Components\Object2DComponentFactory.cs" />
+    <Compile Include="Components\CoroutineComponent.cs" />
+    <Compile Include="Components\ShortWiggleComponent.cs" />
+    <Compile Include="Inputs\Choice.cs" />
+    <Compile Include="Components\Easing.cs" />
+    <Compile Include="Components\EasingComponent.cs" />
+    <Compile Include="Components\EasingComponent2D.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="Input\BundleController.cs" />
-    <Compile Include="Input\Controller.cs" />
-    <Compile Include="Input\JoystickController.cs" />
-    <Compile Include="Input\KeyboardController.cs" />
-    <Compile Include="Input\SteppingController.cs" />
+    <Compile Include="Inputs\BundleController.cs" />
+    <Compile Include="Inputs\Controller.cs" />
+    <Compile Include="Inputs\JoystickController.cs" />
+    <Compile Include="Inputs\KeyboardController.cs" />
+    <Compile Include="Inputs\SteppingController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Component\TimeAnimationComponent.cs" />
-    <Compile Include="Component\TimerComponent.cs" />
-    <Compile Include="Component\TimerSceneComponent.cs" />
+    <Compile Include="Components\TimeAnimationComponent.cs" />
+    <Compile Include="Components\TimerSceneComponent.cs" />
+    <Compile Include="Unit.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Altseed_core.dll">
