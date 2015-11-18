@@ -52,6 +52,11 @@ if __name__ == "__main__":
 	shutil.copy(dirname + '/Runtime/Altseed.dll', '../Dev/Nac.Altseed/Altseed.dll')
 	shutil.copy(dirname + '/Runtime/Altseed.xml', '../Dev/Nac.Altseed/Altseed.xml')
 	shutil.copy(dirname + '/Runtime/Altseed_core.dll', '../Dev/Nac.Altseed/Altseed_core.dll')
+	
+	shutil.copy(dirname + '/Runtime/Altseed.dll', '../Dev/Nac.Altseed.Reactive/Altseed.dll')
+	shutil.copy(dirname + '/Runtime/Altseed.xml', '../Dev/Nac.Altseed.Reactive/Altseed.xml')
+	shutil.copy(dirname + '/Runtime/Altseed_core.dll', '../Dev/Nac.Altseed.Reactive/Altseed_core.dll')
+
 	shutil.copy(dirname + '/Runtime/Altseed.dll', '../Dev/Nac.Altseed.Test/Altseed.dll')
 	shutil.copy(dirname + '/Runtime/Altseed.xml', '../Dev/Nac.Altseed.Test/Altseed.xml')
 	shutil.copy(dirname + '/Runtime/Altseed_core.dll', '../Dev/Nac.Altseed.Test/Altseed_core.dll')

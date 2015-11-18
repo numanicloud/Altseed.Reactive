@@ -64,7 +64,7 @@
     <Compile Include="Object2DComponents\Object2DComponentFactory.cs" />
     <Compile Include="SceneComponents\PushingCoroutineComponent.cs" />
     <Compile Include="Object2DComponents\ShortWiggleComponent.cs" />
-    <Compile Include="Input\Choice.cs" />
+    <Compile Include="Choice.cs" />
     <Compile Include="Object2DComponents\Easing.cs" />
     <Compile Include="Object2DComponents\EasingComponent.cs" />
     <Compile Include="Object2DComponents\EasingComponent2D.cs" />
