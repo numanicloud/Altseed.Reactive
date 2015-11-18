@@ -62,11 +62,5 @@ namespace Nac.Altseed.Reactive
                     return center + new Vector2DF(x, y);
                 });
         }
-
-        public static void SetShortWiggle(Object2D obj, Vector2DF center, Vector2DF amplitude, Vector2DF frequency, float time)
-        {
-            ShortWiggle(center, amplitude, frequency, time)
-                .Subscribe(v => obj.Position = v, () => obj.Position = center);
-        }
     }
 }

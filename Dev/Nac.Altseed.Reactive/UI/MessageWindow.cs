@@ -38,14 +38,9 @@ namespace Nac.Altseed.Reactive.UI
 			Controller = controller;
 		}
 
-		public async Task TalkMessageAsync(string[] message)
+		public async Task TalkMessageAsync(params string[] message)
 		{
             await Observable.FromCoroutine(FlowToShowText(message, true));
-		}
-
-		public async Task TalkMessageAsync(string message)
-		{
-			await TalkMessageAsync(new string[] { message });
 		}
 
 		public async Task TalkMessageWithoutReadAsync(string message)
