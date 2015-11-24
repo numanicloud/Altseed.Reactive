@@ -28,14 +28,14 @@ namespace Nac.Altseed.Reactive
         {
             var f = Easing.GetEasingFunction(start, end);
             return source.Select((x, i) => Easing.GetNextValue(x, goal, i, count, f))
-                .Take(count);
+                .Take(count + 1);
         }
 
         public static IObservable<Vector2DF> EasingVector2DF(this IObservable<Vector2DF> source, Vector2DF goal, EasingStart start, EasingEnd end, int count)
         {
             var f = Easing.GetEasingFunction(start, end);
             return source.Select((v, i) => Easing.GetNextValue(v, goal, i, count, f))
-                .Take(count);
+                .Take(count + 1);
         }
 
         public static IObservable<float> CountTime()

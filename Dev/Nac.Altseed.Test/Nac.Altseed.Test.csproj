@@ -63,8 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltseedTest.cs" />
-    <Compile Include="ReactiveTests\MessageWindowTest.cs" />
-    <Compile Include="ReactiveTests\WiggleTest.cs" />
     <Compile Include="Tests\MessageWindowTest.cs" />
     <Compile Include="Tests\ReactiveInputTest.cs" />
     <Compile Include="Program.cs" />
@@ -76,10 +74,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nac.Altseed.Reactive\Nac.Altseed.Reactive.csproj">
-      <Project>{7cd6e31e-b11f-48cd-9288-a34e76f1c56a}</Project>
-      <Name>Nac.Altseed.Reactive</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nac.Altseed\Nac.Altseed.csproj">
       <Project>{173ba38e-1a4c-48a7-8dd9-8cba72c83a13}</Project>
       <Name>Nac.Altseed</Name>
