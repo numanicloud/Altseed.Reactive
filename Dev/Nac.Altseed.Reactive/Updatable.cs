@@ -21,6 +21,7 @@ namespace Nac.Altseed.Reactive
 
         private Updatable()
         {
+            frameUpdate = new Subject<float>();
         }
 
         public void Update()

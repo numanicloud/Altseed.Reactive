@@ -11,20 +11,17 @@ using Nac.Altseed.Reactive.Input;
 
 namespace Nac.Altseed.Reactive.UI
 {
-	public class MessageWindow<TAbstractKey> : TextureObject2D
+	public class MessageWindow : TextureObject2D
 	{
 		private Subject<Unit> onRead_ = new Subject<Unit>();
+        private Func<bool> isReadKeyPushed;
 
 		public TextObject2D TextObject { get; private set; }
 		public TextureObject2D WaitIndicator { get; private set; }
-
-		public Controller<TAbstractKey> Controller { get; set; }
-		public TAbstractKey ReadKey { get; set; }
 		public float TextSpeed { get; set; }
-
 		public IObservable<Unit> OnRead => onRead_;
 
-		public MessageWindow(Controller<TAbstractKey> controller)
+		public MessageWindow()
 		{
 			TextObject = new TextObject2D()
 			{
@@ -35,8 +32,12 @@ namespace Nac.Altseed.Reactive.UI
 				IsDrawn = false,
 			};
 			TextSpeed = 1;
-			Controller = controller;
 		}
+
+        public void SetReadControl<TAbstractKey>(Controller<TAbstractKey> controller, TAbstractKey readKey)
+        {
+            isReadKeyPushed = () => controller.GetState(readKey) == InputState.Push;
+        }
 
 		public async Task TalkMessageAsync(params string[] message)
 		{
@@ -52,6 +53,11 @@ namespace Nac.Altseed.Reactive.UI
 		{
 			TextObject.Text = message;
 		}
+
+        public void Clear()
+        {
+            TextObject.Text = "";
+        }
 
 
 		protected override void OnStart()
@@ -80,7 +86,7 @@ namespace Nac.Altseed.Reactive.UI
 				{
 					charCount += TextSpeed;
 
-					if(Controller.GetState(ReadKey) == InputState.Push)
+					if(isReadKeyPushed?.Invoke() == true)
 					{
 						charCount = message.Length;
 					}
@@ -92,11 +98,11 @@ namespace Nac.Altseed.Reactive.UI
 				if(readKeyIsNecessary)
 				{
 					WaitIndicator.IsDrawn = true;
-					while(Controller.GetState(ReadKey) != InputState.Push)
+					while(isReadKeyPushed?.Invoke() != true)
 					{
 						yield return Unit.Default;
 					}
-					onRead_.OnNext(System.Reactive.Unit.Default);
+					onRead_.OnNext(Unit.Default);
 					WaitIndicator.IsDrawn = false;
 				}
 

@@ -46,6 +46,14 @@ namespace Nac.Altseed.Reactive
                 .Select(x => time);
         }
 
+        public static IObservable<int> CountFrame()
+        {
+            int frame = 0;
+            return Updatable.Instance.FrameUpdate
+                .Do(f => frame++)
+                .Select(x => frame);
+        }
+
         public static IObservable<Vector2DF> ShortWiggle(Vector2DF center, Vector2DF amplitude, Vector2DF frequency, float time)
         {
             return CountTime()

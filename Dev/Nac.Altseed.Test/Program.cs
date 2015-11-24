@@ -12,7 +12,7 @@ namespace Nac.Altseed.Test
 	{
 		static void Main(string[] args)
 		{
-			AltseedTest test = new MessageWindowTest();
+			AltseedTest test = new ReactiveTests.MessageWindowTest();
 			test.Run();
 		}
 	}

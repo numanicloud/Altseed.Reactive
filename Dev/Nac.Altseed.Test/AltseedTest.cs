@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using asd;
+using Nac.Altseed.Reactive;
 
 namespace Nac.Altseed.Test
 {
@@ -18,6 +20,9 @@ namespace Nac.Altseed.Test
 
 		public void Run()
 		{
+            var syncContext = new UpdatableSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(syncContext);
+
 			Engine.Initialize(name, 640, 480, new EngineOption());
 			Engine.File.AddRootDirectory("Resources");
 
@@ -26,7 +31,9 @@ namespace Nac.Altseed.Test
 			while(Engine.DoEvents())
 			{
 				Engine.Update();
-				OnUpdate();
+                Updatable.Instance.Update();
+                OnUpdate();
+                syncContext.Update();
 			}
 
 			OnTerminate();

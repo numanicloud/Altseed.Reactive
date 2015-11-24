@@ -298,13 +298,13 @@ namespace Nac.Altseed.Reactive.Input
 			{
 				return;
 			}
-			
-			OnDecide?.Invoke(SelectedIndex);
+
+            onDecide_.OnNext(SelectedIndex);
 		}
 
 		private void Cancel()
 		{
-			OnCancel.Invoke(SelectedIndex);
+            onCancel_.OnNext(SelectedIndex);
 		}
 	}
 }
