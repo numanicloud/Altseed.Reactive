@@ -7,7 +7,7 @@ using asd;
 using Nac.Altseed.Reactive.Input;
 using Nac.Altseed.Reactive.UI;
 
-namespace Nac.Altseed.Test.ReactiveTests
+namespace Nac.Altseed.Reactive.Test
 {
     class MessageWindowTest : AltseedTest
     {

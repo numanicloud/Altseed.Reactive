@@ -30,7 +30,7 @@ namespace Nac.Altseed.Reactive.Test
 			while(Engine.DoEvents())
 			{
 				Engine.Update();
-                Updatable.Instance.Update();
+                UpdateManager.Instance.Update();
                 OnUpdate();
                 syncContext.Update();
 			}

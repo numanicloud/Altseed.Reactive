@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using asd;
 using Nac.Altseed.Reactive;
 
-namespace Nac.Altseed.Test.ReactiveTests
+namespace Nac.Altseed.Reactive.Test
 {
     class WiggleTest : AltseedTest
     {

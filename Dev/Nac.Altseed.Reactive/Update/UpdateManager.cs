@@ -12,14 +12,14 @@ namespace Nac.Altseed.Reactive
     /// <summary>
     /// Updateされたことを通知するイベントを持つシングルトン クラス。
     /// </summary>
-    public class Updatable
+    public class UpdateManager
     {
-        private static Updatable instance_;
+        private static UpdateManager instance_;
 
         /// <summary>
         /// このクラスのシングルトン オブジェクト。
         /// </summary>
-        public static Updatable Instance => instance_ ?? (instance_ = new Updatable());
+        public static UpdateManager Instance => instance_ ?? (instance_ = new UpdateManager());
 
         private Subject<float> frameUpdate;
 
@@ -28,7 +28,7 @@ namespace Nac.Altseed.Reactive
         /// </summary>
         public IObservable<float> FrameUpdate => frameUpdate;
 
-        private Updatable()
+        private UpdateManager()
         {
             frameUpdate = new Subject<float>();
         }

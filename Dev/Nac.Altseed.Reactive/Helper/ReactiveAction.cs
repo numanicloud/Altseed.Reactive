@@ -38,12 +38,21 @@ namespace Nac.Altseed.Reactive
     {
         public static Cancelable SetEasingX(this Object2D obj, float goal, EasingStart start, EasingEnd end, int count)
         {
-            var disposable = Updatable.Instance.FrameUpdate
+            var disposable = UpdateManager.Instance.FrameUpdate
                 .Select(x => obj.Position.X)
                 .EasingValue(goal, start, end, count)
                 .Subscribe(x => obj.Position = new Vector2DF(x, obj.Position.Y));
             return new Cancelable(disposable);
         }
+
+		public static Cancelable SetEasing(this Object2D obj, Vector2DF goal, EasingStart start, EasingEnd end, int count)
+		{
+			var disposable = UpdateManager.Instance.FrameUpdate
+				.Select(x => obj.Position)
+				.EasingVector2DF(goal, start, end, count)
+				.Subscribe(p => obj.Position = p);
+			return new Cancelable(disposable);
+		}
 
         public static Cancelable SetShortWiggle(this Object2D obj, Vector2DF center, Vector2DF amplitude, Vector2DF frequency, float time)
         {
@@ -58,5 +67,10 @@ namespace Nac.Altseed.Reactive
         {
             return Observable.CountTime().Subscribe(handler);
         }
+
+		public static IDisposable RegisterUpdating(IUpdatable updatable)
+		{
+			return UpdateManager.Instance.FrameUpdate.Subscribe(f => updatable.Update());
+		}
     }
 }

@@ -19,7 +19,7 @@ namespace Nac.Altseed.Reactive
 
         public static IObservable<T> FromCoroutine<T>(IEnumerator<T> coroutine)
         {
-            return Updatable.Instance.FrameUpdate
+            return UpdateManager.Instance.FrameUpdate
                 .TakeWhile(x => coroutine.MoveNext())
                 .Select(x => coroutine.Current);
         }
@@ -41,7 +41,7 @@ namespace Nac.Altseed.Reactive
         public static IObservable<float> CountTime()
         {
             float time = 0;
-            return Updatable.Instance.FrameUpdate
+            return UpdateManager.Instance.FrameUpdate
                 .Do(f => time += f)
                 .Select(x => time);
         }
@@ -49,7 +49,7 @@ namespace Nac.Altseed.Reactive
         public static IObservable<int> CountFrame()
         {
             int frame = 0;
-            return Updatable.Instance.FrameUpdate
+            return UpdateManager.Instance.FrameUpdate
                 .Do(f => frame++)
                 .Select(x => frame);
         }

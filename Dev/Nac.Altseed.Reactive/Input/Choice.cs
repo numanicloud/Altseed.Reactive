@@ -20,25 +20,15 @@ namespace Nac.Altseed.Reactive.Input
 	/// <typeparam name="TKeyCode">キーの識別子となる型。</typeparam>
 	public class Choice<TAbstractKey>
 	{
-        public class MoveIndexEventArg
-        {
-            public int Prev { get; private set; }
-            public int Current { get; private set; }
-
-            public MoveIndexEventArg(int prev, int current)
-            {
-                Prev = prev;
-                Current = current;
-            }
-        }
+		public static readonly int DisabledIndex = -1;
 
 		private int size_, selectedIndex_;
 		private Controller<TAbstractKey> controller { get; set; }
 		private Dictionary<TAbstractKey, ChoiceControl> controlls { get; set; }
 		private IList<int> skippedIndex { get; set; }
 
-        private Subject<MoveIndexEventArg> onSelectionChanged_ { get; set; }
-        private Subject<MoveIndexEventArg> onMove_ { get; set; }
+        private Subject<int> onSelectionChanged_ { get; set; }
+        private Subject<int> onMove_ { get; set; }
         private Subject<int> onDecide_ { get; set; }
         private Subject<int> onCancel_ { get; set; }
 
@@ -54,15 +44,26 @@ namespace Nac.Altseed.Reactive.Input
 				{
 					throw new Exception("Sizeは0以上である必要があります。");
 				}
+
 				size_ = value;
-				if(SelectedIndex >= size_)
+
+				int prev = SelectedIndex;
+				if(size_ == 0)
 				{
-					var prev = SelectedIndex;
-					var result = SelectPreviousIndex();
-					if(result)
-					{
-                        onSelectionChanged_.OnNext(new MoveIndexEventArg(prev, SelectedIndex));
-					}
+					SelectedIndex = DisabledIndex;
+				}
+				else if(SelectedIndex == DisabledIndex)
+				{
+					SelectNextIndex();
+				}
+				else if(SelectedIndex >= size_)
+				{
+					SelectPreviousIndex();
+				}
+
+				if(prev != SelectedIndex)
+				{
+					onSelectionChanged_.OnNext(SelectedIndex);
 				}
 			}
 		}
@@ -80,7 +81,7 @@ namespace Nac.Altseed.Reactive.Input
 				{
 					selectedIndex_ = 0;
 				}
-				else if(selectedIndex_ >= Size)
+				if(selectedIndex_ >= Size)	// Size = 0 のときは -1 に戻す
 				{
 					selectedIndex_ = Size - 1;
 				}
@@ -90,7 +91,7 @@ namespace Nac.Altseed.Reactive.Input
 				}
 				if(prev != selectedIndex_)
 				{
-                    onSelectionChanged_.OnNext(new MoveIndexEventArg(prev, selectedIndex_));
+                    onSelectionChanged_.OnNext(selectedIndex_);
 				}
 			}
 		}
@@ -103,8 +104,8 @@ namespace Nac.Altseed.Reactive.Input
 		/// </summary>
 		public bool IsControllerUpdated { get; set; }
 
-        public IObservable<MoveIndexEventArg> OnSelectionChanged => onSelectionChanged_;
-        public IObservable<MoveIndexEventArg> OnMove => onMove_;
+        public IObservable<int> OnSelectionChanged => onSelectionChanged_;
+        public IObservable<int> OnMove => onMove_;
         public IObservable<int> OnDecide => onDecide_;
         public IObservable<int> OnCancel => onCancel_;
 
@@ -156,19 +157,16 @@ namespace Nac.Altseed.Reactive.Input
 			}
 			skippedIndex.Add(index);
 
-            while (skippedIndex.Contains(SelectedIndex))
+            if(skippedIndex.Contains(SelectedIndex))
             {
 				var prev = SelectedIndex;
-				var successToMove = SelectNextIndex();
+				var successToMove = SelectNextIndex() || SelectPreviousIndex();
 				if(!successToMove)
 				{
-					successToMove = SelectPreviousIndex();
+					SelectedIndex = DisabledIndex;
 				}
-				if(successToMove)
-				{
-                    onSelectionChanged_.OnNext(new MoveIndexEventArg(prev, SelectedIndex));
-				}
-            }
+				onSelectionChanged_.OnNext(SelectedIndex);
+			}
 		}
 
 		/// <summary>
@@ -182,6 +180,15 @@ namespace Nac.Altseed.Reactive.Input
 				throw new ArgumentException("indexの範囲が不正です index=" + index, "index");
 			}
 			skippedIndex.Remove(index);
+
+			if(SelectedIndex == DisabledIndex)
+			{
+				var successToMove = SelectNextIndex();
+				if(successToMove)
+				{
+					onSelectionChanged_.OnNext(SelectedIndex);
+				}
+			}
 		}
 
         /// <summary>
@@ -272,23 +279,31 @@ namespace Nac.Altseed.Reactive.Input
 
 		private void MoveNext()
 		{
-			var prev = SelectedIndex;
+			if(Size == 0)
+			{
+				return;
+			}
+			
 			var result = SelectNextIndex();
 			if(result)
 			{
-                onMove_.OnNext(new MoveIndexEventArg(prev, SelectedIndex));
-				onSelectionChanged_.OnNext(new MoveIndexEventArg(prev, SelectedIndex));
+                onMove_.OnNext(SelectedIndex);
+				onSelectionChanged_.OnNext(SelectedIndex);
 			}
 		}
 
 		private void MovePrevious()
 		{
-			var prev = SelectedIndex;
+			if(Size == 0)
+			{
+				return;
+			}
+			
 			var result = SelectPreviousIndex();
 			if(result)
             {
-                onMove_.OnNext(new MoveIndexEventArg(prev, SelectedIndex));
-                onSelectionChanged_.OnNext(new MoveIndexEventArg(prev, SelectedIndex));
+                onMove_.OnNext(SelectedIndex);
+                onSelectionChanged_.OnNext(SelectedIndex);
             }
 		}
 

@@ -12,7 +12,7 @@ namespace Nac.Altseed.Reactive.Input
     {
         public static IObservable<Unit> ObserveKeyState<TAbstractKey>(this Controller<TAbstractKey> controller, TAbstractKey key, InputState state)
         {
-            return Updatable.Instance.FrameUpdate
+            return UpdateManager.Instance.FrameUpdate
                 .Where(x => controller.GetState(key) == state)
                 .Select(x => Unit.Default);
         }
