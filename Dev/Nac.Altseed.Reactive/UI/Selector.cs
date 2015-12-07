@@ -170,6 +170,11 @@ namespace Nac.Altseed.Reactive.UI
 			choiceSystem.BindKey(cancel, ChoiceControl.Cancel);
 		}
 
+		public Object2D GetItemForChocie(TChoice choice)
+		{
+			return choiceItems_.Find(x => x.Choice.Equals(choice))?.Item;
+		}
+
         
         protected override void OnUpdate()
         {

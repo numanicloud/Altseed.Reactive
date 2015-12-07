@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using asd;
 
 namespace Nac.Altseed.Reactive
 {
@@ -28,5 +29,35 @@ namespace Nac.Altseed.Reactive
 			}
 			return -1;
 		}
-    }
+
+		public static RectF ToFloat(this RectI rect)
+		{
+			return new RectF(rect.X, rect.Y, rect.Width, rect.Height);
+		}
+
+		public static RectI ToInt(this RectF rect)
+		{
+			return new RectI((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+		}
+
+		public static RectI WithX(this RectI rect, int x)
+		{
+			return new RectI(x, rect.Y, rect.Width, rect.Height);
+		}
+
+		public static RectI WithY(this RectI rect, int y)
+		{
+			return new RectI(rect.X, y, rect.Width, rect.Height);
+		}
+
+		public static RectI GetRectFromVector(Vector2DI position, Vector2DI size)
+		{
+			return new RectI(position.X, position.Y, size.X, size.Y);
+		}
+
+		public static RectF ShiftRect(RectF source, Vector2DF shift)
+		{
+			return new RectF(source.X + shift.X, source.Y + shift.Y, source.Width, source.Height);
+		}
+	}
 }

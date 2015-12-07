@@ -10,7 +10,7 @@ namespace Nac.Altseed.Reactive.Test
     {
         static void Main(string[] args)
         {
-            AltseedTest test = new CollectionBinderTest();
+            AltseedTest test = new ScrollTest();
             test.Run();
         }
     }

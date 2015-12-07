@@ -50,13 +50,21 @@ namespace Nac.Altseed.Reactive.Test
 		{
 		}
 
-        protected KeyboardController<Control> CreateController()
+        protected Controller<Control> CreateController()
         {
             var controller = new KeyboardController<Control>();
             controller.BindDirection(Control.Left, Control.Right, Control.Up, Control.Down);
             controller.BindKey(Keys.Z, Control.Decide);
             controller.BindKey(Keys.X, Control.Cancel);
-            return controller;
+
+			var stepping = new SteppingController<Control>(controller);
+			stepping.IsChildUpdated = true;
+			stepping.EnableSteppingHold(Control.Down, 10, 7);
+			stepping.EnableSteppingHold(Control.Up, 10, 7);
+			stepping.EnableSteppingHold(Control.Left, 10, 7);
+			stepping.EnableSteppingHold(Control.Right, 10, 7);
+
+			return stepping;
         }
 	}
 }
