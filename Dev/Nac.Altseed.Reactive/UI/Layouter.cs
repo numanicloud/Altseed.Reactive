@@ -10,7 +10,9 @@ namespace Nac.Altseed.Reactive.UI
     public abstract class Layouter : TextureObject2D
     {
         public abstract void AddItem(Object2D obj);
+        public abstract void InsertItem(int index, Object2D obj);
         public abstract void RemoveItem(Object2D obj);
+        public abstract void ClearItem();
         protected abstract IEnumerable<Object2D> ObjectsInternal { get; }
 
         protected override void OnUpdate()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
@@ -36,7 +37,8 @@ namespace Nac.Altseed.Reactive.UI
 		private Choice<TAbstractKey> choiceSystem;
 		private IDisposable cancellationOfCursorMoving = null;
 		private Vector2DF cursorOffset_ = new Vector2DF();
-        private bool IsRevising = false;
+        private BooleanDisposable revisingStatus;
+        private Layouter layout;
 
 		public bool IsActive { get; set; }
 		public int SelectedIndex { get; private set; }
@@ -59,7 +61,7 @@ namespace Nac.Altseed.Reactive.UI
 				}
 			}
 		}
-		public Func<Object2D, Vector2DF, CancellationToken, Task> SetCursorPosition { get; set; }
+		public Func<Object2D, Object2D, IObservable<Vector2DF>> SetCursorPosition { get; set; }
         public bool IsControllerUpdated
         {
             get { return choiceSystem.IsControllerUpdated; }
@@ -71,59 +73,94 @@ namespace Nac.Altseed.Reactive.UI
             set { choiceSystem.Loop = value; }
         }
 
-        public Selector(Controller<TAbstractKey> controller)
+        public Selector(Controller<TAbstractKey> controller, Layouter layout)
 		{
-			IsActive = false;
+			IsActive = true;
             IsDrawn = false;
+            revisingStatus = new BooleanDisposable();
+            revisingStatus.Dispose();
+            this.layout = layout;
 
 			choiceSystem = new Choice<TAbstractKey>(0, controller);
 			OnSelectionChanged = choiceSystem.OnSelectionChanged
-                .Where(x => !IsRevising)
+                .Where(x => revisingStatus.IsDisposed)
+                .Where(x => x >= 0)
                 .Select(e => choiceItems_[e].Choice);
-			OnMove = choiceSystem.OnMove.Select(e => choiceItems_[e].Choice);
-			OnDecide = choiceSystem.OnDecide.Select(e => choiceItems_[e].Choice);
-			OnCancel = choiceSystem.OnCancel.Select(e => choiceItems_[e].Choice);
+			OnMove = choiceSystem.OnMove
+                .Where(x => x >= 0)
+                .Select(e => choiceItems_[e].Choice);
+			OnDecide = choiceSystem.OnDecide
+                .Where(x => x >= 0)
+                .Select(e => choiceItems_[e].Choice);
+			OnCancel = choiceSystem.OnCancel
+                .Where(x => x >= 0)
+                .Select(e => choiceItems_[e].Choice);
 
 			choiceSystem.OnSelectionChanged.Subscribe(OnSelectionChangedHandler);
 			SelectedIndex = choiceSystem.SelectedIndex;
-
-            SetCursorPosition = async (o, p, c) =>
+            
+            SetCursorPosition = (o, target) =>
             {
-                var completion = new TaskCompletionSource<Unit>();
-                await UpdateManager.Instance.FrameUpdate
-                  .Select(u => o.Position)
-                  .EasingVector2DF(p, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10)
-                  .Do(v => o.Position = v);
+                var f = Easing.GetEasingFunction(EasingStart.StartRapidly2, EasingEnd.EndSlowly3);
+                return UpdateManager.Instance.FrameUpdate
+                    .Select(u => o.Position)  
+                    .Select((v, i) => Easing.GetNextValue(v, target.Position, i, 10, f))
+                    .Take(11);
             };
         }
 
+
 		public void AddChoice(TChoice choice, Object2D item)
 		{
+            layout.AddItem(item);
 			choiceItems_.Add(new ChoiceItem(choice, item));
 			choiceSystem.Size++;
 		}
 
-		public bool RemoveChoice(TChoice choice)
+        public void InsertChoice(int index, TChoice choice, Object2D item)
+        {
+            layout.InsertItem(index, item);
+            choiceItems_.Insert(index, new ChoiceItem(choice, item));
+            if(index <= SelectedIndex)
+            {
+                using(revisingStatus = new BooleanDisposable())
+                {
+                    choiceSystem.SelectedIndex++;
+                }
+            }
+            choiceSystem.Size++;
+        }
+
+		public Object2D RemoveChoice(TChoice choice)
 		{
 			var index = choiceItems_.IndexOf(c => c.Choice.Equals(choice));
-			if(index != -1)
+            var item = choiceItems_[index].Item;
+            layout.RemoveItem(item);
+            if(index != -1)
 			{
 				choiceItems_.RemoveAt(index);
                 if(index <= SelectedIndex)
                 {
-                    IsRevising = true;
-                    choiceSystem.SelectedIndex--;
-                    IsRevising = false;
+                    using(revisingStatus = new BooleanDisposable())
+                    {
+                        choiceSystem.SelectedIndex--;
+                    }
                 }
                 choiceSystem.Size--;
-                Console.WriteLine($"Removed, Current:{SelectedIndex}");
-				return true;
+				return item;
 			}
 			else
 			{
-				return false;
+				return null;
 			}
 		}
+
+        public void ClearChoice()
+        {
+            layout.ClearItem();
+            choiceItems_.Clear();
+            choiceSystem.Size = 0;
+        }
 
 		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
 		{
@@ -132,6 +169,7 @@ namespace Nac.Altseed.Reactive.UI
 			choiceSystem.BindKey(decide, ChoiceControl.Decide);
 			choiceSystem.BindKey(cancel, ChoiceControl.Cancel);
 		}
+
         
         protected override void OnUpdate()
         {
@@ -174,7 +212,7 @@ namespace Nac.Altseed.Reactive.UI
                 }
                 else
                 {
-                    MoveCursor(choiceItems_[index].Item.Position);
+                    MoveCursor(choiceItems_[index].Item);
                 }
 			}
 			else
@@ -185,10 +223,11 @@ namespace Nac.Altseed.Reactive.UI
 			SelectedIndex = choiceSystem.SelectedIndex;
 		}
 
-		private void MoveCursor(Vector2DF position)
+		private void MoveCursor(Object2D obj)
 		{
 			cancellationOfCursorMoving?.Dispose();
-			cancellationOfCursorMoving = SetCursorPosition(this, position + CursorOffset);
+			cancellationOfCursorMoving = SetCursorPosition?.Invoke(this, obj)
+                .Subscribe(p => Position = p, () => cancellationOfCursorMoving = null);
 		}
 	}
 }

@@ -74,7 +74,6 @@
     <Compile Include="UI\CollectionBinderForSelector.cs" />
     <Compile Include="UI\ISelectableList.cs" />
     <Compile Include="UI\Layouter.cs" />
-    <Compile Include="UI\Menu.cs" />
     <Compile Include="UI\LinearPanel.cs" />
     <Compile Include="Update\IUpdatable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

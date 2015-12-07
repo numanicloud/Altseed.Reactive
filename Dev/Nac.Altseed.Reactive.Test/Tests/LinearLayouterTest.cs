@@ -36,7 +36,7 @@ namespace Nac.Altseed.Reactive.Test
 
         protected override void OnUpdate()
         {
-            if(Engine.Keyboard.GetKeyState(Keys.Enter) == KeyState.Push)
+            if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
             {
                 var obj = new TextObject2D()
                 {
@@ -46,9 +46,45 @@ namespace Nac.Altseed.Reactive.Test
                 layout.AddItem(obj);
                 Engine.AddObject2D(obj);
             }
-            if(Engine.Keyboard.GetKeyState(Keys.Escape) == KeyState.Push)
+            else if(Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push && layout.Objects.Skip(3).Any())
             {
-                layout.Objects.Skip(2).FirstOrDefault()?.Vanish();
+                var obj = new TextObject2D()
+                {
+                    Font = font,
+                    Text = "挿入アイテム",
+                };
+                layout.InsertItem(3, obj);
+                Engine.AddObject2D(obj);
+            }
+
+            if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == KeyState.Hold)
+            {
+                if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+                {
+                    var item = layout.Objects.Skip(2).FirstOrDefault();
+                    if(item != null)
+                    {
+                        layout.RemoveItem(item);
+                    }
+                }
+                else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+                {
+                    layout.ClearItem();
+                }
+            }
+            else
+            {
+                if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+                {
+                    layout.Objects.Skip(2).FirstOrDefault()?.Vanish();
+                }
+                else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+                {
+                    foreach(var item in layout.Objects)
+                    {
+                        item.Vanish();
+                    }
+                }
             }
         }
     }

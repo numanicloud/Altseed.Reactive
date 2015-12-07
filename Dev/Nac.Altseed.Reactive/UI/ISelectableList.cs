@@ -9,7 +9,8 @@ namespace Nac.Altseed.Reactive.UI
 {
     public interface ISelectableList<TChoice>
     {
+        Layer2D Layer { get; }
         void AddChoice(TChoice choice, Object2D obj);
-        bool RemoveChoice(TChoice choice);
+        Object2D RemoveChoice(TChoice choice);
     }
 }

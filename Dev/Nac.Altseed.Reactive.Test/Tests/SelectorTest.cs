@@ -28,6 +28,9 @@ namespace Nac.Altseed.Reactive.Test
                 Color = new Color(240, 196, 90, 255);
             }
         }
+
+        Selector<int, int> selector;
+        Font font;
         
         protected override void OnStart()
         {
@@ -37,24 +40,24 @@ namespace Nac.Altseed.Reactive.Test
             controller.BindKey(Keys.Z, 2);
             controller.BindKey(Keys.X, 3);
 
-            var selector = new Selector<int, int>(controller);
+            var layout = new LinearPanel()
+            {
+                ItemSpan = new Vector2DF(0, 36),
+            };
+            selector = new Selector<int, int>(controller, layout);
             selector.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
             selector.BindKey(0, 1, 2, 3);
             Engine.AddObject2D(selector);
             selector.Loop = true;
-            selector.IsActive = true;
 
-            var font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 255, 255, 255), 0, new Color(0, 0, 0, 255));
-            var itemList = new List<ListItem>();
+            font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 255, 255, 255), 0, new Color(0, 0, 0, 255));
             for(int i = 0; i < 8; i++)
             {
                 var obj = new ListItem()
                 {
                     Text = $"選択肢{i}",
                     Font = font,
-                    Position = new Vector2DF(10, 10 + i * 36),
                 };
-                itemList.Add(obj);
                 Engine.AddObject2D(obj);
                 selector.AddChoice(i, obj);
             }
@@ -67,12 +70,67 @@ namespace Nac.Altseed.Reactive.Test
             selector.OnDecide.Subscribe(i =>
             {
                 Engine.Sound.Play(decideSound);
-                selector.IsActive = false;
             });
             selector.OnCancel.Subscribe(i =>
             {
-                selector.ChoiceItems.Skip(2).FirstOrDefault()?.Item.Vanish();
+                Engine.Sound.Play(cancelSound);
             });
+        }
+
+        protected override void OnUpdate()
+        {
+            if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
+            {
+                var index = selector.ChoiceItems.Any() ? selector.ChoiceItems.Max(x => x.Choice) + 1 : 0;
+                var obj = new ListItem()
+                {
+                    Font = font,
+                    Text = $"追加アイテム{index}",
+                };
+                selector.AddChoice(index, obj);
+                Engine.AddObject2D(obj);
+            }
+            else if(selector.ChoiceItems.Skip(3).Any() && Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push)
+            {
+                int index = selector.ChoiceItems.Max(x => x.Choice) + 1;
+                var obj = new ListItem()
+                {
+                    Font = font,
+                    Text = $"挿入アイテム{index}",
+                };
+                selector.InsertChoice(3, index, obj);
+                Engine.AddObject2D(obj);
+            }
+
+            if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == KeyState.Hold)
+            {
+                if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+                {
+                    var item = selector.ChoiceItems.Skip(3).FirstOrDefault()?.Choice;
+                    if(item.HasValue)
+                    {
+                        selector.RemoveChoice(item.Value);
+                    }
+                }
+                else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+                {
+                    selector.ClearChoice();
+                }
+            }
+            else
+            {
+                if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+                {
+                    selector.ChoiceItems.Skip(3).FirstOrDefault()?.Item.Vanish();
+                }
+                else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+                {
+                    foreach(var item in selector.ChoiceItems)
+                    {
+                        item.Item.Vanish();
+                    }
+                }
+            }
         }
     }
 }

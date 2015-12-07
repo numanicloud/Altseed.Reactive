@@ -30,13 +30,15 @@ namespace Nac.Altseed.Reactive.UI
                 {
                     var obj = ChoiceToItem(choice);
                     list.AddChoice(choice, obj);
+                    list.Layer.AddObject(obj);
                 }
             }
             else if(e.Action == NotifyCollectionChangedAction.Remove)
             {
                 foreach(TChoice choice in e.OldItems)
                 {
-                    list.RemoveChoice(choice);
+                    var item = list.RemoveChoice(choice);
+                    item?.Vanish();
                 }
             }
         }
@@ -46,9 +48,15 @@ namespace Nac.Altseed.Reactive.UI
             notifier.CollectionChanged -= Notifier_CollectionChanged;
         }
 
-        public static IDisposable Bind(ISelectableList<TChoice> list, INotifyCollectionChanged notifier)
+        public static IDisposable Bind(
+            ISelectableList<TChoice> list,
+            INotifyCollectionChanged notifier,
+            Func<TChoice, Object2D> choiceToItem)
         {
-            return new CollectionBinderForSelector<TChoice>(list, notifier);
+            return new CollectionBinderForSelector<TChoice>(list, notifier)
+            {
+                ChoiceToItem = choiceToItem
+            };
         }
     }
 }
