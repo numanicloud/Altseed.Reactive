@@ -5,27 +5,26 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using asd;
+using Nac.Altseed.Reactive.Input;
 
 namespace Nac.Altseed.Reactive.Test
 {
+    enum Control
+    {
+        Left, Right, Up, Down, Decide, Cancel
+    }
+
 	class AltseedTest
 	{
-		private string name;
-
-		public AltseedTest(string name)
-		{
-			this.name = name;
-		}
-
 		public void Run()
 		{
             var syncContext = new UpdatableSynchronizationContext();
             SynchronizationContext.SetSynchronizationContext(syncContext);
 
-			Engine.Initialize(name, 640, 480, new EngineOption());
+			Engine.Initialize(this.GetType().Name, 640, 480, new EngineOption());
 			Engine.File.AddRootDirectory("Resources");
 
-			OnInitialize();
+			OnStart();
 
 			while(Engine.DoEvents())
 			{
@@ -47,8 +46,17 @@ namespace Nac.Altseed.Reactive.Test
 		{
 		}
 
-		protected virtual void OnInitialize()
+		protected virtual void OnStart()
 		{
 		}
+
+        protected KeyboardController<Control> CreateController()
+        {
+            var controller = new KeyboardController<Control>();
+            controller.BindDirection(Control.Left, Control.Right, Control.Up, Control.Down);
+            controller.BindKey(Keys.Z, Control.Decide);
+            controller.BindKey(Keys.X, Control.Cancel);
+            return controller;
+        }
 	}
 }

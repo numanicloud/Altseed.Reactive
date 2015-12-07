@@ -65,7 +65,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\EasingTest.cs" />
+    <Compile Include="Tests\LinearLayouterTest.cs" />
+    <Compile Include="Tests\MenuTest.cs" />
     <Compile Include="Tests\MessageWindowTest.cs" />
+    <Compile Include="Tests\SelectorTest.cs" />
     <Compile Include="Tests\WiggleTest.cs" />
   </ItemGroup>
   <ItemGroup>

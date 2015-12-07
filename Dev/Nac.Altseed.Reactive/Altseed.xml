@@ -14,6 +14,11 @@
             描画に使用するデバイス
             </summary>
         </member>
+        <member name="F:asd.EngineOption.WindowPosition">
+            <summary>
+            ウインドウの初期配置
+            </summary>
+        </member>
         <member name="F:asd.EngineOption.IsReloadingEnabled">
             <summary>
             リソースの再読み込みを有効にするかどうか?
@@ -144,6 +149,15 @@
             <summary>
             タイトルを設定する。
             </summary>
+        </member>
+        <member name="P:asd.Engine.ReferenceCount">
+            <summary>
+            内部の参照数を取得する。
+            </summary>
+            <remarks>
+            内部オブジェクト間の参照の数を取得する。
+            正しく内部オブジェクトが破棄されているか調査するためのデバッグ用である。
+            </remarks>
         </member>
         <member name="P:asd.Engine.DeltaTime">
             <summary>
@@ -655,6 +669,11 @@
             <param name="writingDirection">描画方向 </param>
             <returns>文字の描画領域 </returns>
         </member>
+        <member name="T:asd.Graphics">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:asd.Graphics.CreateTexture2D(System.String)">
             <summary>
             テクスチャを生成する。
@@ -680,6 +699,16 @@
             <param name="height">縦幅</param>
             <param name="format">フォーマット</param>
             <returns>テクスチャ</returns>
+        </member>
+        <member name="M:asd.Graphics.CreateEditableTexture2D(System.String)">
+            <summary>
+            編集可能なテクスチャを生成する。
+            </summary>
+            <param name="path">パス</param>
+            <returns>テクスチャ</returns>
+            <remarks>
+            読み込める画像形式はPNGのみ。
+            </remarks>
         </member>
         <member name="M:asd.Graphics.CreateRenderTexture2D(System.Int32,System.Int32,asd.TextureFormat)">
             <summary>
@@ -828,25 +857,19 @@
             <param name="path">パス</param>
             <returns>画像パッケージ</returns>
         </member>
+        <member name="P:asd.Graphics.GraphicsDeviceType">
+            <summary>
+            描画ランタイムの種類を取得する。
+            </summary>
+        </member>
         <member name="P:asd.Graphics.DrawCallCount">
             <summary>
             1フレーム間に実行された描画命令の回数を取得する。
             </summary>
-            <remarks>
-            現在、エフェクトの描画回数はカウントされない。
-            </remarks>
         </member>
         <member name="P:asd.Graphics.UsedVRAMSize">
             <summary>
             現在使用済みのVRAM容量を取得する。
-            </summary>
-            <remarks>
-            値は推測値である。
-            </remarks>
-        </member>
-        <member name="P:asd.Graphics.GraphicsDeviceType">
-            <summary>
-            描画ランタイムの種類を取得する。
             </summary>
         </member>
         <member name="T:asd.ImagePackage">
@@ -1469,6 +1492,14 @@
             </summary>
             <param name="name">素材名 </param>
             <returns>素材インデックス </returns>
+        </member>
+        <member name="M:asd.Terrain3D.SetCliffTexture(asd.Texture2D,asd.Texture2D,asd.Texture2D)">
+            <summary>
+            
+            </summary>
+            <param name="diffuseTexture"></param>
+            <param name="normalTexture"></param>
+            <param name="metalnessTexture"></param>
         </member>
         <member name="M:asd.Terrain3D.AssignSurfaceWithCircle(System.Int32,System.Single,System.Single,System.Single,System.Single,System.Single)">
             <summary>
@@ -2739,6 +2770,11 @@
             <summary>
             カメラが描画した結果をテクスチャとして取得する。
             </summary>
+        </member>
+        <member name="P:asd.CameraObject2D.TextureFilterType">
+            <summary>
+             カメラが描画した結果を描画する際のテクスチャフィルタを取得または設定する。
+             </summary>
         </member>
         <member name="M:asd.EffectObject2D.Play">
             <summary>
@@ -4019,7 +4055,7 @@
             オーバーライドして、このシーンから別のシーンに切り替わる際に実行される処理を記述する。
             </summary>
         </member>
-        <member name="M:asd.Scene.OnDestroy">
+        <member name="M:asd.Scene.OnDispose">
             <summary>
             オーバーライドして、このシーンが無条件に破棄される際に実行される処理を記述する。
             </summary>
@@ -4513,13 +4549,6 @@
             <param name="isDecompressed">解凍するか?</param>
             <returns>音源</returns>
         </member>
-        <member name="M:asd.Sound.IsPlaying(System.Int32)">
-            <summary>
-            音が再生中か、取得する。
-            </summary>
-            <param name="id">ID</param>
-            <returns>再生中か?</returns>
-        </member>
         <member name="M:asd.Sound.Play(asd.SoundSource)">
             <summary>
             音を再生する。 
@@ -4624,6 +4653,21 @@
         <member name="P:asd.SoundSource.Length">
             <summary>
             音の長さを取得する。
+            </summary>
+        </member>
+        <member name="P:asd.SoundSource.IsPlaybackSpeedEnabled">
+            <summary>
+            再生速度変更するかを取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.SoundSource.PlaybackSpeed">
+            <summary>
+            再生速度を取得または設定する。
+            </summary>
+        </member>
+        <member name="P:asd.SoundSource.PanningPosition">
+            <summary>
+            パン位置を取得または設定する。
             </summary>
         </member>
         <member name="T:asd.swig.VectorUint8.VectorUint8Enumerator">
@@ -4965,6 +5009,21 @@
         <member name="F:asd.GraphicsDeviceType.OpenGL">
             <summary>
             OpenGL. 
+            </summary>
+        </member>
+        <member name="T:asd.WindowPositionType">
+            <summary>
+            ウインドウ表示位置 
+            </summary>
+        </member>
+        <member name="F:asd.WindowPositionType.Default">
+            <summary>
+            OSによる自動選択 
+            </summary>
+        </member>
+        <member name="F:asd.WindowPositionType.Centering">
+            <summary>
+            プライマリモニタの中央 
             </summary>
         </member>
         <member name="T:asd.Object2DType">

@@ -27,10 +27,10 @@ namespace Nac.Altseed.Reactive.Input
 		private Dictionary<TAbstractKey, ChoiceControl> controlls { get; set; }
 		private IList<int> skippedIndex { get; set; }
 
-        private Subject<int> onSelectionChanged_ { get; set; }
-        private Subject<int> onMove_ { get; set; }
-        private Subject<int> onDecide_ { get; set; }
-        private Subject<int> onCancel_ { get; set; }
+        private Subject<int> onSelectionChanged_ { get; set; } = new Subject<int>();
+        private Subject<int> onMove_ { get; set; } = new Subject<int>();
+        private Subject<int> onDecide_ { get; set; } = new Subject<int>();
+        private Subject<int> onCancel_ { get; set; } = new Subject<int>();
 
 		/// <summary>
 		/// 選択肢の項目数を取得または設定します。
@@ -117,11 +117,11 @@ namespace Nac.Altseed.Reactive.Input
         /// <param name="keyIsHold">特定のキーが押下されているかどうかを取得するデリゲート。</param>
 		public Choice(int size, Controller<TAbstractKey> controller)
 		{
-			Size = size;
 			this.controller = controller;
-			Loop = false;
 			controlls = new Dictionary<TAbstractKey, ChoiceControl>();
 			skippedIndex = new List<int>();
+			Size = size;
+			Loop = false;
             SelectedIndex = 0;
 		}
 
@@ -220,6 +220,7 @@ namespace Nac.Altseed.Reactive.Input
 							Cancel();
 							break;
 					}
+                    break;
 				}
 			}
 		}

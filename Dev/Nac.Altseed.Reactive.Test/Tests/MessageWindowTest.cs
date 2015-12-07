@@ -11,11 +11,7 @@ namespace Nac.Altseed.Reactive.Test
 {
     class MessageWindowTest : AltseedTest
     {
-        public MessageWindowTest() : base("MessageWindow")
-        {
-        }
-
-        protected override async void OnInitialize()
+        protected override async void OnStart()
         {
             var controller = new KeyboardController<int>();
             controller.BindKey(Keys.Z, 0);

@@ -39,11 +39,11 @@ if __name__ == "__main__":
 	os.chdir(os.path.dirname(os.path.abspath(__file__)))
 	os.chdir("../Lib")
 	
-	dirname = "Altseed_CS_20150906_WIN"
+	dirname = "Altseed_CS_20151114_WIN"
 	rmdir(dirname)
 	
 	print('Altseedをダウンロードします')
-	download("https://github.com/altseed/Altseed/releases/download/20150906/" + dirname + ".zip", "Altseed.zip")
+	download("https://github.com/altseed/Altseed/releases/download/20151114/" + dirname + ".zip", "Altseed.zip")
 	
 	print('展開します')
 	unzip('Altseed.zip')

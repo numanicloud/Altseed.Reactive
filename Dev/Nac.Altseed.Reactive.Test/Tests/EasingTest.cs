@@ -10,11 +10,7 @@ namespace Nac.Altseed.Reactive.Test
 {
     class EasingTest : AltseedTest
     {
-        public EasingTest() : base("Easing")
-        {
-        }
-
-        protected override void OnInitialize()
+        protected override void OnStart()
         {
             AddObject(new Vector2DF(50, 50), EasingStart.Start, EasingEnd.End);
             AddObject(new Vector2DF(50, 150), EasingStart.StartRapidly2, EasingEnd.EndSlowly2);

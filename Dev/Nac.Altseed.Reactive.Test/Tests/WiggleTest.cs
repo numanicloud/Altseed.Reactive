@@ -13,12 +13,8 @@ namespace Nac.Altseed.Reactive.Test
         private Vector2DF center;
         private TextureObject2D obj;
         private Cancelable cancel;
-
-        public WiggleTest() : base("Wiggle")
-        {
-        }
-
-        protected override void OnInitialize()
+        
+        protected override void OnStart()
         {
             center = new Vector2DF(320, 240);
             obj = new TextureObject2D()

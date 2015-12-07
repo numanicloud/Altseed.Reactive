@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using asd;
 using Nac.Altseed.Reactive.Input;
@@ -17,7 +18,7 @@ namespace Nac.Altseed.Reactive.UI
 		void Disactivate();
 	}
 
-	public class Selector<TChoice, TAbstractKey> : IUpdatable
+	public class Selector<TChoice, TAbstractKey> : TextureObject2D, ISelectableList<TChoice>
 	{
 		public class ChoiceItem
 		{
@@ -33,8 +34,9 @@ namespace Nac.Altseed.Reactive.UI
 
 		private List<ChoiceItem> choiceItems_ = new List<ChoiceItem>();
 		private Choice<TAbstractKey> choiceSystem;
-		private Cancelable cancellationOfCursorMoving = null;
+		private IDisposable cancellationOfCursorMoving = null;
 		private Vector2DF cursorOffset_ = new Vector2DF();
+        private bool IsRevising = false;
 
 		public bool IsActive { get; set; }
 		public int SelectedIndex { get; private set; }
@@ -43,8 +45,7 @@ namespace Nac.Altseed.Reactive.UI
 		public IObservable<TChoice> OnDecide { get; set; }
 		public IObservable<TChoice> OnCancel { get; set; }
 		public IReadOnlyList<ChoiceItem> ChoiceItems => choiceItems_;
-
-		public TextureObject2D Cursor { get; private set; }
+        
 		public Vector2DF CursorOffset
 		{
 			get { return cursorOffset_; }
@@ -54,20 +55,31 @@ namespace Nac.Altseed.Reactive.UI
 				if(choiceSystem.SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
 				{
 					cancellationOfCursorMoving?.Dispose();
-					Cursor.Position = choiceItems_[choiceSystem.SelectedIndex].Item.Position + cursorOffset_;
+					Position = choiceItems_[choiceSystem.SelectedIndex].Item.Position + cursorOffset_;
 				}
 			}
 		}
-		public Func<Object2D, Vector2DF, Cancelable> SetCursorPosition { get; set; }
+		public Func<Object2D, Vector2DF, CancellationToken, Task> SetCursorPosition { get; set; }
+        public bool IsControllerUpdated
+        {
+            get { return choiceSystem.IsControllerUpdated; }
+            set { choiceSystem.IsControllerUpdated = value; }
+        }
+        public bool Loop
+        {
+            get { return choiceSystem.Loop; }
+            set { choiceSystem.Loop = value; }
+        }
 
-		public Selector(Controller<TAbstractKey> controller)
+        public Selector(Controller<TAbstractKey> controller)
 		{
 			IsActive = false;
-			Cursor = new TextureObject2D();
-			Cursor.IsDrawn = false;
+            IsDrawn = false;
 
 			choiceSystem = new Choice<TAbstractKey>(0, controller);
-			OnSelectionChanged = choiceSystem.OnSelectionChanged.Select(e => choiceItems_[e].Choice);
+			OnSelectionChanged = choiceSystem.OnSelectionChanged
+                .Where(x => !IsRevising)
+                .Select(e => choiceItems_[e].Choice);
 			OnMove = choiceSystem.OnMove.Select(e => choiceItems_[e].Choice);
 			OnDecide = choiceSystem.OnDecide.Select(e => choiceItems_[e].Choice);
 			OnCancel = choiceSystem.OnCancel.Select(e => choiceItems_[e].Choice);
@@ -75,8 +87,15 @@ namespace Nac.Altseed.Reactive.UI
 			choiceSystem.OnSelectionChanged.Subscribe(OnSelectionChangedHandler);
 			SelectedIndex = choiceSystem.SelectedIndex;
 
-			SetCursorPosition = (o, p) => Cursor.SetEasing(p, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
-		}
+            SetCursorPosition = async (o, p, c) =>
+            {
+                var completion = new TaskCompletionSource<Unit>();
+                await UpdateManager.Instance.FrameUpdate
+                  .Select(u => o.Position)
+                  .EasingVector2DF(p, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10)
+                  .Do(v => o.Position = v);
+            };
+        }
 
 		public void AddChoice(TChoice choice, Object2D item)
 		{
@@ -89,13 +108,15 @@ namespace Nac.Altseed.Reactive.UI
 			var index = choiceItems_.IndexOf(c => c.Choice.Equals(choice));
 			if(index != -1)
 			{
-				var prev = choiceSystem.SelectedIndex;
 				choiceItems_.RemoveAt(index);
-				choiceSystem.Size--;
-				if(index < choiceSystem.SelectedIndex)
-				{
-					choiceSystem.SelectedIndex--;
-				}
+                if(index <= SelectedIndex)
+                {
+                    IsRevising = true;
+                    choiceSystem.SelectedIndex--;
+                    IsRevising = false;
+                }
+                choiceSystem.Size--;
+                Console.WriteLine($"Removed, Current:{SelectedIndex}");
 				return true;
 			}
 			else
@@ -104,39 +125,61 @@ namespace Nac.Altseed.Reactive.UI
 			}
 		}
 
-		public void BindKey(TAbstractKey prev, TAbstractKey next, TAbstractKey decide, TAbstractKey cancel)
+		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
 		{
-			choiceSystem.BindKey(prev, ChoiceControl.Previous);
 			choiceSystem.BindKey(next, ChoiceControl.Next);
+			choiceSystem.BindKey(prev, ChoiceControl.Previous);
 			choiceSystem.BindKey(decide, ChoiceControl.Decide);
 			choiceSystem.BindKey(cancel, ChoiceControl.Cancel);
 		}
+        
+        protected override void OnUpdate()
+        {
+            if(IsActive)
+            {
+                choiceSystem.Update();
+            }
 
-		public void Update()
+            if(cancellationOfCursorMoving == null && SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
+            {
+                Position = choiceItems_[SelectedIndex].Item.Position;
+            }
+
+            var beVanished = new List<TChoice>();
+            foreach(var item in choiceItems_)
+            {
+                if(!item.Item.IsAlive)
+                {
+                    beVanished.Add(item.Choice);
+                }
+            }
+            beVanished.ForEach(x => RemoveChoice(x));
+        }
+
+
+        private void OnSelectionChangedHandler(int index)
 		{
-			if(IsActive)
-			{
-				choiceSystem.Update();
-			}
-		}
-
-
-		private void OnSelectionChangedHandler(int index)
-		{
-			if(SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
+			if(SelectedIndex != Choice<TAbstractKey>.DisabledIndex && SelectedIndex < choiceItems_.Count)
 			{
 				(choiceItems_[SelectedIndex].Item as IActivatableSelectionItem)?.Disactivate();
 			}
 
 			if(index != Choice<TAbstractKey>.DisabledIndex)
 			{
-				Cursor.IsDrawn = true;
+				IsDrawn = true;
 				(choiceItems_[index].Item as IActivatableSelectionItem)?.Activate();
-				MoveCursor(choiceItems_[index].Item.Position);
+                if(SelectedIndex == Choice<TAbstractKey>.DisabledIndex)
+                {
+                    Position = choiceItems_[index].Item.Position;
+                }
+                else
+                {
+                    MoveCursor(choiceItems_[index].Item.Position);
+                }
 			}
 			else
 			{
-				Cursor.IsDrawn = false;
+				IsDrawn = false;
 			}
 
 			SelectedIndex = choiceSystem.SelectedIndex;
@@ -145,7 +188,7 @@ namespace Nac.Altseed.Reactive.UI
 		private void MoveCursor(Vector2DF position)
 		{
 			cancellationOfCursorMoving?.Dispose();
-			cancellationOfCursorMoving = SetCursorPosition(Cursor, position + CursorOffset);
+			cancellationOfCursorMoving = SetCursorPosition(this, position + CursorOffset);
 		}
 	}
 }
