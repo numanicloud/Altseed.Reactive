@@ -100,6 +100,7 @@ namespace Nac.Altseed.Reactive.UI
 		{
 			get { return scroll; }
 		}
+		public IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem> ChoiceItems => selector.ChoiceItems;
 
 		public bool IsActive
 		{
@@ -117,6 +118,7 @@ namespace Nac.Altseed.Reactive.UI
 			layout = new LinearPanel();
 			selector = new Selector<TChoice, TAbstractKey>(controller, layout);
 			scroll = new ScrollLayer();
+			layout.ObjectsNotification.CollectionChanged += ObjectsNotification_CollectionChanged;
 
 			scroll.AddObject(selector);
 
@@ -135,6 +137,11 @@ namespace Nac.Altseed.Reactive.UI
 			ResetBound();
 		}
 
+		private void ObjectsNotification_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			ResetOuterBound();
+		}
+
 		public void AddChoice(TChoice choice, Object2D obj)
 		{
 			selector.AddChoice(choice, obj);
@@ -146,6 +153,11 @@ namespace Nac.Altseed.Reactive.UI
 			var obj = selector.RemoveChoice(choice);
 			ResetOuterBound();
 			return obj;
+		}
+
+		public Object2D GetItemForChoice(TChoice choice)
+		{
+			return selector.GetItemForChocie(choice);
 		}
 
 

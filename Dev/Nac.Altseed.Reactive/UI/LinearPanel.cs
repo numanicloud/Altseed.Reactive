@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using asd;
@@ -15,9 +17,11 @@ namespace Nac.Altseed.Reactive.UI
         private ObservableCollection<Object2D> objects_ { get; set; }
         private List<IDisposable> cancellations { get; set; }
         private Vector2DF startingOffset, itemSpan;
+		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
 
         protected override IEnumerable<Object2D> ObjectsInternal => objects_;
 
+		public IObservable<Unit> OnLayoutChanged => onLayoutChanged_;
 		public INotifyCollectionChanged ObjectsNotification => objects_;
         public IEnumerable<Object2D> Objects => objects_;
         public Vector2DF StartingOffset

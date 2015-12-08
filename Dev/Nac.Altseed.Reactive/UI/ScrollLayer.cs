@@ -89,6 +89,7 @@ namespace Nac.Altseed.Reactive.UI
 
 		private void ReviseCamera(RectF rect)
 		{
+			Console.WriteLine(Helper.ToString(rect));
 			var offset = new Vector2DF();
 
 			var innerBindingRect = new RectF(
@@ -96,25 +97,29 @@ namespace Nac.Altseed.Reactive.UI
 				cameraTargetPosition.Y + BindingAreaRange.Y,
 				BindingAreaRange.Width,
 				BindingAreaRange.Height);
-			Console.WriteLine(Helper.ToString(innerBindingRect));
-			offset += GetJut(rect, innerBindingRect, false);
+			offset += GetJut(rect, innerBindingRect, true);
+			Console.Write(offset + " -> ");
 
 			var outerBindingRect = new RectF(
 				Starting.X,
 				Starting.Y,
 				Ending.X - Starting.X,
 				Ending.Y - Starting.Y);
-			offset -= GetJut(AddPosition(camera.Src.ToFloat(), offset), outerBindingRect, false);
+			offset -= GetJut(AddPosition(camera.Src.ToFloat(), offset), outerBindingRect, true);
+			Console.WriteLine(offset);
 
 			if(offset != new Vector2DF(0, 0))
 			{
 				cameraTargetPosition = camera.Src.Position.To2DF() + offset;
-                scrollDisposable?.Dispose();
+				scrollDisposable?.Dispose();
+				camera.Src = new RectI((int)cameraTargetPosition.X, (int)cameraTargetPosition.Y, camera.Src.Width, camera.Src.Height);
+				/*
 				scrollDisposable = UpdateManager.Instance.FrameUpdate
 					.Select(t => camera.Src.Position.To2DF())
 					.EasingVector2DF(cameraTargetPosition, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10)
 					.Select(p => p.To2DI())
 					.Subscribe(p => camera.Src = new RectI(p.X, p.Y, camera.Src.Width, camera.Src.Height));
+				//*/
 			}
 		}
 
@@ -129,7 +134,7 @@ namespace Nac.Altseed.Reactive.UI
 			{
 				result.X = rect.X + rect.Width - (bound.X + bound.Width);
 			}
-			
+
 			if((priorStarting || rect.Height < bound.Height) && rect.Y < bound.Y)
 			{
 				result.Y = rect.Y - bound.Y;

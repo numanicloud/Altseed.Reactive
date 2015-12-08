@@ -23,8 +23,8 @@ namespace Nac.Altseed.Reactive.Test
 			selector.LineSpan = 36;
 			selector.BoundLines = 3;
 			selector.LineWidth = 360;
-			selector.ExtraLinesOnEnding = 0;
-			selector.ExtraLinesOnStarting = 0;
+			selector.ExtraLinesOnStarting = 1;
+			selector.ExtraLinesOnEnding = 1;
 
 			font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 0, 0, 255), 0, new Color(0, 0, 0, 0));
 
@@ -50,11 +50,7 @@ namespace Nac.Altseed.Reactive.Test
 		{
 			if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
 			{
-				Console.WriteLine("Remove");
-				for(int i = 0; i < 6; i++)
-				{
-					selector.RemoveChoice(i);
-				}
+				selector.ChoiceItems.FirstOrDefault()?.Item.Vanish();
 			}
 		}
 	}
