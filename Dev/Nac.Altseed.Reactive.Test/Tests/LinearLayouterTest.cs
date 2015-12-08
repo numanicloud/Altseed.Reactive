@@ -46,7 +46,7 @@ namespace Nac.Altseed.Reactive.Test
                 layout.AddItem(obj);
                 Engine.AddObject2D(obj);
             }
-            else if(Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push && layout.Objects.Skip(3).Any())
+            else if(Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push && layout.Items.Skip(3).Any())
             {
                 var obj = new TextObject2D()
                 {
@@ -61,10 +61,10 @@ namespace Nac.Altseed.Reactive.Test
             {
                 if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
                 {
-                    var item = layout.Objects.Skip(2).FirstOrDefault();
+                    var item = layout.Items.Skip(2).FirstOrDefault();
                     if(item != null)
                     {
-                        layout.RemoveItem(item);
+                        layout.RemoveItem(item.Object);
                     }
                 }
                 else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
@@ -76,13 +76,13 @@ namespace Nac.Altseed.Reactive.Test
             {
                 if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
                 {
-                    layout.Objects.Skip(2).FirstOrDefault()?.Vanish();
+                    layout.Items.Skip(2).FirstOrDefault()?.Object?.Vanish();
                 }
                 else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
                 {
-                    foreach(var item in layout.Objects)
+                    foreach(var item in layout.Items)
                     {
-                        item.Vanish();
+                        item.Object.Vanish();
                     }
                 }
             }

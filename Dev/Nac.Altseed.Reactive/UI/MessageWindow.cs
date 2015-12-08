@@ -41,12 +41,12 @@ namespace Nac.Altseed.Reactive.UI
 
 		public async Task TalkMessageAsync(params string[] message)
 		{
-            await Observable.FromCoroutine(FlowToShowText(message, true));
+            await ObservableHelper.FromCoroutine(FlowToShowText(message, true));
 		}
 
 		public async Task TalkMessageWithoutReadAsync(string message)
 		{
-            await Observable.FromCoroutine(FlowToShowText(new string[] { message }, false));
+            await ObservableHelper.FromCoroutine(FlowToShowText(new string[] { message }, false));
 		}
 
 		public void ShowMessage(string message)

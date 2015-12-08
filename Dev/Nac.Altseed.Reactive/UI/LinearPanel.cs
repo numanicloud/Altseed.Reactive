@@ -14,16 +14,43 @@ namespace Nac.Altseed.Reactive.UI
 {
     public class LinearPanel : Layouter
     {
-        private ObservableCollection<Object2D> objects_ { get; set; }
+		public class ItemInfo
+		{
+			private LinearPanel owner { get; set; }
+			public Object2D Object { get; private set; }
+			public IDisposable Cancellation { get; private set; }
+			public Vector2DF LayoutedPosition { get; private set; }
+
+			public ItemInfo(LinearPanel owner, Object2D obj)
+			{
+				this.owner = owner;
+				Object = obj;
+				LayoutedPosition = obj.Position;
+			}
+
+			public void StopAnimation()
+			{
+				Cancellation?.Dispose();
+			}
+
+			public void StartAnimation(Vector2DF goal)
+			{
+				LayoutedPosition = goal;
+				Cancellation?.Dispose();
+				Cancellation = owner.SetItemPosition(Object, goal);
+			}
+		}
+
+        private ObservableCollection<ItemInfo> items_ { get; set; }
         private List<IDisposable> cancellations { get; set; }
         private Vector2DF startingOffset, itemSpan;
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
 
-        protected override IEnumerable<Object2D> ObjectsInternal => objects_;
+        protected override IEnumerable<Object2D> ObjectsInternal => items_.Select(x => x.Object);
 
 		public IObservable<Unit> OnLayoutChanged => onLayoutChanged_;
-		public INotifyCollectionChanged ObjectsNotification => objects_;
-        public IEnumerable<Object2D> Objects => objects_;
+		public INotifyCollectionChanged ObjectsNotification => items_;
+        public IEnumerable<ItemInfo> Items => items_;
         public Vector2DF StartingOffset
         {
             get { return startingOffset; }
@@ -46,65 +73,69 @@ namespace Nac.Altseed.Reactive.UI
 
         public LinearPanel()
         {
-            objects_ = new ObservableCollection<Object2D>();
+            items_ = new ObservableCollection<ItemInfo>();
             cancellations = new List<IDisposable>();
             SetItemPosition = (o, v) => o.SetEasing(v, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 20);
         }
 
         public override void AddItem(Object2D item)
         {
-            item.Position = GetPosition(objects_.Count);
+            item.Position = GetPosition(items_.Count);
             AddChild(item, ChildMode.Position);
-            objects_.Add(item);
+            items_.Add(new ItemInfo(this, item));
             cancellations.Add(null);
+			onLayoutChanged_.OnNext(Unit.Default);
         }
 
         public override void InsertItem(int index, Object2D item)
         {
             item.Position = GetPosition(index);
             AddChild(item, ChildMode.Position);
-            objects_.Insert(index, item);
+            items_.Insert(index, new ItemInfo(this, item));
             cancellations.Insert(index, null);
 
-            for(int i = index + 1; i < objects_.Count; i++)
+            for(int i = index + 1; i < items_.Count; i++)
             {
-                cancellations[i]?.Dispose();
-                cancellations[i] = SetItemPosition(objects_[i], GetPosition(i));
+				items_[i].StartAnimation(GetPosition(i));
             }
-        }
+
+			onLayoutChanged_.OnNext(Unit.Default);
+		}
 
         public override void RemoveItem(Object2D item)
         {
-            var index = objects_.IndexOf(item);
+            var index = items_.IndexOf(x => x.Object == item);
             RemoveChild(item);
-            objects_.Remove(item);
+            items_.RemoveAt(index);
             cancellations.RemoveAt(index);
             
-            for(int i = index; i < objects_.Count; i++)
-            {
-                cancellations[i]?.Dispose();
-                cancellations[i] = SetItemPosition(objects_[i], GetPosition(i));
+            for(int i = index; i < items_.Count; i++)
+			{
+				items_[i].StartAnimation(GetPosition(i));
             }
-        }
+
+			onLayoutChanged_.OnNext(Unit.Default);
+		}
 
         public override void ClearItem()
         {
-            foreach(var item in objects_)
+            foreach(var item in items_)
             {
-                RemoveChild(item);
+                RemoveChild(item.Object);
             }
-            objects_.Clear();
+            items_.Clear();
             cancellations.Clear();
-        }
+			onLayoutChanged_.OnNext(Unit.Default);
+		}
 
         private void ResetPosition()
         {
-            for(int i = 0; i < objects_.Count; i++)
+            for(int i = 0; i < items_.Count; i++)
             {
-                cancellations[i]?.Dispose();
-                objects_[i].Position = GetPosition(i);
-            }
-        }
+				items_[i].StartAnimation(GetPosition(i));
+			}
+			onLayoutChanged_.OnNext(Unit.Default);
+		}
 
         private Vector2DF GetPosition(int index)
         {

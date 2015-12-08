@@ -9,7 +9,7 @@ using asd;
 
 namespace Nac.Altseed.Reactive
 {
-    public static class Observable
+    public static class ObservableHelper
     {
         public static IObservable<U> SelectCorourine<T, U>(this IObservable<T> source, IEnumerator<U> coroutine)
         {

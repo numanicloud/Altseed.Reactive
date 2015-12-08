@@ -56,7 +56,7 @@ namespace Nac.Altseed.Reactive
 
         public static Cancelable SetShortWiggle(this Object2D obj, Vector2DF center, Vector2DF amplitude, Vector2DF frequency, float time)
         {
-            var disposable = Observable.ShortWiggle(center, amplitude, frequency, time)
+            var disposable = ObservableHelper.ShortWiggle(center, amplitude, frequency, time)
                 .Subscribe(v => obj.Position = v, () => obj.Position = center);
             var cancelable = new Cancelable(disposable);
             cancelable.OnDispose.Subscribe(u => obj.Position = center);
@@ -65,7 +65,7 @@ namespace Nac.Altseed.Reactive
 
         public static IDisposable TimeAnimation(Action<float> handler)
         {
-            return Observable.CountTime().Subscribe(handler);
+            return ObservableHelper.CountTime().Subscribe(handler);
         }
 
 		public static IDisposable RegisterUpdating(IUpdatable updatable)

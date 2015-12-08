@@ -13,13 +13,13 @@ namespace Nac.Altseed.Reactive.UI
 		private Vector2DF starting_, ending_;
 		private Vector2DF position_, cameraSize_;
 		private RectF bindingAreaRange_;
-		private IDisposable scrollDisposable;
-		private Vector2DF cameraTargetPosition;
 
 		private CameraObject2D camera { get; set; }
 		private RectF seeingArea { get; set; }
 		private IDisposable disposableForSeeingArea { get; set; }
-		private Vector2DF seeingAreaRangeRightBottom { get; set; }
+		private IDisposable scrollDisposable { get; set; }
+		private Vector2DF cameraTargetPosition { get; set; }
+		private Func<Vector2DF, IObservable<RectF>> getCameraMoving { get; set; }
 
 		public Vector2DF Starting
 		{
@@ -63,7 +63,6 @@ namespace Nac.Altseed.Reactive.UI
 			set
 			{
 				bindingAreaRange_ = value;
-				seeingAreaRangeRightBottom = BindingAreaRange.Vertexes[2];
 				ReviseCamera(seeingArea);
 			}
 		}
@@ -74,6 +73,7 @@ namespace Nac.Altseed.Reactive.UI
 		{
 			camera = new CameraObject2D();
 			AddObject(camera);
+			getCameraMoving = p => Observable.Return(camera.Src.ToFloat().WithPosition(p));
 		}
 
 		public void SubscribeSeeingArea(IObservable<RectF> onSeeingAreaChanged)
@@ -86,10 +86,17 @@ namespace Nac.Altseed.Reactive.UI
 			});
 		}
 
+		public void SetUpForEasingBehavior(EasingStart start, EasingEnd end)
+		{
+			getCameraMoving = target => UpdateManager.Instance.FrameUpdate
+				.Select(t => camera.Src.Position.To2DF())
+				.EasingVector2DF(target, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10)
+				.Select(p => camera.Src.ToFloat().WithPosition(p));
+        }
+
 
 		private void ReviseCamera(RectF rect)
 		{
-			Console.WriteLine(Helper.ToString(rect));
 			var offset = new Vector2DF();
 
 			var innerBindingRect = new RectF(
@@ -97,51 +104,43 @@ namespace Nac.Altseed.Reactive.UI
 				cameraTargetPosition.Y + BindingAreaRange.Y,
 				BindingAreaRange.Width,
 				BindingAreaRange.Height);
-			offset += GetJut(rect, innerBindingRect, true);
-			Console.Write(offset + " -> ");
+			offset += GetJut(rect, innerBindingRect);
 
 			var outerBindingRect = new RectF(
 				Starting.X,
 				Starting.Y,
 				Ending.X - Starting.X,
 				Ending.Y - Starting.Y);
-			offset -= GetJut(AddPosition(camera.Src.ToFloat(), offset), outerBindingRect, true);
-			Console.WriteLine(offset);
+			offset -= GetJut(AddPosition(camera.Src.ToFloat(), offset), outerBindingRect);
 
 			if(offset != new Vector2DF(0, 0))
 			{
 				cameraTargetPosition = camera.Src.Position.To2DF() + offset;
 				scrollDisposable?.Dispose();
-				camera.Src = new RectI((int)cameraTargetPosition.X, (int)cameraTargetPosition.Y, camera.Src.Width, camera.Src.Height);
-				/*
-				scrollDisposable = UpdateManager.Instance.FrameUpdate
-					.Select(t => camera.Src.Position.To2DF())
-					.EasingVector2DF(cameraTargetPosition, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10)
-					.Select(p => p.To2DI())
-					.Subscribe(p => camera.Src = new RectI(p.X, p.Y, camera.Src.Width, camera.Src.Height));
-				//*/
+				scrollDisposable = getCameraMoving(cameraTargetPosition)
+					.Subscribe(r => camera.Src = r.ToInt());
 			}
 		}
 
-		private Vector2DF GetJut(RectF rect, RectF bound, bool priorStarting)
+		private Vector2DF GetJut(RectF rect, RectF bound)
 		{
 			Vector2DF result = new Vector2DF();
-			if((priorStarting || rect.Width < bound.Width) && rect.X < bound.X)
-			{
-				result.X = rect.X - bound.X;
-			}
-			else if((!priorStarting || rect.Width < bound.Width) && rect.X + rect.Width > bound.X + bound.Width)
+			if(rect.X + rect.Width > bound.X + bound.Width)
 			{
 				result.X = rect.X + rect.Width - (bound.X + bound.Width);
 			}
-
-			if((priorStarting || rect.Height < bound.Height) && rect.Y < bound.Y)
+			if(rect.X - result.X < bound.X)
 			{
-				result.Y = rect.Y - bound.Y;
+				result.X += rect.X - result.X - bound.X;
 			}
-			else if((!priorStarting || rect.Height < bound.Height) && rect.Y + rect.Height > bound.Y + bound.Height)
+
+			if(rect.Y + rect.Height > bound.Y + bound.Height)
 			{
 				result.Y = rect.Y + rect.Height - (bound.Y + bound.Height);
+			}
+			if(rect.Y - result.Y < bound.Y)
+			{
+				result.Y += rect.Y - result.Y - bound.Y;
 			}
 
 			return result;

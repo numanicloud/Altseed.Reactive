@@ -65,6 +65,11 @@ namespace Nac.Altseed.Reactive
 			return new RectF(source.X + shift.X, source.Y + shift.Y, source.Width, source.Height);
 		}
 
+		public static RectF WithPosition(this RectF source, Vector2DF position)
+		{
+			return new RectF(position.X, position.Y, source.Width, source.Height);
+		}
+
 		public static string ToString(RectF rect)
 		{
 			return $"({rect.X}, {rect.Y}, {rect.Width}, {rect.Height})";

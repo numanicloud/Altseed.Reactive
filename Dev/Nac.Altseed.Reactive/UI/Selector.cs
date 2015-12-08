@@ -39,9 +39,11 @@ namespace Nac.Altseed.Reactive.UI
 		private Vector2DF cursorOffset_ = new Vector2DF();
         private BooleanDisposable revisingStatus;
         private Layouter layout;
+		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
 
 		public bool IsActive { get; set; }
 		public int SelectedIndex { get; private set; }
+		public IObservable<Unit> OnLayoutChanged => onLayoutChanged_;
 		public IObservable<TChoice> OnSelectionChanged { get; private set; }
 		public IObservable<TChoice> OnMove { get; private set; }
 		public IObservable<TChoice> OnDecide { get; private set; }
@@ -73,7 +75,22 @@ namespace Nac.Altseed.Reactive.UI
             set { choiceSystem.Loop = value; }
         }
 
-        public Selector(Controller<TAbstractKey> controller, Layouter layout)
+		public TChoice SelectedChoice
+		{
+			get
+			{
+				if(SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
+				{
+					return ChoiceItems[SelectedIndex].Choice;
+				}
+				else
+				{
+					return default(TChoice);
+				}
+			}
+		}
+
+		public Selector(Controller<TAbstractKey> controller, Layouter layout)
 		{
 			IsActive = true;
             IsDrawn = false;
@@ -115,6 +132,7 @@ namespace Nac.Altseed.Reactive.UI
             layout.AddItem(item);
 			choiceItems_.Add(new ChoiceItem(choice, item));
 			choiceSystem.Size++;
+			onLayoutChanged_.OnNext(Unit.Default);
 		}
 
         public void InsertChoice(int index, TChoice choice, Object2D item)
@@ -129,7 +147,8 @@ namespace Nac.Altseed.Reactive.UI
                 }
             }
             choiceSystem.Size++;
-        }
+			onLayoutChanged_.OnNext(Unit.Default);
+		}
 
 		public Object2D RemoveChoice(TChoice choice)
 		{
@@ -147,6 +166,7 @@ namespace Nac.Altseed.Reactive.UI
                     }
                 }
                 choiceSystem.Size--;
+				onLayoutChanged_.OnNext(Unit.Default);
 				return item;
 			}
 			else
@@ -160,7 +180,8 @@ namespace Nac.Altseed.Reactive.UI
             layout.ClearItem();
             choiceItems_.Clear();
             choiceSystem.Size = 0;
-        }
+			onLayoutChanged_.OnNext(Unit.Default);
+		}
 
 		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
 		{

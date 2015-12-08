@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,6 +87,12 @@ namespace Nac.Altseed.Reactive.UI
 			}
 		}
 
+		#region Selectorへの委譲機能
+		public bool IsActive
+		{
+			get { return selector.IsActive; }
+			set { selector.IsActive = value; }
+		}
 		public bool IsControllerUpdated
 		{
 			get { return selector.IsControllerUpdated; }
@@ -96,36 +103,50 @@ namespace Nac.Altseed.Reactive.UI
 			get { return selector.Loop; }
 			set { selector.Loop = value; }
 		}
-		public Layer2D Layer
-		{
-			get { return scroll; }
-		}
+		public Layer2D Layer => selector.Layer;
 		public IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem> ChoiceItems => selector.ChoiceItems;
-
-		public bool IsActive
-		{
-			get { return selector.IsActive; }
-			set { selector.IsActive = value; }
-		}
 		public int SelectedIndex => selector.SelectedIndex;
 		public IObservable<TChoice> OnSelectionChanged => selector.OnSelectionChanged;
 		public IObservable<TChoice> OnMove => selector.OnMove;
 		public IObservable<TChoice> OnDecide => selector.OnDecide;
 		public IObservable<TChoice> OnCancel => selector.OnCancel;
 
+		public void AddChoice(TChoice choice, Object2D obj)
+		{
+			selector.AddChoice(choice, obj);
+		}
+
+		public Object2D RemoveChoice(TChoice choice)
+		{
+			return selector.RemoveChoice(choice);
+		}
+
+		public Object2D GetItemForChoice(TChoice choice)
+		{
+			return selector.GetItemForChocie(choice);
+		}
+
+		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
+		{
+			selector.BindKey(next, prev, decide, cancel);
+		}
+		#endregion
+
 		public ScrollingSelector(Controller<TAbstractKey> controller)
 		{
 			layout = new LinearPanel();
 			selector = new Selector<TChoice, TAbstractKey>(controller, layout);
 			scroll = new ScrollLayer();
-			layout.ObjectsNotification.CollectionChanged += ObjectsNotification_CollectionChanged;
 
 			scroll.AddObject(selector);
 
 			var areaChanged = selector.OnSelectionChanged
-				.Select(c => selector.GetItemForChocie(c).Position)
-				.Select(p => new RectF(p.X, p.Y, selector.Texture.Size.X, selector.Texture.Size.Y));
+				.Select(c => Unit.Default)
+				.Merge(selector.OnLayoutChanged)
+				.Where(u => selector.SelectedIndex != -1)
+				.Select(p => Helper.GetRectFromVector(layout.ItemSpan * selector.SelectedIndex, GetSize(1)));
 			scroll.SubscribeSeeingArea(areaChanged);
+			layout.OnLayoutChanged.Subscribe(u => ResetOuterBound());
 
 			Position = new Vector2DF();
 			orientation_ = Orientation.Vertical;
@@ -134,30 +155,19 @@ namespace Nac.Altseed.Reactive.UI
 			boundLines_ = 1;
 			extraLinesOnStarting = 1;
 			extraLinesOnEnding = 1;
+			ResetOuterBound();
 			ResetBound();
 		}
 
-		private void ObjectsNotification_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		public void SetEasingScrollUp(EasingStart start, EasingEnd end)
 		{
-			ResetOuterBound();
+			scroll.SetUpForEasingBehavior(start, end);
 		}
 
-		public void AddChoice(TChoice choice, Object2D obj)
+		public void SetDebugCameraUp()
 		{
-			selector.AddChoice(choice, obj);
-			ResetOuterBound();
-		}
-
-		public Object2D RemoveChoice(TChoice choice)
-		{
-			var obj = selector.RemoveChoice(choice);
-			ResetOuterBound();
-			return obj;
-		}
-
-		public Object2D GetItemForChoice(TChoice choice)
-		{
-			return selector.GetItemForChocie(choice);
+			var viewer = new ScrollBoundViewer(scroll);
+			scroll.AddObject(viewer);
 		}
 
 
@@ -169,50 +179,42 @@ namespace Nac.Altseed.Reactive.UI
 
 		private void ResetOuterBound()
 		{
-			Vector2DF widthDirection = new Vector2DF();
-			switch(Orientation)
-			{
-			case Orientation.Horizontal:
-				widthDirection = new Vector2DF(0, LineWidth);
-				break;
-			case Orientation.Vertical:
-				widthDirection = new Vector2DF(LineWidth, 0);
-				break;
-			}
-
-			scroll.Ending = layout.Objects.Count() * layout.ItemSpan + widthDirection;
+			scroll.Ending = GetSize(layout.Items.Count());
 		}
 
 		private void ResetBound()
 		{
-			Vector2DF widthDirection = new Vector2DF();
 			switch(Orientation)
 			{
 			case Orientation.Horizontal:
 				layout.ItemSpan = new Vector2DF(LineSpan, 0);
-				widthDirection = new Vector2DF(0, LineWidth);
 				break;
 			case Orientation.Vertical:
 				layout.ItemSpan = new Vector2DF(0, LineSpan);
-				widthDirection = new Vector2DF(LineWidth, 0);
 				break;
 			}
 
 			var bindStarting = layout.ItemSpan * ExtraLinesOnStarting;
-			var bindSize = layout.ItemSpan * BoundLines + widthDirection;
-			scroll.CameraSize = layout.ItemSpan * (ExtraLinesOnStarting + BoundLines + ExtraLinesOnEnding) + widthDirection;
+			var bindSize = GetSize(BoundLines);
+			scroll.CameraSize = GetSize(ExtraLinesOnStarting + BoundLines + ExtraLinesOnEnding);
 			scroll.BindingAreaRange = Helper.GetRectFromVector(bindStarting, bindSize);
 		}
 
-		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
+		private Vector2DF GetSize(int lines)
 		{
-			selector.BindKey(next, prev, decide, cancel);
-		}
-
-		public void SetDebugCameraUp()
-		{
-			var viewer = new ScrollBoundViewer(scroll);
-			scroll.AddObject(viewer);
+			Vector2DF size = new Vector2DF();
+			switch(Orientation)
+			{
+			case Orientation.Horizontal:
+				size.X = LineSpan * lines;
+				size.Y = LineWidth;
+				break;
+			case Orientation.Vertical:
+				size.X = LineWidth;
+				size.Y = LineSpan * lines;
+				break;
+			}
+			return size;
 		}
 	}
 }

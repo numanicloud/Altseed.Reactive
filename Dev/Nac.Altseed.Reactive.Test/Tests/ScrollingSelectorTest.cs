@@ -21,10 +21,11 @@ namespace Nac.Altseed.Reactive.Test
 			selector.IsControllerUpdated = true;
 			selector.Position = new Vector2DF(30, 30);
 			selector.LineSpan = 36;
-			selector.BoundLines = 3;
+			selector.BoundLines = 2;
 			selector.LineWidth = 360;
 			selector.ExtraLinesOnStarting = 1;
 			selector.ExtraLinesOnEnding = 1;
+			selector.SetEasingScrollUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3);
 
 			font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 0, 0, 255), 0, new Color(0, 0, 0, 0));
 
@@ -50,7 +51,7 @@ namespace Nac.Altseed.Reactive.Test
 		{
 			if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
 			{
-				selector.ChoiceItems.FirstOrDefault()?.Item.Vanish();
+				selector.ChoiceItems.Skip(2).FirstOrDefault()?.Item.Vanish();
 			}
 		}
 	}
