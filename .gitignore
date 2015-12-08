@@ -11,10 +11,12 @@
 x64/
 build/
 [Oo]bj/
-[Bb]in/
 /Lib/
 packages/
+/Dev/*/bin/Debug/*.*
+/Dev/*/bin/Release/*.*
 
+ShaderCache/
 Altseed.XML
 Altseed.dll
 Altseed_core.dll
