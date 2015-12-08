@@ -19,7 +19,7 @@ namespace Nac.Altseed.Reactive.UI
 		void Disactivate();
 	}
 
-	public class Selector<TChoice, TAbstractKey> : TextureObject2D, ISelectableList<TChoice, TAbstractKey>
+	public class Selector<TChoice, TAbstractKey> : TextureObject2D, ISelector<TChoice, TAbstractKey>
 	{
 		public class ChoiceItem
 		{
@@ -116,16 +116,21 @@ namespace Nac.Altseed.Reactive.UI
 			choiceSystem.OnSelectionChanged.Subscribe(OnSelectionChangedHandler);
 			SelectedIndex = choiceSystem.SelectedIndex;
             
-            SetCursorPosition = (o, target) =>
-            {
-                var f = Easing.GetEasingFunction(EasingStart.StartRapidly2, EasingEnd.EndSlowly3);
-                return UpdateManager.Instance.FrameUpdate
-                    .Select(u => o.Position)  
-                    .Select((v, i) => Easing.GetNextValue(v, target.Position, i, 10, f))
-                    .Take(11);
-            };
+            SetCursorPosition = (o, target) => Observable.Return(target.Position);
         }
 
+
+		public void SetEasingBehaviorUp(EasingStart start, EasingEnd end, int time)
+		{
+			SetCursorPosition = (o, target) =>
+			{
+				var f = Easing.GetEasingFunction(start, end);
+				return UpdateManager.Instance.FrameUpdate
+					.Select(u => o.Position)
+					.Select((v, i) => Easing.GetNextValue(v, target.Position, i, time, f))
+					.Take(time + 1);
+			};
+		}
 
 		public void AddChoice(TChoice choice, Object2D item)
 		{

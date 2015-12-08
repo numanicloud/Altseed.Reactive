@@ -16,7 +16,7 @@ namespace Nac.Altseed.Reactive.UI
 		Horizontal, Vertical
 	}
 
-	public class ScrollingSelector<TChoice, TAbstractKey> : Layer2D, ISelectableList<TChoice, TAbstractKey>
+	public class ScrollingSelector<TChoice, TAbstractKey> : Layer2D, ISelector<TChoice, TAbstractKey>
 	{
 		private Orientation orientation_;
 		private float lineSpan_, lineWidth_;
@@ -126,6 +126,16 @@ namespace Nac.Altseed.Reactive.UI
 			return selector.GetItemForChocie(choice);
 		}
 
+		public void InsertChoice(int index, TChoice choice, Object2D obj)
+		{
+			selector.InsertChoice(index, choice, obj);
+		}
+
+		public void ClearChoice()
+		{
+			selector.ClearChoice();
+		}
+
 		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
 		{
 			selector.BindKey(next, prev, decide, cancel);
@@ -159,9 +169,11 @@ namespace Nac.Altseed.Reactive.UI
 			ResetBound();
 		}
 
-		public void SetEasingScrollUp(EasingStart start, EasingEnd end)
+		public void SetEasingScrollUp(EasingStart start, EasingEnd end, int time)
 		{
-			scroll.SetUpForEasingBehavior(start, end);
+			layout.SetEasingBehaviorUp(start, end, time);
+			selector.SetEasingBehaviorUp(start, end, time);
+			scroll.SetEasingBehaviorUp(start, end, time);
 		}
 
 		public void SetDebugCameraUp()

@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,8 @@ namespace Nac.Altseed.Reactive.UI
 			{
 				LayoutedPosition = goal;
 				Cancellation?.Dispose();
-				Cancellation = owner.SetItemPosition(Object, goal);
+				Cancellation = owner.SetItemPosition(Object, goal)
+					.Subscribe(p => Object.Position = p);
 			}
 		}
 
@@ -69,14 +71,21 @@ namespace Nac.Altseed.Reactive.UI
                 ResetPosition();
             }
         }
-        public Func<Object2D, Vector2DF, Cancelable> SetItemPosition { get; set; }
+        public Func<Object2D, Vector2DF, IObservable<Vector2DF>> SetItemPosition { get; set; }
 
         public LinearPanel()
         {
             items_ = new ObservableCollection<ItemInfo>();
             cancellations = new List<IDisposable>();
-            SetItemPosition = (o, v) => o.SetEasing(v, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 20);
+			SetItemPosition = (o, v) => Observable.Return(v);
         }
+
+		public void SetEasingBehaviorUp(EasingStart start, EasingEnd end, int time)
+		{
+			SetItemPosition = (o, v) => UpdateManager.Instance.FrameUpdate
+				.Select(t => o.Position)
+				.EasingVector2DF(v, start, end, time);
+		}
 
         public override void AddItem(Object2D item)
         {

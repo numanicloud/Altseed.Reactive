@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,11 @@ namespace Nac.Altseed.Reactive.UI
 {
     public class CollectionBinderForSelector<TChoice> : IDisposable
     {
-        private ISelectableList<TChoice> list { get; set; }
+        private ISelector<TChoice> list { get; set; }
         private INotifyCollectionChanged notifier { get; set; }
         public Func<TChoice, Object2D> ChoiceToItem { get; set; }
 
-        private CollectionBinderForSelector(ISelectableList<TChoice> list, INotifyCollectionChanged notifier)
+        private CollectionBinderForSelector(ISelector<TChoice> list, INotifyCollectionChanged notifier)
         {
             this.list = list;
             this.notifier = notifier;
@@ -49,11 +50,22 @@ namespace Nac.Altseed.Reactive.UI
         }
 
         public static IDisposable Bind(
-            ISelectableList<TChoice> list,
-            INotifyCollectionChanged notifier,
-            Func<TChoice, Object2D> choiceToItem)
+            ISelector<TChoice> selector,
+            ObservableCollection<TChoice> notifier,
+            Func<TChoice, Object2D> choiceToItem,
+			bool doInitialize)
         {
-            return new CollectionBinderForSelector<TChoice>(list, notifier)
+			if(doInitialize)
+			{
+				selector.ClearChoice();
+				foreach(var choice in notifier)
+				{
+					var obj = choiceToItem(choice);
+                    selector.AddChoice(choice, obj);
+					selector.Layer.AddObject(obj);
+				}
+			}
+            return new CollectionBinderForSelector<TChoice>(selector, notifier)
             {
                 ChoiceToItem = choiceToItem
             };

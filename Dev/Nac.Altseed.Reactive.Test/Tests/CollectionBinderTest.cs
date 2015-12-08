@@ -52,7 +52,7 @@ namespace Nac.Altseed.Reactive.Test
             {
                 Font = font,
                 Text = $"追加アイテム{c}",
-            });
+            }, false);
         }
 
         protected override void OnUpdate()

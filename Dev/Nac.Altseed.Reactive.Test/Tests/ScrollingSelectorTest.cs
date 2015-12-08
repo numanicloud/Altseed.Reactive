@@ -25,7 +25,7 @@ namespace Nac.Altseed.Reactive.Test
 			selector.LineWidth = 360;
 			selector.ExtraLinesOnStarting = 1;
 			selector.ExtraLinesOnEnding = 1;
-			selector.SetEasingScrollUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3);
+			selector.SetEasingScrollUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
 
 			font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 0, 0, 255), 0, new Color(0, 0, 0, 0));
 
@@ -44,7 +44,7 @@ namespace Nac.Altseed.Reactive.Test
 				selector.Layer.AddObject(obj);
 			}
 
-			selector.SetDebugCameraUp();
+			//selector.SetDebugCameraUp();
 		}
 
 		protected override void OnUpdate()

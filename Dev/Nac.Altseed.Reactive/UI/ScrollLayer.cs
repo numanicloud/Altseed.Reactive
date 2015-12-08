@@ -86,11 +86,11 @@ namespace Nac.Altseed.Reactive.UI
 			});
 		}
 
-		public void SetUpForEasingBehavior(EasingStart start, EasingEnd end)
+		public void SetEasingBehaviorUp(EasingStart start, EasingEnd end, int time)
 		{
 			getCameraMoving = target => UpdateManager.Instance.FrameUpdate
 				.Select(t => camera.Src.Position.To2DF())
-				.EasingVector2DF(target, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10)
+				.EasingVector2DF(target, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, time)
 				.Select(p => camera.Src.ToFloat().WithPosition(p));
         }
 

@@ -7,7 +7,7 @@ using asd;
 
 namespace Nac.Altseed.Reactive.UI
 {
-    public interface ISelectableList<TChoice>
+    public interface ISelector<TChoice>
     {
         Layer2D Layer { get; }
 
@@ -20,9 +20,11 @@ namespace Nac.Altseed.Reactive.UI
 
 		void AddChoice(TChoice choice, Object2D obj);
         Object2D RemoveChoice(TChoice choice);
+		void InsertChoice(int index, TChoice choice, Object2D obj);
+		void ClearChoice();
     }
 
-	public interface ISelectableList<TChoice, TAbstractKey> : ISelectableList<TChoice>
+	public interface ISelector<TChoice, TAbstractKey> : ISelector<TChoice>
 	{
 		void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel);
 	}
