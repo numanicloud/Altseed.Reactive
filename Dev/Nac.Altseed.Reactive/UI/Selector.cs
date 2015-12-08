@@ -19,7 +19,7 @@ namespace Nac.Altseed.Reactive.UI
 		void Disactivate();
 	}
 
-	public class Selector<TChoice, TAbstractKey> : TextureObject2D, ISelectableList<TChoice>
+	public class Selector<TChoice, TAbstractKey> : TextureObject2D, ISelectableList<TChoice, TAbstractKey>
 	{
 		public class ChoiceItem
 		{
@@ -42,10 +42,10 @@ namespace Nac.Altseed.Reactive.UI
 
 		public bool IsActive { get; set; }
 		public int SelectedIndex { get; private set; }
-		public IObservable<TChoice> OnSelectionChanged { get; set; }
-		public IObservable<TChoice> OnMove { get; set; }
-		public IObservable<TChoice> OnDecide { get; set; }
-		public IObservable<TChoice> OnCancel { get; set; }
+		public IObservable<TChoice> OnSelectionChanged { get; private set; }
+		public IObservable<TChoice> OnMove { get; private set; }
+		public IObservable<TChoice> OnDecide { get; private set; }
+		public IObservable<TChoice> OnCancel { get; private set; }
 		public IReadOnlyList<ChoiceItem> ChoiceItems => choiceItems_;
         
 		public Vector2DF CursorOffset
@@ -134,10 +134,10 @@ namespace Nac.Altseed.Reactive.UI
 		public Object2D RemoveChoice(TChoice choice)
 		{
 			var index = choiceItems_.IndexOf(c => c.Choice.Equals(choice));
-            var item = choiceItems_[index].Item;
-            layout.RemoveItem(item);
             if(index != -1)
 			{
+				var item = choiceItems_[index].Item;
+				layout.RemoveItem(item);
 				choiceItems_.RemoveAt(index);
                 if(index <= SelectedIndex)
                 {

@@ -68,6 +68,7 @@
     <Compile Include="Tests\EasingTest.cs" />
     <Compile Include="Tests\LinearLayouterTest.cs" />
     <Compile Include="Tests\MessageWindowTest.cs" />
+    <Compile Include="Tests\ScrollingSelectorTest.cs" />
     <Compile Include="Tests\ScrollTest.cs" />
     <Compile Include="Tests\SelectorTest.cs" />
     <Compile Include="Tests\WiggleTest.cs" />

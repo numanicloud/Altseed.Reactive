@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Text;
@@ -10,12 +12,13 @@ namespace Nac.Altseed.Reactive.UI
 {
     public class LinearPanel : Layouter
     {
-        private List<Object2D> objects_ { get; set; }
+        private ObservableCollection<Object2D> objects_ { get; set; }
         private List<IDisposable> cancellations { get; set; }
         private Vector2DF startingOffset, itemSpan;
 
         protected override IEnumerable<Object2D> ObjectsInternal => objects_;
 
+		public INotifyCollectionChanged ObjectsNotification => objects_;
         public IEnumerable<Object2D> Objects => objects_;
         public Vector2DF StartingOffset
         {
@@ -39,7 +42,7 @@ namespace Nac.Altseed.Reactive.UI
 
         public LinearPanel()
         {
-            objects_ = new List<Object2D>();
+            objects_ = new ObservableCollection<Object2D>();
             cancellations = new List<IDisposable>();
             SetItemPosition = (o, v) => o.SetEasing(v, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 20);
         }

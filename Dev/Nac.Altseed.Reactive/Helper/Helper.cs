@@ -55,9 +55,19 @@ namespace Nac.Altseed.Reactive
 			return new RectI(position.X, position.Y, size.X, size.Y);
 		}
 
+		public static RectF GetRectFromVector(Vector2DF position, Vector2DF size)
+		{
+			return new RectF(position.X, position.Y, size.X, size.Y);
+		}
+
 		public static RectF ShiftRect(RectF source, Vector2DF shift)
 		{
 			return new RectF(source.X + shift.X, source.Y + shift.Y, source.Width, source.Height);
+		}
+
+		public static string ToString(RectF rect)
+		{
+			return $"({rect.X}, {rect.Y}, {rect.Width}, {rect.Height})";
 		}
 	}
 }

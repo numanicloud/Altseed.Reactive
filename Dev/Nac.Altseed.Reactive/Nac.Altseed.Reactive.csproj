@@ -76,6 +76,7 @@
     <Compile Include="UI\Layouter.cs" />
     <Compile Include="UI\LinearPanel.cs" />
     <Compile Include="UI\ScrollBoundViewer.cs" />
+    <Compile Include="UI\ScrollingSelector.cs" />
     <Compile Include="UI\ScrollLayer.cs" />
     <Compile Include="Update\IUpdatable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

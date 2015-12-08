@@ -10,9 +10,11 @@ namespace Nac.Altseed.Reactive.UI
 {
 	public class ScrollLayer : Layer2D
 	{
-		private Vector2DF starting_, ending_, position_, cameraSize_;
+		private Vector2DF starting_, ending_;
+		private Vector2DF position_, cameraSize_;
 		private RectF bindingAreaRange_;
 		private IDisposable scrollDisposable;
+		private Vector2DF cameraTargetPosition;
 
 		private CameraObject2D camera { get; set; }
 		private RectF seeingArea { get; set; }
@@ -87,50 +89,52 @@ namespace Nac.Altseed.Reactive.UI
 
 		private void ReviseCamera(RectF rect)
 		{
+			var offset = new Vector2DF();
+
 			var innerBindingRect = new RectF(
-				camera.Src.X + BindingAreaRange.X,
-				camera.Src.Y + BindingAreaRange.Y,
+				cameraTargetPosition.X + BindingAreaRange.X,
+				cameraTargetPosition.Y + BindingAreaRange.Y,
 				BindingAreaRange.Width,
 				BindingAreaRange.Height);
+			Console.WriteLine(Helper.ToString(innerBindingRect));
+			offset += GetJut(rect, innerBindingRect, false);
+
 			var outerBindingRect = new RectF(
 				Starting.X,
 				Starting.Y,
 				Ending.X - Starting.X,
 				Ending.Y - Starting.Y);
-
-			var offset = new Vector2DF();
-			offset += GetJut(rect, innerBindingRect);
-			offset -= GetJut(AddPosition(camera.Src.ToFloat(), offset), outerBindingRect);
+			offset -= GetJut(AddPosition(camera.Src.ToFloat(), offset), outerBindingRect, false);
 
 			if(offset != new Vector2DF(0, 0))
 			{
-				scrollDisposable?.Dispose();
+				cameraTargetPosition = camera.Src.Position.To2DF() + offset;
+                scrollDisposable?.Dispose();
 				scrollDisposable = UpdateManager.Instance.FrameUpdate
 					.Select(t => camera.Src.Position.To2DF())
-					.EasingVector2DF(camera.Src.Position.To2DF() + offset, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10)
+					.EasingVector2DF(cameraTargetPosition, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10)
 					.Select(p => p.To2DI())
 					.Subscribe(p => camera.Src = new RectI(p.X, p.Y, camera.Src.Width, camera.Src.Height));
 			}
 		}
 
-		private Vector2DF GetJut(RectF rect, RectF bound)
+		private Vector2DF GetJut(RectF rect, RectF bound, bool priorStarting)
 		{
 			Vector2DF result = new Vector2DF();
-
-			if(rect.X < bound.X)
+			if((priorStarting || rect.Width < bound.Width) && rect.X < bound.X)
 			{
 				result.X = rect.X - bound.X;
 			}
-			else if(rect.Width < bound.Width && rect.X + rect.Width > bound.X + bound.Width)
+			else if((!priorStarting || rect.Width < bound.Width) && rect.X + rect.Width > bound.X + bound.Width)
 			{
 				result.X = rect.X + rect.Width - (bound.X + bound.Width);
 			}
-
-			if(rect.Y < bound.Y)
+			
+			if((priorStarting || rect.Height < bound.Height) && rect.Y < bound.Y)
 			{
 				result.Y = rect.Y - bound.Y;
 			}
-			else if(rect.Height < bound.Height && rect.Y + rect.Height > bound.Y + bound.Height)
+			else if((!priorStarting || rect.Height < bound.Height) && rect.Y + rect.Height > bound.Y + bound.Height)
 			{
 				result.Y = rect.Y + rect.Height - (bound.Y + bound.Height);
 			}

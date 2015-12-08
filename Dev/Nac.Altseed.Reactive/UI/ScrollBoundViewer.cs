@@ -13,6 +13,7 @@ namespace Nac.Altseed.Reactive.UI
 		private CameraObject2D debugCamera { get; set; }
 		private GeometryObject2D outerBinding { get; set; }
 		private GeometryObject2D innerBinding { get; set; }
+		private GeometryObject2D cameraBinding { get; set; }
 
 		public ScrollBoundViewer(ScrollLayer scrollLayer)
 		{
@@ -26,13 +27,18 @@ namespace Nac.Altseed.Reactive.UI
 			};
 			outerBinding = new GeometryObject2D()
 			{
-				DrawingPriority = -2,
+				DrawingPriority = -3,
 				Color = new Color(255, 0, 0, 128),
 			};
 			innerBinding = new GeometryObject2D()
 			{
 				DrawingPriority = -1,
 				Color = new Color(0, 0, 255, 128),
+			};
+			cameraBinding = new GeometryObject2D()
+			{
+				DrawingPriority = -2,
+				Color = new Color(0, 255, 0, 128),
 			};
 		}
 
@@ -46,6 +52,10 @@ namespace Nac.Altseed.Reactive.UI
 			{
 				DrawingArea = Helper.ShiftRect(scrollLayer.BindingAreaRange, scrollLayer.CameraSrc.Position.To2DF()),
 			};
+			cameraBinding.Shape = new RectangleShape()
+			{
+				DrawingArea = scrollLayer.CameraSrc.ToFloat(),
+			};
 		}
 
 		protected override void OnStart()
@@ -53,6 +63,7 @@ namespace Nac.Altseed.Reactive.UI
 			Layer.AddObject(debugCamera);
 			Layer.AddObject(outerBinding);
 			Layer.AddObject(innerBinding);
+			Layer.AddObject(cameraBinding);
 		}
 
 		protected override void OnVanish()
@@ -60,6 +71,7 @@ namespace Nac.Altseed.Reactive.UI
 			debugCamera.Vanish();
 			outerBinding.Vanish();
 			innerBinding.Vanish();
+			cameraBinding.Vanish();
 		}
 	}
 }
