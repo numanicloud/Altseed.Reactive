@@ -10,7 +10,7 @@ namespace Nac.Altseed.Reactive.Test
     {
         static void Main(string[] args)
         {
-            AltseedTest test = new BindCollectionForScrollingSelector();
+            AltseedTest test = new LinearLayouterTest();
             test.Run();
         }
     }
