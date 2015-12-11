@@ -4,36 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using asd;
-using Nac.Altseed.Object2DComponents;
+using Nac.Altseed;
 
 namespace Nac.Altseed.Test
 {
-	class WiggleTest : AltseedTest
-	{
-		Vector2DF center;
-		TextureObject2D obj;
-
-		public WiggleTest() : base("Wiggle")
-		{
-		}
-
-		protected override void OnInitialize()
-		{
-			center = new Vector2DF(320, 240);
+    class WiggleTest : AltseedTest
+    {
+        private Vector2DF center;
+        private TextureObject2D obj;
+        private Cancelable cancel;
+        
+        protected override void OnStart()
+        {
+            center = new Vector2DF(320, 240);
             obj = new TextureObject2D()
-			{
-				Texture = Engine.Graphics.CreateTexture2D("Heart.png"),
-				Position = center,
-			};
-			Engine.AddObject2D(obj);
-		}
+            {
+                Texture = Engine.Graphics.CreateTexture2D("Heart.png"),
+                Position = center,
+            };
+            Engine.AddObject2D(obj);
 
-		protected override void OnUpdate()
-		{
-			if(Engine.Keyboard.GetKeyState(Keys.Z) == KeyState.Push)
-			{
-				obj.AddComponent(new ShortWiggleComponent(center, new Vector2DF(10, 10), new Vector2DF(10, 7), 3), "Wiggle"); 
-			}
-		}
-	}
+            var obj2 = new TextureObject2D()
+            {
+                Texture = Engine.Graphics.CreateTexture2D("Heart.png"),
+                Position = center,
+                DrawingPriority = -1,
+            };
+            Engine.AddObject2D(obj2);
+        }
+
+        protected override void OnUpdate()
+        {
+            if(Engine.Keyboard.GetKeyState(Keys.Z) == KeyState.Push)
+            {
+                cancel?.Dispose();
+                cancel = ReactiveAction.SetShortWiggle(obj, center, new Vector2DF(10, 10), new Vector2DF(10, 7), 3);
+            }
+            if(cancel != null && Engine.Keyboard.GetKeyState(Keys.X) == KeyState.Push)
+            {
+                cancel.Dispose();
+            }
+        }
+    }
 }

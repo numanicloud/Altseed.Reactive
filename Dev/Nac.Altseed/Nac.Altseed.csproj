@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{173BA38E-1A4C-48A7-8DD9-8CBA72C83A13}</ProjectGuid>
+    <ProjectGuid>{7CD6E31E-B11F-48CD-9288-A34E76F1C56A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nac.Altseed</RootNamespace>
@@ -20,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,29 +55,35 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CenterPosition.cs" />
-    <Compile Include="Object2DComponents\CoroutineComponent.cs" />
-    <Compile Include="Object2DComponents\Object2DComponentFactory.cs" />
-    <Compile Include="SceneComponents\PushingCoroutineComponent.cs" />
-    <Compile Include="Object2DComponents\ShortWiggleComponent.cs" />
-    <Compile Include="Choice.cs" />
-    <Compile Include="Object2DComponents\Easing.cs" />
-    <Compile Include="Object2DComponents\EasingComponent.cs" />
-    <Compile Include="Object2DComponents\EasingComponent2D.cs" />
-    <Compile Include="Helper.cs" />
+    <Compile Include="Helper\CenterPosition.cs" />
+    <Compile Include="Helper\Easing.cs" />
+    <Compile Include="Helper\Helper.cs" />
+    <Compile Include="Helper\ReactiveAction.cs" />
     <Compile Include="Input\BundleController.cs" />
+    <Compile Include="Input\Choice.cs" />
     <Compile Include="Input\Controller.cs" />
-    <Compile Include="Input\JoystickController.cs" />
+    <Compile Include="Input\ControllerExtention.cs" />
+    <Compile Include="Input\JoyStickController.cs" />
     <Compile Include="Input\KeyboardController.cs" />
     <Compile Include="Input\SteppingController.cs" />
+    <Compile Include="Helper\Observable.cs" />
+    <Compile Include="UI\CollectionBinderForSelector.cs" />
+    <Compile Include="UI\ISelectableList.cs" />
+    <Compile Include="UI\Layouter.cs" />
+    <Compile Include="UI\LinearPanel.cs" />
+    <Compile Include="UI\ScrollBoundViewer.cs" />
+    <Compile Include="UI\ScrollingSelector.cs" />
+    <Compile Include="UI\ScrollLayer.cs" />
+    <Compile Include="Update\IUpdatable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Object2DComponents\TimeAnimationComponent.cs" />
-    <Compile Include="SceneComponents\TimerComponent.cs" />
     <Compile Include="UI\MessageWindow.cs" />
-    <Compile Include="Unit.cs" />
+    <Compile Include="UI\Selector.cs" />
+    <Compile Include="Update\UpdateManager.cs" />
+    <Compile Include="Update\UpdatableSynchronizationContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Altseed_core.dll">

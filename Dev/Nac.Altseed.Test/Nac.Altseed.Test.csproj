@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CBF488E5-4E55-4DBD-BB77-77C21E33AA06}</ProjectGuid>
+    <ProjectGuid>{B14BAA0E-FB6C-4394-BB52-A3C8CC8E1CA3}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nac.Altseed.Test</RootNamespace>
@@ -32,8 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Altseed, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Altseed">
       <HintPath>.\Altseed.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -63,10 +62,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltseedTest.cs" />
-    <Compile Include="Tests\MessageWindowTest.cs" />
-    <Compile Include="Tests\ReactiveInputTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\BindCollectionForScrollingSelector.cs" />
+    <Compile Include="Tests\CollectionBinderTest.cs" />
+    <Compile Include="Tests\EasingTest.cs" />
+    <Compile Include="Tests\LinearLayouterTest.cs" />
+    <Compile Include="Tests\MessageWindowTest.cs" />
+    <Compile Include="Tests\ScrollingSelectorTest.cs" />
+    <Compile Include="Tests\ScrollTest.cs" />
+    <Compile Include="Tests\SelectorTest.cs" />
     <Compile Include="Tests\WiggleTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -75,12 +80,14 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nac.Altseed\Nac.Altseed.csproj">
-      <Project>{173ba38e-1a4c-48a7-8dd9-8cba72c83a13}</Project>
+      <Project>{7cd6e31e-b11f-48cd-9288-a34e76f1c56a}</Project>
       <Name>Nac.Altseed</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Altseed_core.dll" />
+    <Content Include="Altseed_core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

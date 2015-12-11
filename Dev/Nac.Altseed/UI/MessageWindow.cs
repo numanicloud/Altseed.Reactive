@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using asd;
 using Nac.Altseed.Input;
-using Nac.Altseed.Object2DComponents;
 
 namespace Nac.Altseed.UI
 {
-	public class MessageWindow<TAbstractKey> : TextureObject2D
+	public class MessageWindow : TextureObject2D
 	{
-		private Subject<System.Reactive.Unit> onRead_ = new Subject<System.Reactive.Unit>();
+		private Subject<Unit> onRead_ = new Subject<Unit>();
+        private Func<bool> isReadKeyPushed;
 
 		public TextObject2D TextObject { get; private set; }
 		public TextureObject2D WaitIndicator { get; private set; }
-
-		public Controller<TAbstractKey> Controller { get; set; }
-		public TAbstractKey ReadKey { get; set; }
 		public float TextSpeed { get; set; }
+		public IObservable<Unit> OnRead => onRead_;
 
-		public IObservable<System.Reactive.Unit> OnRead => onRead_;
-
-		public MessageWindow(Controller<TAbstractKey> controller)
+		public MessageWindow()
 		{
 			TextObject = new TextObject2D()
 			{
@@ -34,29 +32,32 @@ namespace Nac.Altseed.UI
 				IsDrawn = false,
 			};
 			TextSpeed = 1;
-			Controller = controller;
 		}
 
-		public void TalkMessage(string[] message, Action callback)
+        public void SetReadControl<TAbstractKey>(Controller<TAbstractKey> controller, TAbstractKey readKey)
+        {
+            isReadKeyPushed = () => controller.GetState(readKey) == InputState.Push;
+        }
+
+		public async Task TalkMessageAsync(params string[] message)
 		{
-			// シーンに追加する方式だと親が居ないときに呼べない
-			AddComponent(new CoroutineComponent(FlowToShowText(message, true), callback), "MessageWindow.TalkMessage");
+            await ObservableHelper.FromCoroutine(FlowToShowText(message, true));
 		}
 
-		public void TalkMessage(string message, Action callback)
+		public async Task TalkMessageWithoutReadAsync(string message)
 		{
-			TalkMessage(new string[] { message }, callback);
-		}
-
-		public void TalkMessageWithoutRead(string message, Action callback)
-		{
-			AddComponent(new CoroutineComponent(FlowToShowText(new string[] { message }, false), callback), "MessageWindow.TalkMessageWithoutRead");
+            await ObservableHelper.FromCoroutine(FlowToShowText(new string[] { message }, false));
 		}
 
 		public void ShowMessage(string message)
 		{
 			TextObject.Text = message;
 		}
+
+        public void Clear()
+        {
+            TextObject.Text = "";
+        }
 
 
 		protected override void OnStart()
@@ -75,9 +76,8 @@ namespace Nac.Altseed.UI
 			TextObject.Vanish();
 			WaitIndicator.Vanish();
 		}
-
-
-		private IEnumerable<Unit> FlowToShowText(string[] text, bool readKeyIsNecessary)
+       
+		private IEnumerator<Unit> FlowToShowText(string[] text, bool readKeyIsNecessary)
 		{
 			foreach(var message in text)
 			{
@@ -86,27 +86,27 @@ namespace Nac.Altseed.UI
 				{
 					charCount += TextSpeed;
 
-					if(Controller.GetState(ReadKey) == InputState.Push)
+					if(isReadKeyPushed?.Invoke() == true)
 					{
 						charCount = message.Length;
 					}
 
 					TextObject.Text = message.Substring(0, (int)charCount);
-					yield return Unit.I;
+					yield return Unit.Default;
 				}
 
 				if(readKeyIsNecessary)
 				{
 					WaitIndicator.IsDrawn = true;
-					while(Controller.GetState(ReadKey) != InputState.Push)
+					while(isReadKeyPushed?.Invoke() != true)
 					{
-						yield return Unit.I;
+						yield return Unit.Default;
 					}
-					onRead_.OnNext(System.Reactive.Unit.Default);
+					onRead_.OnNext(Unit.Default);
 					WaitIndicator.IsDrawn = false;
 				}
 
-				yield return Unit.I;
+				yield return Unit.Default;
 			}
 		}
 	}
