@@ -68,7 +68,7 @@
     <Compile Include="Input\BundleController.cs" />
     <Compile Include="Input\Choice.cs" />
     <Compile Include="Input\Controller.cs" />
-    <Compile Include="Input\ControllerExtention.cs" />
+    <Compile Include="Input\ControllerHelper.cs" />
     <Compile Include="Input\JoyStickController.cs" />
     <Compile Include="Input\KeyboardController.cs" />
     <Compile Include="Input\SteppingController.cs" />
