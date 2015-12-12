@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 using Nac.Altseed;
+using Nac.Altseed.Linq;
 using Nac.Altseed.ObjectSystem;
 
 namespace Nac.Altseed.Test

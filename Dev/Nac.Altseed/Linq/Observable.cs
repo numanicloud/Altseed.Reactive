@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 
-namespace Nac.Altseed
+namespace Nac.Altseed.Linq
 {
 	public static class ObservableHelper
 	{

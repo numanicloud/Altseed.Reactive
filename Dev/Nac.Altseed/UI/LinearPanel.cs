@@ -4,16 +4,14 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 using asd;
+using Nac.Altseed.Linq;
 
 namespace Nac.Altseed.UI
 {
-    public class LinearPanel : Layouter
+	public class LinearPanel : Layouter
     {
 		public class ItemInfo
 		{

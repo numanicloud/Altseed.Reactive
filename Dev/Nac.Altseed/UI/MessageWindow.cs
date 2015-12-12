@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
 using System.Threading.Tasks;
 using asd;
 using Nac.Altseed.Input;
+using Nac.Altseed.Linq;
+using Nac.Altseed.ObjectSystem;
 
 namespace Nac.Altseed.UI
 {
-	public class MessageWindow : TextureObject2D
+	public class MessageWindow : ReactiveTextureObject2D
 	{
 		private Subject<Unit> onRead_ = new Subject<Unit>();
         private Func<bool> isReadKeyPushed;
@@ -41,12 +41,12 @@ namespace Nac.Altseed.UI
 
 		public async Task TalkMessageAsync(params string[] message)
 		{
-            await ObservableHelper.FromCoroutine(FlowToShowText(message, true));
+			await OnUpdateEvent.SelectCorourine(FlowToShowText(message, true));
 		}
 
 		public async Task TalkMessageWithoutReadAsync(string message)
 		{
-            await ObservableHelper.FromCoroutine(FlowToShowText(new string[] { message }, false));
+			await OnUpdateEvent.SelectCorourine(FlowToShowText(new string[] { message }, false));
 		}
 
 		public void ShowMessage(string message)

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using asd;
 
 namespace Nac.Altseed.UI
 {
-    public interface ISelector<TChoice>
+	public interface ISelector<TChoice>
     {
         Layer2D Layer { get; }
 

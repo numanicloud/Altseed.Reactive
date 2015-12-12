@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
-using System.Text;
 
 namespace Nac.Altseed.Input
 {
-    /// <summary>
-    /// 選択肢に対する操作を表す列挙体。
-    /// </summary>
+	/// <summary>
+	/// 選択肢に対する操作を表す列挙体。
+	/// </summary>
 	public enum ChoiceControl
 	{
 		Next, Previous, Decide, Cancel
@@ -27,10 +26,10 @@ namespace Nac.Altseed.Input
 		private Dictionary<TAbstractKey, ChoiceControl> controlls { get; set; }
 		private IList<int> skippedIndex { get; set; }
 
-        private Subject<int> onSelectionChanged_ { get; set; } = new Subject<int>();
-        private Subject<int> onMove_ { get; set; } = new Subject<int>();
-        private Subject<int> onDecide_ { get; set; } = new Subject<int>();
-        private Subject<int> onCancel_ { get; set; } = new Subject<int>();
+		private Subject<int> onSelectionChanged_ { get; set; } = new Subject<int>();
+		private Subject<int> onMove_ { get; set; } = new Subject<int>();
+		private Subject<int> onDecide_ { get; set; } = new Subject<int>();
+		private Subject<int> onCancel_ { get; set; } = new Subject<int>();
 
 		/// <summary>
 		/// 選択肢の項目数を取得または設定します。
@@ -67,16 +66,16 @@ namespace Nac.Altseed.Input
 				}
 			}
 		}
-        /// <summary>
-        /// 現在選択されている項目のインデックスを取得します。
-        /// </summary>
+		/// <summary>
+		/// 現在選択されている項目のインデックスを取得します。
+		/// </summary>
 		public int SelectedIndex
 		{
 			get { return selectedIndex_; }
 			set
 			{
 				var prev = selectedIndex_;
-                selectedIndex_ = value;
+				selectedIndex_ = value;
 				if(selectedIndex_ < 0)
 				{
 					selectedIndex_ = 0;
@@ -91,30 +90,30 @@ namespace Nac.Altseed.Input
 				}
 				if(prev != selectedIndex_)
 				{
-                    onSelectionChanged_.OnNext(selectedIndex_);
+					onSelectionChanged_.OnNext(selectedIndex_);
 				}
 			}
 		}
-        /// <summary>
-        /// 選択肢間の移動操作をループできるようにするかどうかの真偽値を取得または設定します。
-        /// </summary>
+		/// <summary>
+		/// 選択肢間の移動操作をループできるようにするかどうかの真偽値を取得または設定します。
+		/// </summary>
 		public bool Loop { get; set; }
 		/// <summary>
 		/// 登録したコントローラーを自動的にUpdateするかどうかの真偽値を取得または設定します。
 		/// </summary>
 		public bool IsControllerUpdated { get; set; }
 
-        public IObservable<int> OnSelectionChanged => onSelectionChanged_;
-        public IObservable<int> OnMove => onMove_;
-        public IObservable<int> OnDecide => onDecide_;
-        public IObservable<int> OnCancel => onCancel_;
+		public IObservable<int> OnSelectionChanged => onSelectionChanged_;
+		public IObservable<int> OnMove => onMove_;
+		public IObservable<int> OnDecide => onDecide_;
+		public IObservable<int> OnCancel => onCancel_;
 
-        /// <summary>
-        /// Choiceクラスを生成します。
-        /// </summary>
-        /// <param name="size">選択肢の数。</param>
-        /// <param name="loop">選択肢間の移動をループさせるかどうか。</param>
-        /// <param name="keyIsHold">特定のキーが押下されているかどうかを取得するデリゲート。</param>
+		/// <summary>
+		/// Choiceクラスを生成します。
+		/// </summary>
+		/// <param name="size">選択肢の数。</param>
+		/// <param name="loop">選択肢間の移動をループさせるかどうか。</param>
+		/// <param name="keyIsHold">特定のキーが押下されているかどうかを取得するデリゲート。</param>
 		public Choice(int size, Controller<TAbstractKey> controller)
 		{
 			this.controller = controller;
@@ -122,14 +121,14 @@ namespace Nac.Altseed.Input
 			skippedIndex = new List<int>();
 			Size = size;
 			Loop = false;
-            SelectedIndex = 0;
+			SelectedIndex = 0;
 		}
 
-        /// <summary>
-        /// 指定したキーを指定した選択肢の操作に割り当てます。
-        /// </summary>
-        /// <param name="key">操作に割り当てるキー。</param>
-        /// <param name="controll">キーに割り当てる操作。</param>
+		/// <summary>
+		/// 指定したキーを指定した選択肢の操作に割り当てます。
+		/// </summary>
+		/// <param name="key">操作に割り当てるキー。</param>
+		/// <param name="controll">キーに割り当てる操作。</param>
 		/// <remarks>同じキーに異なる操作を割り当てると、最後の割り当てで上書きされます。</remarks>
 		public void BindKey(TAbstractKey key, ChoiceControl controll)
 		{
@@ -145,10 +144,10 @@ namespace Nac.Altseed.Input
 			controlls.Remove(key);
 		}
 
-        /// <summary>
-        /// 選択肢の移動の際にスキップする選択肢のインデックスを追加します。
-        /// </summary>
-        /// <param name="index">スキップする選択肢のインデックス。</param>
+		/// <summary>
+		/// 選択肢の移動の際にスキップする選択肢のインデックスを追加します。
+		/// </summary>
+		/// <param name="index">スキップする選択肢のインデックス。</param>
 		public void AddSkippedIndex(int index)
 		{
 			if (index >= Size || index < 0)
@@ -157,8 +156,8 @@ namespace Nac.Altseed.Input
 			}
 			skippedIndex.Add(index);
 
-            if(skippedIndex.Contains(SelectedIndex))
-            {
+			if(skippedIndex.Contains(SelectedIndex))
+			{
 				var prev = SelectedIndex;
 				var successToMove = SelectNextIndex() || SelectPreviousIndex();
 				if(!successToMove)
@@ -191,9 +190,9 @@ namespace Nac.Altseed.Input
 			}
 		}
 
-        /// <summary>
-        /// 選択肢の制御を実行します。毎フレーム呼び出す必要があります。
-        /// </summary>
+		/// <summary>
+		/// 選択肢の制御を実行します。毎フレーム呼び出す必要があります。
+		/// </summary>
 		public void Update()
 		{
 			if (IsControllerUpdated)
@@ -220,7 +219,7 @@ namespace Nac.Altseed.Input
 							Cancel();
 							break;
 					}
-                    break;
+					break;
 				}
 			}
 		}
@@ -288,7 +287,7 @@ namespace Nac.Altseed.Input
 			var result = SelectNextIndex();
 			if(result)
 			{
-                onMove_.OnNext(SelectedIndex);
+				onMove_.OnNext(SelectedIndex);
 				onSelectionChanged_.OnNext(SelectedIndex);
 			}
 		}
@@ -302,10 +301,10 @@ namespace Nac.Altseed.Input
 			
 			var result = SelectPreviousIndex();
 			if(result)
-            {
-                onMove_.OnNext(SelectedIndex);
-                onSelectionChanged_.OnNext(SelectedIndex);
-            }
+			{
+				onMove_.OnNext(SelectedIndex);
+				onSelectionChanged_.OnNext(SelectedIndex);
+			}
 		}
 
 		private void Decide()
@@ -315,12 +314,12 @@ namespace Nac.Altseed.Input
 				return;
 			}
 
-            onDecide_.OnNext(SelectedIndex);
+			onDecide_.OnNext(SelectedIndex);
 		}
 
 		private void Cancel()
 		{
-            onCancel_.OnNext(SelectedIndex);
+			onCancel_.OnNext(SelectedIndex);
 		}
 	}
 }

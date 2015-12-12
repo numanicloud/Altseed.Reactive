@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using asd;
 
 namespace Nac.Altseed.UI
 {
-    public abstract class Layouter : TextureObject2D
+	public abstract class Layouter : TextureObject2D
     {
         public abstract void AddItem(Object2D obj);
         public abstract void InsertItem(int index, Object2D obj);

@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 
-namespace Nac.Altseed
+namespace Nac.Altseed.Linq
 {
-    public static class Helper
+    public static class LinqHelper
     {
 		/// <summary>
 		/// コレクションの要素から指定した条件を最初に満たすオブジェクトを検索し、そのインデックスを返します。

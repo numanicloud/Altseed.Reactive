@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using asd;
 
 namespace Nac.Altseed.UI
 {
-    public class CollectionBinderForSelector<TChoice> : IDisposable
+	public class CollectionBinderForSelector<TChoice> : IDisposable
     {
         private ISelector<TChoice> list { get; set; }
         private INotifyCollectionChanged notifier { get; set; }

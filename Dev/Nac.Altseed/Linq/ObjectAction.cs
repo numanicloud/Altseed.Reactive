@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using asd;
 using Nac.Altseed.ObjectSystem;
 
-namespace Nac.Altseed
+namespace Nac.Altseed.Linq
 {
 	/// <summary>
 	/// Altseed のオブジェクトシステムに関するリアクティブ メソッドを提供するヘルパー。
