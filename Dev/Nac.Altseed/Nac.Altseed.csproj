@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Altseed">
@@ -61,8 +62,9 @@
   <ItemGroup>
     <Compile Include="Helper\CenterPosition.cs" />
     <Compile Include="Helper\Easing.cs" />
+    <Compile Include="Helper\GeometoryHelper.cs" />
     <Compile Include="Helper\Helper.cs" />
-    <Compile Include="Helper\ReactiveAction.cs" />
+    <Compile Include="Helper\ObjectAction.cs" />
     <Compile Include="Input\BundleController.cs" />
     <Compile Include="Input\Choice.cs" />
     <Compile Include="Input\Controller.cs" />
@@ -71,6 +73,11 @@
     <Compile Include="Input\KeyboardController.cs" />
     <Compile Include="Input\SteppingController.cs" />
     <Compile Include="Helper\Observable.cs" />
+    <Compile Include="ObjectSystem\INotifyUpdated.cs" />
+    <Compile Include="ObjectSystem\ReactiveLayer2D.cs" />
+    <Compile Include="ObjectSystem\ReactiveScene.cs" />
+    <Compile Include="ObjectSystem\ReactiveTextObject2D.cs" />
+    <Compile Include="ObjectSystem\ReactiveTextureObject2D.cs" />
     <Compile Include="UI\CollectionBinderForSelector.cs" />
     <Compile Include="UI\ISelectableList.cs" />
     <Compile Include="UI\Layouter.cs" />

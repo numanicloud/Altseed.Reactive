@@ -12,7 +12,7 @@ namespace Nac.Altseed.Test
     {
         private Vector2DF center;
         private TextureObject2D obj;
-        private Cancelable cancel;
+        private IDisposable cancel;
         
         protected override void OnStart()
         {
@@ -38,7 +38,9 @@ namespace Nac.Altseed.Test
             if(Engine.Keyboard.GetKeyState(Keys.Z) == KeyState.Push)
             {
                 cancel?.Dispose();
-                cancel = ReactiveAction.SetShortWiggle(obj, center, new Vector2DF(10, 10), new Vector2DF(10, 7), 3);
+				cancel = UpdateManager.Instance.FrameUpdate
+					.ShortWiggle(center, new Vector2DF(10, 10), new Vector2DF(10, 7), 180)
+					.Subscribe(p => obj.Position = p);
             }
             if(cancel != null && Engine.Keyboard.GetKeyState(Keys.X) == KeyState.Push)
             {

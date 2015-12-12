@@ -20,7 +20,7 @@ namespace Nac.Altseed.UI
 			this.scrollLayer = scrollLayer;
 			debugCamera = new CameraObject2D()
 			{
-				Src = Helper.GetRectFromVector(
+				Src = GeometoryHelper.GetRectFromVector(
 					(scrollLayer.Starting - new Vector2DF(30, 30)).To2DI(),
 					(scrollLayer.Ending - scrollLayer.Starting + new Vector2DF(60, 60)).To2DI()),
 				Dst = new RectI(Engine.WindowSize.X / 2, 0, Engine.WindowSize.X / 2, Engine.WindowSize.Y),
@@ -46,11 +46,11 @@ namespace Nac.Altseed.UI
 		{
 			outerBinding.Shape = new RectangleShape()
 			{
-				DrawingArea = Helper.GetRectFromVector(scrollLayer.Starting.To2DI(), (scrollLayer.Ending - scrollLayer.Starting).To2DI()).ToFloat(),
+				DrawingArea = GeometoryHelper.GetRectFromVector(scrollLayer.Starting.To2DI(), (scrollLayer.Ending - scrollLayer.Starting).To2DI()).ToFloat(),
 			};
 			innerBinding.Shape = new RectangleShape()
 			{
-				DrawingArea = Helper.ShiftRect(scrollLayer.BindingAreaRange, scrollLayer.CameraSrc.Position.To2DF()),
+				DrawingArea = scrollLayer.BindingAreaRange.Shift(scrollLayer.CameraSrc.Position.To2DF()),
 			};
 			cameraBinding.Shape = new RectangleShape()
 			{
