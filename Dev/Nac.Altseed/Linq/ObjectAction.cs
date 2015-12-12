@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -173,6 +174,66 @@ namespace Nac.Altseed.Linq
 		public static IObservable<float> TimeAnimation(this INotifyUpdated source, Action<float> action)
 		{
 			return source.OnUpdateEvent.Total().Do(action);
+		}
+
+		/// <summary>
+		/// シーケンスを時間単位として、カメラの Src の位置を滑らかに移動させます。
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source">時間単位となるシーケンス。</param>
+		/// <param name="camera">Src の位置を移動させるカメラ。</param>
+		/// <param name="goal">終点の位置。</param>
+		/// <param name="start">始点での速度。</param>
+		/// <param name="end">終点での速度。</param>
+		/// <param name="count">移動にかける時間。</param>
+		/// <returns></returns>
+		public static IObservable<Vector2DF> DoEasingCameraSrc<T>(this IObservable<T> source, CameraObject2D camera, Vector2DF goal, EasingStart start, EasingEnd end, int count)
+		{
+			return source.Select(t => camera.Src.Position.To2DF())
+				.EasingVector2DF(goal, start, end, count)
+				.Do(p => camera.Src = camera.Src.WithPosition(p.To2DI()));
+		}
+
+		/// <summary>
+		/// シーケンスを時間単位として、オブジェクトを振動させます。
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source">時間単位となるシーケンス。</param>
+		/// <param name="obj">振動させるオブジェクト。</param>
+		/// <param name="center">振動の中心点。</param>
+		/// <param name="amplitude">軸ごとの振幅。</param>
+		/// <param name="frequency">軸ごとの周波数(/秒)。</param>
+		/// <param name="count">振動するフレーム数。</param>
+		/// <returns></returns>
+		public static IObservable<Vector2DF> DoShortWiggle<T>(this IObservable<T> source, Object2D obj, Vector2DF center, Vector2DF amplitude, Vector2DF frequency, int count)
+		{
+			return source.ShortWiggle(center, amplitude, frequency, count)
+				.Do(p => obj.Position = p, () => obj.Position = center);
+		}
+
+		/// <summary>
+		/// シーケンスを時間単位として、オブジェクトを振動させ続けます。
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source">時間単位となるシーケンス。</param>
+		/// <param name="obj">振動させるオブジェクト。</param>
+		/// <param name="center">振動の中心点。</param>
+		/// <param name="amplitude">軸ごとの振幅。</param>
+		/// <param name="frequency">軸ごとの周波数(/秒)。</param>
+		/// <returns></returns>
+		public static IObservable<Vector2DF> DoWiggle<T>(this IObservable<T> source, Object2D obj, Vector2DF center, Vector2DF amplitude, Vector2DF frequency)
+		{
+			return source.Wiggle(center, amplitude, frequency)
+				.Do(p => obj.Position = p, () => obj.Position = center);
+		}
+
+		public static IObservable<Unit> Timer(this INotifyUpdated obj, float time)
+		{
+			float t = 0;
+			return obj.OnUpdateEvent.Do(f => t += f)
+				.SkipWhile(f => t < time)
+				.Select(f => Unit.Default)
+				.Take(1);
 		}
 	}
 }
