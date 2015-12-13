@@ -31,7 +31,7 @@ namespace Nac.Altseed.Test
 
         Selector<int, int> selector;
         Font font;
-        
+
         protected override void OnStart()
         {
             var controller = new KeyboardController<int>();
@@ -43,12 +43,18 @@ namespace Nac.Altseed.Test
             var layout = new LinearPanel()
             {
                 ItemSpan = new Vector2DF(0, 36),
+                Position = new Vector2DF(20, 20),
             };
-            selector = new Selector<int, int>(controller, layout);
-            selector.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
+            layout.SetEasingBehaviorUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
+            selector = new Selector<int, int>(controller, layout)
+            {
+                Texture = Engine.Graphics.CreateTexture2D("ListCursor.png"),
+                Loop = true,
+                CursorOffset = new Vector2DF(-5, -3),
+            };
             selector.BindKey(0, 1, 2, 3);
+            selector.SetEasingBehaviorUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
             Engine.AddObject2D(selector);
-            selector.Loop = true;
 
             font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 255, 255, 255), 0, new Color(0, 0, 0, 255));
             for(int i = 0; i < 8; i++)

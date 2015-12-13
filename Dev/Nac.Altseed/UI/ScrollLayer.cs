@@ -65,6 +65,7 @@ namespace Nac.Altseed.UI
 			}
 		}
 		public RectI CameraSrc => camera.Src;
+        public RectF SeeingArea => seeingArea;
 
 
 		public ScrollLayer()
@@ -109,11 +110,11 @@ namespace Nac.Altseed.UI
 				Starting.Y,
 				Ending.X - Starting.X,
 				Ending.Y - Starting.Y);
-			offset -= GetJut(AddPosition(camera.Src.ToFloat(), offset), outerBindingRect);
+			offset -= GetJut(camera.Src.ToFloat().WithPosition(cameraTargetPosition + offset), outerBindingRect);
 
 			if(offset != new Vector2DF(0, 0))
 			{
-				cameraTargetPosition = camera.Src.Position.To2DF() + offset;
+				cameraTargetPosition = cameraTargetPosition + offset;
 				scrollDisposable?.Dispose();
 				scrollDisposable = getCameraMoving(cameraTargetPosition)
 					.Subscribe(r => camera.Src = r.ToInt());

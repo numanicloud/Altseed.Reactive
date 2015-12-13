@@ -5,230 +5,248 @@ using System.Reactive;
 using System.Reactive.Linq;
 using asd;
 using Nac.Altseed.Input;
+using Nac.Altseed.ObjectSystem;
 
 namespace Nac.Altseed.UI
 {
-	public enum Orientation
-	{
-		Horizontal, Vertical
-	}
+    public enum Orientation
+    {
+        Horizontal, Vertical
+    }
 
-	public class ScrollingSelector<TChoice, TAbstractKey> : Layer2D, ISelector<TChoice, TAbstractKey>
-	{
-		private Orientation orientation_;
-		private float lineSpan_, lineWidth_;
-		private int boundLines_, extraLinesOnStarting, extraLinesOnEnding;
+    public class ScrollingSelector<TChoice, TAbstractKey> : ReactiveLayer2D, ISelector<TChoice, TAbstractKey>
+    {
+        private Orientation orientation_;
+        private float lineSpan_, lineWidth_;
+        private int boundLines_, extraLinesOnStarting, extraLinesOnEnding;
 
-		private Selector<TChoice, TAbstractKey> selector { get; set; }
-		private ScrollLayer scroll { get; set; }
-		private LinearPanel layout { get; set; }
+        private Selector<TChoice, TAbstractKey> selector { get; set; }
+        private ScrollLayer scroll { get; set; }
+        private LinearPanel layout { get; set; }
 
-		public TextureObject2D Cursor => selector;
-		public Vector2DF Position
-		{
-			get { return scroll.Position; }
-			set { scroll.Position = value; }
-		}
-		public Orientation Orientation
-		{
-			get { return orientation_; }
-			set
-			{
-				orientation_ = value;
-				ResetBound();
-			}
-		}
-		public float LineSpan
-		{
-			get { return lineSpan_; }
-			set
-			{
-				lineSpan_ = value;
-				ResetBound();
-			}
-		}
-		public float LineWidth
-		{
-			get { return lineWidth_; }
-			set
-			{
-				lineWidth_ = value;
-				ResetBound();
-			}
-		}
-		public int BoundLines
-		{
-			get { return boundLines_; }
-			set
-			{
-				boundLines_ = value;
-				ResetBound();
-			}
-		}
-		public int ExtraLinesOnStarting
-		{
-			get { return extraLinesOnStarting; }
-			set
-			{
-				extraLinesOnStarting = value;
-				ResetBound();
-			}
-		}
-		public int ExtraLinesOnEnding
-		{
-			get { return extraLinesOnEnding; }
-			set
-			{
-				extraLinesOnEnding = value;
-				ResetBound();
-			}
-		}
+        public TextureObject2D Cursor => selector;
+        public Vector2DF Position
+        {
+            get { return scroll.Position; }
+            set { scroll.Position = value; }
+        }
+        public Orientation Orientation
+        {
+            get { return orientation_; }
+            set
+            {
+                orientation_ = value;
+                ResetBound();
+            }
+        }
+        public float LineSpan
+        {
+            get { return lineSpan_; }
+            set
+            {
+                lineSpan_ = value;
+                ResetBound();
+            }
+        }
+        public float LineWidth
+        {
+            get { return lineWidth_; }
+            set
+            {
+                lineWidth_ = value;
+                ResetBound();
+            }
+        }
+        public int BoundLines
+        {
+            get { return boundLines_; }
+            set
+            {
+                boundLines_ = value;
+                ResetBound();
+            }
+        }
+        public int ExtraLinesOnStarting
+        {
+            get { return extraLinesOnStarting; }
+            set
+            {
+                extraLinesOnStarting = value;
+                ResetBound();
+            }
+        }
+        public int ExtraLinesOnEnding
+        {
+            get { return extraLinesOnEnding; }
+            set
+            {
+                extraLinesOnEnding = value;
+                ResetBound();
+            }
+        }
 
-		#region Selectorへの委譲機能
-		public bool IsActive
-		{
-			get { return selector.IsActive; }
-			set { selector.IsActive = value; }
-		}
-		public bool IsControllerUpdated
-		{
-			get { return selector.IsControllerUpdated; }
-			set { selector.IsControllerUpdated = value; }
-		}
-		public bool Loop
-		{
-			get { return selector.Loop; }
-			set { selector.Loop = value; }
-		}
-		public Layer2D Layer => selector.Layer;
-		public IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem> ChoiceItems => selector.ChoiceItems;
-		public int SelectedIndex => selector.SelectedIndex;
-		public IObservable<TChoice> OnSelectionChanged => selector.OnSelectionChanged;
-		public IObservable<TChoice> OnMove => selector.OnMove;
-		public IObservable<TChoice> OnDecide => selector.OnDecide;
-		public IObservable<TChoice> OnCancel => selector.OnCancel;
+        public Vector2DF LayoutStarting
+        {
+            get { return layout.StartingOffset; }
+            set { layout.StartingOffset = value; }
+        }
 
-		public void AddChoice(TChoice choice, Object2D obj)
-		{
-			selector.AddChoice(choice, obj);
-		}
+        #region Selectorへの委譲機能
+        public bool IsActive
+        {
+            get { return selector.IsActive; }
+            set { selector.IsActive = value; }
+        }
+        public bool IsControllerUpdated
+        {
+            get { return selector.IsControllerUpdated; }
+            set { selector.IsControllerUpdated = value; }
+        }
+        public bool Loop
+        {
+            get { return selector.Loop; }
+            set { selector.Loop = value; }
+        }
+        public Vector2DF CursorOffset
+        {
+            get { return selector.CursorOffset; }
+            set
+            {
+                selector.CursorOffset = value;
+                ResetBound();
+                ResetOuterBound();
+            }
+        }
+        public Layer2D Layer => selector.Layer;
+        public IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem> ChoiceItems => selector.ChoiceItems;
+        public int SelectedIndex => selector.SelectedIndex;
+        public IObservable<TChoice> OnSelectionChanged => selector.OnSelectionChanged;
+        public IObservable<TChoice> OnMove => selector.OnMove;
+        public IObservable<TChoice> OnDecide => selector.OnDecide;
+        public IObservable<TChoice> OnCancel => selector.OnCancel;
 
-		public Object2D RemoveChoice(TChoice choice)
-		{
-			return selector.RemoveChoice(choice);
-		}
+        public void AddChoice(TChoice choice, Object2D obj)
+        {
+            selector.AddChoice(choice, obj);
+        }
 
-		public Object2D GetItemForChoice(TChoice choice)
-		{
-			return selector.GetItemForChocie(choice);
-		}
+        public Object2D RemoveChoice(TChoice choice)
+        {
+            return selector.RemoveChoice(choice);
+        }
 
-		public void InsertChoice(int index, TChoice choice, Object2D obj)
-		{
-			selector.InsertChoice(index, choice, obj);
-		}
+        public Object2D GetItemForChoice(TChoice choice)
+        {
+            return selector.GetItemForChocie(choice);
+        }
 
-		public void ClearChoice()
-		{
-			selector.ClearChoice();
-		}
+        public void InsertChoice(int index, TChoice choice, Object2D obj)
+        {
+            selector.InsertChoice(index, choice, obj);
+        }
 
-		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
-		{
-			selector.BindKey(next, prev, decide, cancel);
-		}
-		#endregion
+        public void ClearChoice()
+        {
+            selector.ClearChoice();
+        }
 
-		public ScrollingSelector(Controller<TAbstractKey> controller)
-		{
-			layout = new LinearPanel();
-			selector = new Selector<TChoice, TAbstractKey>(controller, layout);
-			scroll = new ScrollLayer();
+        public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
+        {
+            selector.BindKey(next, prev, decide, cancel);
+        }
+        #endregion
 
-			scroll.AddObject(selector);
+        public ScrollingSelector(Controller<TAbstractKey> controller)
+        {
+            layout = new LinearPanel();
+            selector = new Selector<TChoice, TAbstractKey>(controller, layout);
+            scroll = new ScrollLayer();
 
-			var areaChanged = selector.OnSelectionChanged
-				.Select(c => Unit.Default)
-				.Merge(selector.OnLayoutChanged)
-				.Where(u => selector.SelectedIndex != -1)
-				.Select(p => GeometoryHelper.GetRectFromVector(layout.ItemSpan * selector.SelectedIndex, GetSize(1)));
-			scroll.SubscribeSeeingArea(areaChanged);
-			layout.OnLayoutChanged.Subscribe(u => ResetOuterBound());
+            scroll.AddObject(selector);
 
-			Position = new Vector2DF();
-			orientation_ = Orientation.Vertical;
-			lineSpan_ = 20;
-			lineWidth_ = 200;
-			boundLines_ = 1;
-			extraLinesOnStarting = 1;
-			extraLinesOnEnding = 1;
-			ResetOuterBound();
-			ResetBound();
-		}
+            var areaChanged = selector.OnSelectionChanged
+                .Select(c => Unit.Default)
+                .Merge(selector.OnLayoutChanged)
+                .Where(u => selector.SelectedIndex != -1)
+                .Select(p => GeometoryHelper.GetRectFromVector(layout.ItemSpan * selector.SelectedIndex + selector.CursorOffset, GetSize(1)));
+            scroll.SubscribeSeeingArea(areaChanged);
+            layout.OnLayoutChanged.Subscribe(u => ResetOuterBound());
 
-		public void SetEasingScrollUp(EasingStart start, EasingEnd end, int time)
-		{
-			layout.SetEasingBehaviorUp(start, end, time);
-			selector.SetEasingBehaviorUp(start, end, time);
-			scroll.SetEasingBehaviorUp(start, end, time);
-		}
+            Position = new Vector2DF();
+            orientation_ = Orientation.Vertical;
+            lineSpan_ = 20;
+            lineWidth_ = 200;
+            boundLines_ = 1;
+            extraLinesOnStarting = 1;
+            extraLinesOnEnding = 1;
+            ResetOuterBound();
+            ResetBound();
+        }
 
-		public void SetDebugCameraUp()
-		{
-			var viewer = new ScrollBoundViewer(scroll);
-			scroll.AddObject(viewer);
-		}
+        public void SetEasingScrollUp(EasingStart start, EasingEnd end, int time)
+        {
+            layout.SetEasingBehaviorUp(start, end, time);
+            selector.SetEasingBehaviorUp(start, end, time);
+            scroll.SetEasingBehaviorUp(start, end, time);
+        }
 
-
-		protected override void OnStart()
-		{
-			Scene.AddLayer(scroll);
-		}
-
-		protected override void OnVanish()
-		{
-			scroll.Vanish();
-		}
+        public void SetDebugCameraUp()
+        {
+            var viewer = new ScrollBoundViewer(scroll);
+            scroll.AddObject(viewer);
+        }
 
 
-		private void ResetOuterBound()
-		{
-			scroll.Ending = GetSize(layout.Items.Count());
-		}
+        protected override void OnStart()
+        {
+            Scene.AddLayer(scroll);
+        }
 
-		private void ResetBound()
-		{
-			switch(Orientation)
-			{
-			case Orientation.Horizontal:
-				layout.ItemSpan = new Vector2DF(LineSpan, 0);
-				break;
-			case Orientation.Vertical:
-				layout.ItemSpan = new Vector2DF(0, LineSpan);
-				break;
-			}
+        protected override void OnVanish()
+        {
+            scroll.Vanish();
+        }
 
-			var bindStarting = layout.ItemSpan * ExtraLinesOnStarting;
-			var bindSize = GetSize(BoundLines);
-			scroll.CameraSize = GetSize(ExtraLinesOnStarting + BoundLines + ExtraLinesOnEnding);
-			scroll.BindingAreaRange = GeometoryHelper.GetRectFromVector(bindStarting, bindSize);
-		}
 
-		private Vector2DF GetSize(int lines)
-		{
-			Vector2DF size = new Vector2DF();
-			switch(Orientation)
-			{
-			case Orientation.Horizontal:
-				size.X = LineSpan * lines;
-				size.Y = LineWidth;
-				break;
-			case Orientation.Vertical:
-				size.X = LineWidth;
-				size.Y = LineSpan * lines;
-				break;
-			}
-			return size;
-		}
-	}
+        private void ResetOuterBound()
+        {
+            scroll.Starting = selector.CursorOffset;
+            scroll.Ending = GetSize(layout.Items.Count()) + selector.CursorOffset;
+        }
+
+        private void ResetBound()
+        {
+            switch(Orientation)
+            {
+            case Orientation.Horizontal:
+                layout.ItemSpan = new Vector2DF(LineSpan, 0);
+                break;
+            case Orientation.Vertical:
+                layout.ItemSpan = new Vector2DF(0, LineSpan);
+                break;
+            }
+
+            var bindStarting = layout.ItemSpan * ExtraLinesOnStarting;
+            var bindSize = GetSize(BoundLines);
+            scroll.CameraSize = GetSize(ExtraLinesOnStarting + BoundLines + ExtraLinesOnEnding);
+            scroll.BindingAreaRange = GeometoryHelper.GetRectFromVector(bindStarting, bindSize);
+        }
+
+        private Vector2DF GetSize(int lines)
+        {
+            Vector2DF size = new Vector2DF();
+            switch(Orientation)
+            {
+            case Orientation.Horizontal:
+                size.X = LineSpan * lines;
+                size.Y = LineWidth;
+                break;
+            case Orientation.Vertical:
+                size.X = LineWidth;
+                size.Y = LineSpan * lines;
+                break;
+            }
+            return size;
+        }
+    }
 }

@@ -14,6 +14,7 @@ namespace Nac.Altseed.UI
 		private GeometryObject2D outerBinding { get; set; }
 		private GeometryObject2D innerBinding { get; set; }
 		private GeometryObject2D cameraBinding { get; set; }
+        private GeometryObject2D seeingArea { get; set; }
 
 		public ScrollBoundViewer(ScrollLayer scrollLayer)
 		{
@@ -40,7 +41,12 @@ namespace Nac.Altseed.UI
 				DrawingPriority = -2,
 				Color = new Color(0, 255, 0, 128),
 			};
-		}
+            seeingArea = new GeometryObject2D()
+            {
+                DrawingPriority = -2,
+                Color = new Color(255, 255, 0, 100),
+            };
+        }
 
 		protected override void OnUpdate()
 		{
@@ -56,6 +62,10 @@ namespace Nac.Altseed.UI
 			{
 				DrawingArea = scrollLayer.CameraSrc.ToFloat(),
 			};
+            seeingArea.Shape = new RectangleShape()
+            {
+                DrawingArea = scrollLayer.SeeingArea,
+            };
 		}
 
 		protected override void OnStart()
@@ -64,6 +74,7 @@ namespace Nac.Altseed.UI
 			Layer.AddObject(outerBinding);
 			Layer.AddObject(innerBinding);
 			Layer.AddObject(cameraBinding);
+            Layer.AddObject(seeingArea);
 		}
 
 		protected override void OnVanish()
@@ -72,6 +83,7 @@ namespace Nac.Altseed.UI
 			outerBinding.Vanish();
 			innerBinding.Vanish();
 			cameraBinding.Vanish();
+            seeingArea.Vanish();
 		}
 	}
 }

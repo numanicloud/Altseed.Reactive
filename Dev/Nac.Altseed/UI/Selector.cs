@@ -36,8 +36,8 @@ namespace Nac.Altseed.UI
 		private IDisposable cancellationOfCursorMoving = null;
 		private Vector2DF cursorOffset_ = new Vector2DF();
         private BooleanDisposable revisingStatus;
-        private Layouter layout;
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
+        private Object2D parent;
 
 		public bool IsActive { get; set; }
 		public int SelectedIndex { get; private set; }
@@ -48,6 +48,7 @@ namespace Nac.Altseed.UI
 		public IObservable<TChoice> OnCancel { get; private set; }
 		public IReadOnlyList<ChoiceItem> ChoiceItems => choiceItems_;
         
+        public Layouter Layout { get; private set; }
 		public Vector2DF CursorOffset
 		{
 			get { return cursorOffset_; }
@@ -56,12 +57,11 @@ namespace Nac.Altseed.UI
 				cursorOffset_ = value;
 				if(choiceSystem.SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
 				{
-					cancellationOfCursorMoving?.Dispose();
-					Position = choiceItems_[choiceSystem.SelectedIndex].Item.Position + cursorOffset_;
+                    SuddenlyMoveCursor(choiceItems_[choiceSystem.SelectedIndex].Item);
 				}
 			}
 		}
-		public Func<Object2D, Object2D, IObservable<Vector2DF>> SetCursorPosition { get; set; }
+        public Func<Object2D, Vector2DF, IObservable<Vector2DF>> SetCursorPosition { get; set; }
         public bool IsControllerUpdated
         {
             get { return choiceSystem.IsControllerUpdated; }
@@ -94,7 +94,7 @@ namespace Nac.Altseed.UI
             IsDrawn = false;
             revisingStatus = new BooleanDisposable();
             revisingStatus.Dispose();
-            this.layout = layout;
+            this.Layout = layout;
 
 			choiceSystem = new Choice<TAbstractKey>(0, controller);
 			OnSelectionChanged = choiceSystem.OnSelectionChanged
@@ -113,8 +113,6 @@ namespace Nac.Altseed.UI
 
 			choiceSystem.OnSelectionChanged.Subscribe(OnSelectionChangedHandler);
 			SelectedIndex = choiceSystem.SelectedIndex;
-            
-            SetCursorPosition = (o, target) => Observable.Return(target.Position);
         }
 
 
@@ -125,14 +123,14 @@ namespace Nac.Altseed.UI
 				var f = Easing.GetEasingFunction(start, end);
 				return UpdateManager.Instance.FrameUpdate
 					.Select(u => o.Position)
-					.Select((v, i) => Easing.GetNextValue(v, target.Position, i, time, f))
+					.Select((v, i) => Easing.GetNextValue(v, target, i, time, f))
 					.Take(time + 1);
 			};
 		}
 
 		public void AddChoice(TChoice choice, Object2D item)
 		{
-            layout.AddItem(item);
+            Layout.AddItem(item);
 			choiceItems_.Add(new ChoiceItem(choice, item));
 			choiceSystem.Size++;
 			onLayoutChanged_.OnNext(Unit.Default);
@@ -140,7 +138,7 @@ namespace Nac.Altseed.UI
 
         public void InsertChoice(int index, TChoice choice, Object2D item)
         {
-            layout.InsertItem(index, item);
+            Layout.InsertItem(index, item);
             choiceItems_.Insert(index, new ChoiceItem(choice, item));
             if(index <= SelectedIndex)
             {
@@ -159,7 +157,6 @@ namespace Nac.Altseed.UI
             if(index != -1)
 			{
 				var item = choiceItems_[index].Item;
-				layout.RemoveItem(item);
 				choiceItems_.RemoveAt(index);
                 if(index <= SelectedIndex)
                 {
@@ -169,6 +166,7 @@ namespace Nac.Altseed.UI
                     }
                 }
                 choiceSystem.Size--;
+				Layout.RemoveItem(item);
 				onLayoutChanged_.OnNext(Unit.Default);
 				return item;
 			}
@@ -180,9 +178,9 @@ namespace Nac.Altseed.UI
 
         public void ClearChoice()
         {
-            layout.ClearItem();
             choiceItems_.Clear();
             choiceSystem.Size = 0;
+            Layout.ClearItem();
 			onLayoutChanged_.OnNext(Unit.Default);
 		}
 
@@ -205,11 +203,6 @@ namespace Nac.Altseed.UI
             if(IsActive)
             {
                 choiceSystem.Update();
-            }
-
-            if(cancellationOfCursorMoving == null && SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
-            {
-                Position = choiceItems_[SelectedIndex].Item.Position;
             }
 
             var beVanished = new List<TChoice>();
@@ -237,7 +230,7 @@ namespace Nac.Altseed.UI
 				(choiceItems_[index].Item as IActivatableSelectionItem)?.Activate();
                 if(SelectedIndex == Choice<TAbstractKey>.DisabledIndex)
                 {
-                    Position = choiceItems_[index].Item.Position;
+                    SuddenlyMoveCursor(choiceItems_[index].Item);
                 }
                 else
                 {
@@ -252,11 +245,34 @@ namespace Nac.Altseed.UI
 			SelectedIndex = choiceSystem.SelectedIndex;
 		}
 
+        private void SuddenlyMoveCursor(Object2D obj)
+        {
+            cancellationOfCursorMoving?.Dispose();
+            cancellationOfCursorMoving = null;
+            
+            parent?.RemoveChild(this);
+            obj.AddChild(this, ChildMode.All);
+            parent = obj;
+            Position = CursorOffset;
+        }
+
 		private void MoveCursor(Object2D obj)
 		{
-			cancellationOfCursorMoving?.Dispose();
-			cancellationOfCursorMoving = SetCursorPosition?.Invoke(this, obj)
-                .Subscribe(p => Position = p, () => cancellationOfCursorMoving = null);
+            if(SetCursorPosition == null)
+            {
+                SuddenlyMoveCursor(obj);
+            }
+            else
+            {
+                cancellationOfCursorMoving?.Dispose();
+                
+                Position = GetGlobalPosition() - obj.GetGlobalPosition();
+                parent?.RemoveChild(this);
+                obj.AddChild(this, ChildMode.All);
+                parent = obj;
+                cancellationOfCursorMoving = SetCursorPosition(this, CursorOffset)
+                    .Subscribe(p => Position = p, () => cancellationOfCursorMoving = null);
+            }
 		}
 	}
 }

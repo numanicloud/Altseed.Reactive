@@ -74,7 +74,8 @@
     <Compile Include="Input\JoyStickController.cs" />
     <Compile Include="Input\KeyboardController.cs" />
     <Compile Include="Input\SteppingController.cs" />
-    <Compile Include="Linq\Observable.cs" />
+    <Compile Include="Linq\ObservableHelper.cs" />
+    <Compile Include="Linq\ReactiveObjectAction.cs" />
     <Compile Include="ObjectSystem\INotifyUpdated.cs" />
     <Compile Include="ObjectSystem\ReactiveLayer2D.cs" />
     <Compile Include="ObjectSystem\ReactiveScene.cs" />
