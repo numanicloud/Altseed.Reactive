@@ -18,7 +18,7 @@ namespace Nac.Altseed.Test
             selector = new ScrollingSelector<int, Control>(CreateController())
             {
                 Position = new Vector2DF(30, 30),
-                CursorOffset = new Vector2DF(-5, -3 + 18),
+                CursorOffset = new Vector2DF(-3, -4 + 18),
                 LayoutStarting = new Vector2DF(0, 18),
                 LineSpan = 36,
                 LineWidth = 360,
