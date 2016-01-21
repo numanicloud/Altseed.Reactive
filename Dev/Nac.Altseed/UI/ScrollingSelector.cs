@@ -120,6 +120,7 @@ namespace Nac.Altseed.UI
         public Layer2D Layer => selector.Layer;
         public IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem> ChoiceItems => selector.ChoiceItems;
         public int SelectedIndex => selector.SelectedIndex;
+		public TChoice SelectedChoice => selector.SelectedChoice;
         public IObservable<TChoice> OnSelectionChanged => selector.OnSelectionChanged;
         public IObservable<TChoice> OnMove => selector.OnMove;
         public IObservable<TChoice> OnDecide => selector.OnDecide;
@@ -199,19 +200,21 @@ namespace Nac.Altseed.UI
 
         protected override void OnStart()
         {
+			base.OnStart();
             Scene.AddLayer(scroll);
         }
 
         protected override void OnVanish()
         {
+			base.OnVanish();
             scroll.Vanish();
         }
 
 
         private void ResetOuterBound()
         {
-            scroll.Starting = selector.CursorOffset;
-            scroll.Ending = GetSize(layout.Items.Count()) + selector.CursorOffset;
+			scroll.Starting = LayoutStarting + selector.CursorOffset;
+            scroll.Ending = GetSize(layout.Items.Count()) + LayoutStarting + selector.CursorOffset;
         }
 
         private void ResetBound()

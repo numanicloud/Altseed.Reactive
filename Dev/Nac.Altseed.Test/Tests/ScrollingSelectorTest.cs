@@ -8,6 +8,11 @@ using Nac.Altseed.UI;
 
 namespace Nac.Altseed.Test
 {
+	public class HogeVal
+	{
+		public int X { get; set; }
+	}
+
     class ScrollingSelectorTest : AltseedTest
     {
         Font font;
@@ -17,33 +22,48 @@ namespace Nac.Altseed.Test
         {
             selector = new ScrollingSelector<int, Control>(CreateController())
             {
-                Position = new Vector2DF(30, 30),
-                CursorOffset = new Vector2DF(-5, -3 + 18),
-                LayoutStarting = new Vector2DF(0, 18),
+                Position = new Vector2DF(60, 35),
+                CursorOffset = new Vector2DF(-5, 3),
                 LineSpan = 36,
                 LineWidth = 360,
-                BoundLines = 2,
+                BoundLines = 9,
                 ExtraLinesOnStarting = 1,
-                ExtraLinesOnEnding = 1,
+                ExtraLinesOnEnding = 0,
                 IsControllerUpdated = true,
+				Loop = true,
             };
             selector.BindKey(Control.Down, Control.Up, Control.Decide, Control.Cancel);
             selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
-            selector.Cursor.SetCenterPosition(CenterPosition.CenterLeft);
             selector.SetEasingScrollUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
+			selector.AddObject(new TextureObject2D()
+			{
+				Texture = Engine.Graphics.CreateTexture2D("ListWindowLarge.png"),
+				Position = new Vector2DF(30, 30),
+				DrawingPriority = -1,
+			});
 
-            font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 0, 0, 255), 0, new Color(0, 0, 0, 0));
+            font = Engine.Graphics.CreateFont("MPlusB.aff");
 
             var scene = new Scene();
-            scene.AddLayer(selector);
-            Engine.ChangeScene(scene);
 
-            for(int i = 0; i < 10; i++)
+			var background = new Layer2D();
+			background.AddObject(new GeometryObject2D()
+			{
+				Shape = new RectangleShape() { DrawingArea = new RectF(0, 0, 640, 480) },
+				Color = new Color(255, 255, 255, 255),
+			});
+			scene.AddLayer(background);
+
+			scene.AddLayer(selector);
+			Engine.ChangeScene(scene);
+
+			for(int i = 0; i < 15; i++)
             {
                 var obj = new TextObject2D()
                 {
                     Font = font,
                     Text = $"アイテム{i}",
+					Color = new Color(225, 160, 0, 255),
                 };
                 selector.AddChoice(i, obj);
                 selector.Layer.AddObject(obj);

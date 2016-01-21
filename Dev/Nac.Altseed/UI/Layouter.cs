@@ -3,7 +3,7 @@ using asd;
 
 namespace Nac.Altseed.UI
 {
-	public abstract class Layouter : TextureObject2D
+	public abstract class Layouter : ObjectSystem.ReactiveTextureObject2D
     {
         public abstract void AddItem(Object2D obj);
         public abstract void InsertItem(int index, Object2D obj);

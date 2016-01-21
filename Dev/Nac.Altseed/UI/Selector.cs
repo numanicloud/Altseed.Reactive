@@ -17,7 +17,7 @@ namespace Nac.Altseed.UI
 		void Disactivate();
 	}
 
-	public class Selector<TChoice, TAbstractKey> : TextureObject2D, ISelector<TChoice, TAbstractKey>
+	public class Selector<TChoice, TAbstractKey> : ObjectSystem.ReactiveTextureObject2D, ISelector<TChoice, TAbstractKey>
 	{
 		public class ChoiceItem
 		{
@@ -184,6 +184,12 @@ namespace Nac.Altseed.UI
 			onLayoutChanged_.OnNext(Unit.Default);
 		}
 
+		public void AddSkippedChoice(TChoice choice)
+		{
+			var index = choiceItems_.IndexOf(x => x.Choice.Equals(choice));
+			choiceSystem.AddSkippedIndex(index);
+		}
+
 		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
 		{
 			choiceSystem.BindKey(next, ChoiceControl.Next);
@@ -197,9 +203,20 @@ namespace Nac.Altseed.UI
 			return choiceItems_.Find(x => x.Choice.Equals(choice))?.Item;
 		}
 
+		public void VanishUISet()
+		{
+			foreach(var item in Layout.Children)
+			{
+				item.Vanish();
+			}
+			Layout.Vanish();
+			Vanish();
+		}
+
         
         protected override void OnUpdate()
         {
+			base.OnUpdate();
             if(IsActive)
             {
                 choiceSystem.Update();

@@ -9,7 +9,7 @@ using Nac.Altseed.Input;
 
 namespace Nac.Altseed.Test
 {
-    enum Control
+    public enum Control
     {
         Left, Right, Up, Down, Decide, Cancel
     }
