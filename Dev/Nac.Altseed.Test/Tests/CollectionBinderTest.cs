@@ -42,10 +42,10 @@ namespace Nac.Altseed.Test
             };
 
             var selector = new Selector<int, Control>(CreateController(), layout);
-            selector.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
+            selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
             selector.BindKey(Control.Down, Control.Up, Control.Decide, Control.Cancel);
             selector.Loop = true;
-            Engine.AddObject2D(selector);
+			selector.RegisterLayer((Layer2D)Engine.CurrentScene.Layers.First());
 
             font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 255, 255, 255), 0, new Color(0, 0, 0, 255));
             CollectionBinderForSelector<int>.Bind(selector, collection, c => new ListItem()

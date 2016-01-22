@@ -48,13 +48,13 @@ namespace Nac.Altseed.Test
             layout.SetEasingBehaviorUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
             selector = new Selector<int, int>(controller, layout)
             {
-                Texture = Engine.Graphics.CreateTexture2D("ListCursor.png"),
                 Loop = true,
                 CursorOffset = new Vector2DF(-5, -3),
             };
-            selector.BindKey(0, 1, 2, 3);
+			selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
+			selector.BindKey(0, 1, 2, 3);
             selector.SetEasingBehaviorUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
-            Engine.AddObject2D(selector);
+			selector.RegisterLayer((Layer2D)Engine.CurrentScene.Layers.First());
 
             font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 255, 255, 255), 0, new Color(0, 0, 0, 255));
             for(int i = 0; i < 8; i++)

@@ -5,8 +5,6 @@ namespace Nac.Altseed.UI
 {
 	public interface ISelector<TChoice>
     {
-        Layer2D Layer { get; }
-
 		bool IsActive { get; set; }
 		int SelectedIndex { get; }
 		IObservable<TChoice> OnSelectionChanged { get; }

@@ -8,6 +8,7 @@ using System.Reactive.Subjects;
 using asd;
 using Nac.Altseed.Input;
 using Nac.Altseed.Linq;
+using Nac.Altseed.ObjectSystem;
 
 namespace Nac.Altseed.UI
 {
@@ -17,7 +18,7 @@ namespace Nac.Altseed.UI
 		void Disactivate();
 	}
 
-	public class Selector<TChoice, TAbstractKey> : ObjectSystem.ReactiveTextureObject2D, ISelector<TChoice, TAbstractKey>
+	public class Selector<TChoice, TAbstractKey> : ISelector<TChoice, TAbstractKey>
 	{
 		public class ChoiceItem
 		{
@@ -35,9 +36,8 @@ namespace Nac.Altseed.UI
 		private Choice<TAbstractKey> choiceSystem;
 		private IDisposable cancellationOfCursorMoving = null;
 		private Vector2DF cursorOffset_ = new Vector2DF();
-        private BooleanDisposable revisingStatus;
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
-        private Object2D parent;
+        private BooleanDisposable revisingStatus;
 
 		public bool IsActive { get; set; }
 		public int SelectedIndex { get; private set; }
@@ -49,6 +49,7 @@ namespace Nac.Altseed.UI
 		public IReadOnlyList<ChoiceItem> ChoiceItems => choiceItems_;
         
         public Layouter Layout { get; private set; }
+		public ReactiveTextureObject2D Cursor { get; private set; }
 		public Vector2DF CursorOffset
 		{
 			get { return cursorOffset_; }
@@ -91,7 +92,6 @@ namespace Nac.Altseed.UI
 		public Selector(Controller<TAbstractKey> controller, Layouter layout)
 		{
 			IsActive = true;
-            IsDrawn = false;
             revisingStatus = new BooleanDisposable();
             revisingStatus.Dispose();
             this.Layout = layout;
@@ -113,7 +113,10 @@ namespace Nac.Altseed.UI
 
 			choiceSystem.OnSelectionChanged.Subscribe(OnSelectionChangedHandler);
 			SelectedIndex = choiceSystem.SelectedIndex;
-        }
+
+			Cursor = new ReactiveTextureObject2D();
+			Cursor.IsDrawn = false;
+		}
 
 
 		public void SetEasingBehaviorUp(EasingStart start, EasingEnd end, int time)
@@ -203,20 +206,27 @@ namespace Nac.Altseed.UI
 			return choiceItems_.Find(x => x.Choice.Equals(choice))?.Item;
 		}
 
-		public void VanishUISet()
+
+		public void RegisterLayer(Layer2D layer)
 		{
-			foreach(var item in Layout.Children)
-			{
-				item.Dispose();
-			}
-			Layout.Dispose();
-			Dispose();
+			layer.AddObject(Layout);
+			layer.AddObject(Cursor);
 		}
 
+		public void UnregisterLayer(Layer2D layer)
+		{
+			layer.RemoveObject(Layout);
+			layer.RemoveObject(Cursor);
+		}
+
+		public void Dispose()
+		{
+			Layout.Dispose();
+			Cursor.Dispose();
+		}
         
-        protected override void OnUpdate()
+        public void Update()
         {
-			base.OnUpdate();
             if(IsActive)
             {
                 choiceSystem.Update();
@@ -243,7 +253,7 @@ namespace Nac.Altseed.UI
 
 			if(index != Choice<TAbstractKey>.DisabledIndex)
 			{
-				IsDrawn = true;
+				Cursor.IsDrawn = true;
 				(choiceItems_[index].Item as IActivatableSelectionItem)?.Activate();
                 if(SelectedIndex == Choice<TAbstractKey>.DisabledIndex)
                 {
@@ -256,7 +266,7 @@ namespace Nac.Altseed.UI
 			}
 			else
 			{
-				IsDrawn = false;
+				Cursor.IsDrawn = false;
 			}
 
 			SelectedIndex = choiceSystem.SelectedIndex;
@@ -267,10 +277,9 @@ namespace Nac.Altseed.UI
             cancellationOfCursorMoving?.Dispose();
             cancellationOfCursorMoving = null;
 
-			Parent?.RemoveChild(this);
-            obj.AddChild(this, ChildManagementMode.Nothing, ChildTransformingMode.All);
-            parent = obj;
-            Position = CursorOffset;
+			Cursor.Parent?.RemoveChild(Cursor);
+            obj.AddChild(Cursor, ChildManagementMode.Nothing, ChildTransformingMode.All);
+            Cursor.Position = CursorOffset;
         }
 
 		private void MoveCursor(Object2D obj)
@@ -283,12 +292,11 @@ namespace Nac.Altseed.UI
             {
                 cancellationOfCursorMoving?.Dispose();
                 
-                Position = GetGlobalPosition() - obj.GetGlobalPosition();
-				Parent?.RemoveChild(this);
-				obj.AddChild(this, ChildManagementMode.Nothing, ChildTransformingMode.All);
-				parent = obj;
-                cancellationOfCursorMoving = SetCursorPosition(this, CursorOffset)
-                    .Subscribe(p => Position = p, () => cancellationOfCursorMoving = null);
+                Cursor.Position = Cursor.GetGlobalPosition() - obj.GetGlobalPosition();
+				Cursor.Parent?.RemoveChild(Cursor);
+				obj.AddChild(Cursor, ChildManagementMode.Nothing, ChildTransformingMode.All);
+                cancellationOfCursorMoving = SetCursorPosition(Cursor, CursorOffset)
+                    .Subscribe(p => Cursor.Position = p, () => cancellationOfCursorMoving = null);
             }
 		}
 	}

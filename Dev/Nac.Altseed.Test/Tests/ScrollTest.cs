@@ -19,12 +19,12 @@ namespace Nac.Altseed.Test
 			};
 			var selector = new Selector<int, Control>(CreateController(), layout);
 			selector.BindKey(Control.Down, Control.Up, Control.Decide, Control.Cancel);
-			selector.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
+			selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
 			selector.IsControllerUpdated = true;
 
 			var font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 0, 0, 255), 0, new Color(0, 0, 0, 0));
 
-			var size = selector.Texture.Size;
+			var size = selector.Cursor.Texture.Size;
 
 			var scroll = new ScrollLayer()
 			{
@@ -41,7 +41,7 @@ namespace Nac.Altseed.Test
 
 			var scene = new Scene();
 			scene.AddLayer(scroll);
-			scroll.AddObject(selector);
+			selector.RegisterLayer(scroll);
 			Engine.ChangeScene(scene);
 
 			for(int i = 0; i < 10; i++)

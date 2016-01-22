@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using asd;
+using Nac.Altseed.ObjectSystem;
 using Nac.Altseed.UI;
 
 namespace Nac.Altseed.Test
@@ -30,16 +31,10 @@ namespace Nac.Altseed.Test
             selector.BindKey(Control.Down, Control.Up, Control.Decide, Control.Cancel);
             selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
             selector.SetEasingScrollUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
-			selector.AddObject(new TextureObject2D()
-			{
-				Texture = Engine.Graphics.CreateTexture2D("ListWindowLarge.png"),
-				Position = new Vector2DF(30, 30),
-				DrawingPriority = -1,
-			});
 
             font = Engine.Graphics.CreateFont("MPlusB.aff");
 
-            var scene = new Scene();
+            var scene = new ReactiveScene();
 
 			var background = new Layer2D();
 			background.AddObject(new GeometryObject2D()
@@ -47,9 +42,15 @@ namespace Nac.Altseed.Test
 				Shape = new RectangleShape() { DrawingArea = new RectF(0, 0, 640, 480) },
 				Color = new Color(255, 255, 255, 255),
 			});
+			background.AddObject(new TextureObject2D()
+			{
+				Texture = Engine.Graphics.CreateTexture2D("ListWindowLarge.png"),
+				Position = new Vector2DF(30, 30),
+				DrawingPriority = 1,
+			});
 			scene.AddLayer(background);
-
-			scene.AddLayer(selector);
+			
+			selector.RegisterScene(scene);
 			Engine.ChangeScene(scene);
 
 			for(int i = 0; i < 15; i++)
@@ -61,8 +62,9 @@ namespace Nac.Altseed.Test
 					Color = new Color(225, 160, 0, 255),
                 };
                 selector.AddChoice(i, obj);
-                selector.Layer.AddObject(obj);
             }
+
+			scene.OnUpdateEvent.Subscribe(f => selector.Update());
 
             //selector.SetDebugCameraUp();
         }

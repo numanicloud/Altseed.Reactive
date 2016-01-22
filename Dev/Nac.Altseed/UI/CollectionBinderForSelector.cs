@@ -27,7 +27,6 @@ namespace Nac.Altseed.UI
                 {
                     var obj = ChoiceToItem(choice);
                     list.AddChoice(choice, obj);
-                    list.Layer.AddObject(obj);
                 }
             }
             else if(e.Action == NotifyCollectionChangedAction.Remove)
@@ -58,7 +57,6 @@ namespace Nac.Altseed.UI
 				{
 					var obj = choiceToItem(choice);
                     selector.AddChoice(choice, obj);
-					selector.Layer.AddObject(obj);
 				}
 			}
             return new CollectionBinderForSelector<TChoice>(selector, notifier)

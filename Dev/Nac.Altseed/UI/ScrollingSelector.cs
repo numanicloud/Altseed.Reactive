@@ -14,21 +14,21 @@ namespace Nac.Altseed.UI
         Horizontal, Vertical
     }
 
-    public class ScrollingSelector<TChoice, TAbstractKey> : ReactiveLayer2D, ISelector<TChoice, TAbstractKey>
+    public class ScrollingSelector<TChoice, TAbstractKey> : ISelector<TChoice, TAbstractKey>
     {
         private Orientation orientation_;
         private float lineSpan_, lineWidth_;
         private int boundLines_, extraLinesOnStarting, extraLinesOnEnding;
 
         private Selector<TChoice, TAbstractKey> selector { get; set; }
-        private ScrollLayer scroll { get; set; }
         private LinearPanel layout { get; set; }
 
-        public TextureObject2D Cursor => selector;
-        public Vector2DF Position
+        public TextureObject2D Cursor => selector.Cursor;
+		public ScrollLayer ScrollLayer { get; private set; }
+		public Vector2DF Position
         {
-            get { return scroll.Position; }
-            set { scroll.Position = value; }
+            get { return ScrollLayer.Position; }
+            set { ScrollLayer.Position = value; }
         }
         public Orientation Orientation
         {
@@ -117,7 +117,6 @@ namespace Nac.Altseed.UI
                 ResetOuterBound();
             }
         }
-        public Layer2D Layer => selector.Layer;
         public IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem> ChoiceItems => selector.ChoiceItems;
         public int SelectedIndex => selector.SelectedIndex;
 		public TChoice SelectedChoice => selector.SelectedChoice;
@@ -161,16 +160,14 @@ namespace Nac.Altseed.UI
         {
             layout = new LinearPanel();
             selector = new Selector<TChoice, TAbstractKey>(controller, layout);
-            scroll = new ScrollLayer();
-
-            scroll.AddObject(selector);
+            ScrollLayer = new ScrollLayer();
 
             var areaChanged = selector.OnSelectionChanged
                 .Select(c => Unit.Default)
                 .Merge(selector.OnLayoutChanged)
                 .Where(u => selector.SelectedIndex != -1)
                 .Select(p => GeometoryHelper.GetRectFromVector(layout.ItemSpan * selector.SelectedIndex + selector.CursorOffset, GetSize(1)));
-            scroll.SubscribeSeeingArea(areaChanged);
+            ScrollLayer.SubscribeSeeingArea(areaChanged);
             layout.OnLayoutChanged.Subscribe(u => ResetOuterBound());
 
             Position = new Vector2DF();
@@ -182,39 +179,49 @@ namespace Nac.Altseed.UI
             extraLinesOnEnding = 1;
             ResetOuterBound();
             ResetBound();
+
+			selector.RegisterLayer(ScrollLayer);
         }
 
         public void SetEasingScrollUp(EasingStart start, EasingEnd end, int time)
         {
             layout.SetEasingBehaviorUp(start, end, time);
             selector.SetEasingBehaviorUp(start, end, time);
-            scroll.SetEasingBehaviorUp(start, end, time);
+            ScrollLayer.SetEasingBehaviorUp(start, end, time);
         }
 
         public void SetDebugCameraUp()
         {
-            var viewer = new ScrollBoundViewer(scroll);
-            scroll.AddObject(viewer);
+            var viewer = new ScrollBoundViewer(ScrollLayer);
+            ScrollLayer.AddObject(viewer);
         }
 
 
-        protected override void OnAdded()
-        {
-			base.OnAdded();
-            Scene.AddLayer(scroll);
-        }
+		public void RegisterScene(Scene scene)
+		{
+			scene.AddLayer(ScrollLayer);
+		}
 
-        protected override void OnDispose()
-        {
-			base.OnDispose();
-            scroll.Dispose();
-        }
+		public void UnregisterScene(Scene scene)
+		{
+			scene.RemoveLayer(ScrollLayer);
+		}
+
+		public void Dispose()
+		{
+			ScrollLayer.Dispose();
+		}
+
+		public void Update()
+		{
+			selector.Update();
+		}
 
 
         private void ResetOuterBound()
         {
-			scroll.Starting = LayoutStarting + selector.CursorOffset;
-            scroll.Ending = GetSize(layout.Items.Count()) + LayoutStarting + selector.CursorOffset;
+			ScrollLayer.Starting = LayoutStarting + selector.CursorOffset;
+            ScrollLayer.Ending = GetSize(layout.Items.Count()) + LayoutStarting + selector.CursorOffset;
         }
 
         private void ResetBound()
@@ -231,8 +238,8 @@ namespace Nac.Altseed.UI
 
             var bindStarting = layout.ItemSpan * ExtraLinesOnStarting;
             var bindSize = GetSize(BoundLines);
-            scroll.CameraSize = GetSize(ExtraLinesOnStarting + BoundLines + ExtraLinesOnEnding);
-            scroll.BindingAreaRange = GeometoryHelper.GetRectFromVector(bindStarting, bindSize);
+            ScrollLayer.CameraSize = GetSize(ExtraLinesOnStarting + BoundLines + ExtraLinesOnEnding);
+            ScrollLayer.BindingAreaRange = GeometoryHelper.GetRectFromVector(bindStarting, bindSize);
         }
 
         private Vector2DF GetSize(int lines)
