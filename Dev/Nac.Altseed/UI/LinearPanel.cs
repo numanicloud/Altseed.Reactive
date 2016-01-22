@@ -88,7 +88,7 @@ namespace Nac.Altseed.UI
         public override void AddItem(Object2D item)
         {
             item.Position = GetPosition(items_.Count);
-            AddChild(item, ChildMode.Position);
+            AddChild(item, ChildManagementMode.Nothing, ChildTransformingMode.Position);
             items_.Add(new ItemInfo(this, item));
             cancellations.Add(null);
 			onLayoutChanged_.OnNext(Unit.Default);
@@ -97,7 +97,7 @@ namespace Nac.Altseed.UI
         public override void InsertItem(int index, Object2D item)
         {
             item.Position = GetPosition(index);
-            AddChild(item, ChildMode.Position);
+            AddChild(item, ChildManagementMode.Nothing, ChildTransformingMode.Position);
             items_.Insert(index, new ItemInfo(this, item));
             cancellations.Insert(index, null);
 

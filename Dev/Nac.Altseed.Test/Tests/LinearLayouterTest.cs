@@ -76,13 +76,13 @@ namespace Nac.Altseed.Test
             {
                 if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
                 {
-                    layout.Items.Skip(2).FirstOrDefault()?.Object?.Vanish();
+                    layout.Items.Skip(2).FirstOrDefault()?.Object?.Dispose();
                 }
                 else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
                 {
                     foreach(var item in layout.Items)
                     {
-                        item.Object.Vanish();
+                        item.Object.Dispose();
                     }
                 }
             }

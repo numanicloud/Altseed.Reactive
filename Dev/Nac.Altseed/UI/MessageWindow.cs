@@ -26,11 +26,21 @@ namespace Nac.Altseed.UI
 			TextObject = new TextObject2D()
 			{
 				Text = "",
+				DrawingPriority = 1,
 			};
 			WaitIndicator = new TextureObject2D()
 			{
 				IsDrawn = false,
+				DrawingPriority = 1,
 			};
+			AddDrawnChild(TextObject,
+				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment,
+				ChildTransformingMode.All,
+				ChildDrawingMode.DrawingPriority);
+			TextObject.AddDrawnChild(WaitIndicator,
+				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment,
+				ChildTransformingMode.All,
+				ChildDrawingMode.DrawingPriority);
 			TextSpeed = 1;
 		}
 
@@ -59,24 +69,7 @@ namespace Nac.Altseed.UI
             TextObject.Text = "";
         }
 
-
-		protected override void OnStart()
-		{
-			TextObject.DrawingPriority = DrawingPriority + 1;
-			AddChild(TextObject, ChildMode.Position);
-			Layer.AddObject(TextObject);
-
-			WaitIndicator.DrawingPriority = DrawingPriority + 1;
-			TextObject.AddChild(WaitIndicator, ChildMode.Position);
-			Layer.AddObject(WaitIndicator);
-		}
-
-		protected override void OnVanish()
-		{
-			TextObject.Vanish();
-			WaitIndicator.Vanish();
-		}
-       
+		
 		private IEnumerator<Unit> FlowToShowText(string[] text, bool readKeyIsNecessary)
 		{
 			foreach(var message in text)

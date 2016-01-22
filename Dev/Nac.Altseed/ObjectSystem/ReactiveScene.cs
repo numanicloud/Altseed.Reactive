@@ -11,21 +11,19 @@ namespace Nac.Altseed.ObjectSystem
 	public class ReactiveScene : Scene, INotifyUpdated
 	{
 		private Subject<float> onUpdatedEvent_ = new Subject<float>();
-		private Subject<Unit> onUpdatedForTheFirstTimeEvent_ = new Subject<Unit>();
+		private Subject<Unit> onRegisteredEvent_ = new Subject<Unit>();
 
 		/// <summary>
-		/// 更新されたときに発行されるイベント。他のシーンに移るときに完了します。
+		/// 更新されたときに発行されるイベント。このシーンが破棄されると完了します。
 		/// </summary>
 		public IObservable<float> OnUpdateEvent => onUpdatedEvent_;
-		/// <summary>
-		/// 最初に更新されたときに発行されるイベント。発行と同時に完了します。
+		/// このシーンがエンジンに登録されたときに発行されるイベント。このシーンが破棄されると完了します。
 		/// </summary>
-		public IObservable<Unit> OnUpdatedForTheFirstTimeEvent => onUpdatedForTheFirstTimeEvent_;
+		public IObservable<Unit> OnRegisteredEvent => onRegisteredEvent_;
 
-		protected override void OnUpdateForTheFirstTime()
+		protected override void OnRegistered()
 		{
-			onUpdatedForTheFirstTimeEvent_.OnNext(Unit.Default);
-			onUpdatedForTheFirstTimeEvent_.OnCompleted();
+			onRegisteredEvent_.OnNext(Unit.Default);
 		}
 
 		protected override void OnUpdated()
@@ -33,9 +31,10 @@ namespace Nac.Altseed.ObjectSystem
 			onUpdatedEvent_.OnNext(Engine.DeltaTime);
 		}
 
-		protected override void OnChanging()
+		protected override void OnDispose()
 		{
 			onUpdatedEvent_.OnCompleted();
+			onRegisteredEvent_.OnCompleted();
 		}
 	}
 }

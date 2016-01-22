@@ -46,6 +46,11 @@ namespace Nac.Altseed.UI
                 DrawingPriority = -2,
                 Color = new Color(255, 255, 0, 100),
             };
+			AddChild(debugCamera, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
+			AddChild(outerBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
+			AddChild(innerBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
+			AddChild(cameraBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
+			AddChild(seeingArea, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
         }
 
 		protected override void OnUpdate()
@@ -66,24 +71,6 @@ namespace Nac.Altseed.UI
             {
                 DrawingArea = scrollLayer.SeeingArea,
             };
-		}
-
-		protected override void OnStart()
-		{
-			Layer.AddObject(debugCamera);
-			Layer.AddObject(outerBinding);
-			Layer.AddObject(innerBinding);
-			Layer.AddObject(cameraBinding);
-            Layer.AddObject(seeingArea);
-		}
-
-		protected override void OnVanish()
-		{
-			debugCamera.Vanish();
-			outerBinding.Vanish();
-			innerBinding.Vanish();
-			cameraBinding.Vanish();
-            seeingArea.Vanish();
 		}
 	}
 }

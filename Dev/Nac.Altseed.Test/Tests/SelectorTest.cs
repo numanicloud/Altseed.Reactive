@@ -127,13 +127,13 @@ namespace Nac.Altseed.Test
             {
                 if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
                 {
-                    selector.ChoiceItems.Skip(3).FirstOrDefault()?.Item.Vanish();
+                    selector.ChoiceItems.Skip(3).FirstOrDefault()?.Item?.Dispose();
                 }
                 else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
                 {
                     foreach(var item in selector.ChoiceItems)
                     {
-                        item.Item.Vanish();
+                        item.Item.Dispose();
                     }
                 }
             }

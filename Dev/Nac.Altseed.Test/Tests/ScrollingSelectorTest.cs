@@ -8,11 +8,6 @@ using Nac.Altseed.UI;
 
 namespace Nac.Altseed.Test
 {
-	public class HogeVal
-	{
-		public int X { get; set; }
-	}
-
     class ScrollingSelectorTest : AltseedTest
     {
         Font font;
@@ -76,7 +71,7 @@ namespace Nac.Altseed.Test
         {
             if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
             {
-                selector.ChoiceItems.Skip(2).FirstOrDefault()?.Item.Vanish();
+                selector.ChoiceItems.Skip(2).FirstOrDefault()?.Item?.Dispose();
             }
         }
     }

@@ -198,16 +198,16 @@ namespace Nac.Altseed.UI
         }
 
 
-        protected override void OnStart()
+        protected override void OnAdded()
         {
-			base.OnStart();
+			base.OnAdded();
             Scene.AddLayer(scroll);
         }
 
-        protected override void OnVanish()
+        protected override void OnDispose()
         {
-			base.OnVanish();
-            scroll.Vanish();
+			base.OnDispose();
+            scroll.Dispose();
         }
 
 

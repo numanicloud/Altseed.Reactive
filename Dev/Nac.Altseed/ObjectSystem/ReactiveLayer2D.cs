@@ -27,7 +27,7 @@ namespace Nac.Altseed.ObjectSystem
 			onUpdatedEvent_.OnNext(Engine.DeltaTime);
 		}
 
-		protected override void OnVanish()
+		protected override void OnDispose()
 		{
 			onVanisEvent_.OnNext(Unit.Default);
 			onUpdatedEvent_.OnCompleted();

@@ -35,7 +35,7 @@ namespace Nac.Altseed.UI
                 foreach(TChoice choice in e.OldItems)
                 {
                     var item = list.RemoveChoice(choice);
-                    item?.Vanish();
+                    item?.Dispose();
                 }
             }
         }

@@ -207,10 +207,10 @@ namespace Nac.Altseed.UI
 		{
 			foreach(var item in Layout.Children)
 			{
-				item.Vanish();
+				item.Dispose();
 			}
-			Layout.Vanish();
-			Vanish();
+			Layout.Dispose();
+			Dispose();
 		}
 
         
@@ -266,9 +266,9 @@ namespace Nac.Altseed.UI
         {
             cancellationOfCursorMoving?.Dispose();
             cancellationOfCursorMoving = null;
-            
-            parent?.RemoveChild(this);
-            obj.AddChild(this, ChildMode.All);
+
+			Parent?.RemoveChild(this);
+            obj.AddChild(this, ChildManagementMode.Nothing, ChildTransformingMode.All);
             parent = obj;
             Position = CursorOffset;
         }
@@ -284,9 +284,9 @@ namespace Nac.Altseed.UI
                 cancellationOfCursorMoving?.Dispose();
                 
                 Position = GetGlobalPosition() - obj.GetGlobalPosition();
-                parent?.RemoveChild(this);
-                obj.AddChild(this, ChildMode.All);
-                parent = obj;
+				Parent?.RemoveChild(this);
+				obj.AddChild(this, ChildManagementMode.Nothing, ChildTransformingMode.All);
+				parent = obj;
                 cancellationOfCursorMoving = SetCursorPosition(this, CursorOffset)
                     .Subscribe(p => Position = p, () => cancellationOfCursorMoving = null);
             }
