@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using asd;
 using Nac.Altseed.Input;
+using Nac.Altseed.ObjectSystem;
 using Nac.Altseed.UI;
 
 namespace Nac.Altseed.Test
@@ -34,6 +35,9 @@ namespace Nac.Altseed.Test
 
         protected override void OnStart()
         {
+			var scene = new ReactiveScene();
+			var layer = new ReactiveLayer2D();
+
             var controller = new KeyboardController<int>();
             controller.BindKey(Keys.Down, 0);
             controller.BindKey(Keys.Up, 1);
@@ -54,7 +58,6 @@ namespace Nac.Altseed.Test
 			selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
 			selector.BindKey(0, 1, 2, 3);
             selector.SetEasingBehaviorUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
-			selector.RegisterLayer((Layer2D)Engine.CurrentScene.Layers.First());
 
             font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 255, 255, 255), 0, new Color(0, 0, 0, 255));
             for(int i = 0; i < 8; i++)
@@ -81,7 +84,11 @@ namespace Nac.Altseed.Test
             {
                 Engine.Sound.Play(cancelSound);
             });
-        }
+
+			Engine.ChangeScene(scene);
+			scene.AddLayer(layer);
+			selector.RegisterLayer(layer);
+		}
 
         protected override void OnUpdate()
         {
@@ -137,6 +144,11 @@ namespace Nac.Altseed.Test
                     }
                 }
             }
+
+			if(Engine.Keyboard.GetKeyState(Keys.Enter) == KeyState.Push)
+			{
+				selector.Dispose();
+			}
         }
     }
 }

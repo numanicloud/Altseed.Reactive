@@ -34,11 +34,11 @@ namespace Nac.Altseed.UI
 				DrawingPriority = 1,
 			};
 			AddDrawnChild(TextObject,
-				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment,
+				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal,
 				ChildTransformingMode.All,
 				ChildDrawingMode.DrawingPriority);
 			TextObject.AddDrawnChild(WaitIndicator,
-				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment,
+				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal,
 				ChildTransformingMode.All,
 				ChildDrawingMode.DrawingPriority);
 			TextSpeed = 1;

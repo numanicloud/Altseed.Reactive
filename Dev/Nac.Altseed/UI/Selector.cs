@@ -34,7 +34,7 @@ namespace Nac.Altseed.UI
 
 		private List<ChoiceItem> choiceItems_ = new List<ChoiceItem>();
 		private Choice<TAbstractKey> choiceSystem;
-		private IDisposable cancellationOfCursorMoving = null;
+		private IDisposable cancellationOfCursorMoving = null, update = null;
 		private Vector2DF cursorOffset_ = new Vector2DF();
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
         private BooleanDisposable revisingStatus;
@@ -207,25 +207,36 @@ namespace Nac.Altseed.UI
 		}
 
 
-		public void RegisterLayer(Layer2D layer)
+		/// <summary>
+		/// 指定したレイヤーにこのマネージャーを登録します。
+		/// </summary>
+		/// <param name="layer">このマネージャーを登録するレイヤー。</param>
+		public void RegisterLayer(ReactiveLayer2D layer)
 		{
 			layer.AddObject(Layout);
 			layer.AddObject(Cursor);
+			update = layer.OnUpdateEvent.Subscribe(f => Update());
 		}
 
-		public void UnregisterLayer(Layer2D layer)
+		/// <summary>
+		/// 指定したレイヤーからこのマネージャーを登録解除します。
+		/// </summary>
+		/// <param name="layer">このマネージャーを登録解除するレイヤー。</param>
+		public void UnregisterLayer(ReactiveLayer2D layer)
 		{
 			layer.RemoveObject(Layout);
 			layer.RemoveObject(Cursor);
+			update?.Dispose();
 		}
 
 		public void Dispose()
 		{
 			Layout.Dispose();
 			Cursor.Dispose();
+			update?.Dispose();
 		}
         
-        public void Update()
+        private void Update()
         {
             if(IsActive)
             {
@@ -246,12 +257,14 @@ namespace Nac.Altseed.UI
 
         private void OnSelectionChangedHandler(int index)
 		{
-			if(SelectedIndex != Choice<TAbstractKey>.DisabledIndex && SelectedIndex < choiceItems_.Count)
+			if(SelectedIndex != Choice<TAbstractKey>.DisabledIndex
+				&& SelectedIndex < choiceItems_.Count
+				&& choiceItems_[SelectedIndex].Item.IsAlive)
 			{
 				(choiceItems_[SelectedIndex].Item as IActivatableSelectionItem)?.Disactivate();
 			}
 
-			if(index != Choice<TAbstractKey>.DisabledIndex)
+			if(index != Choice<TAbstractKey>.DisabledIndex && choiceItems_[index].Item.IsAlive)
 			{
 				Cursor.IsDrawn = true;
 				(choiceItems_[index].Item as IActivatableSelectionItem)?.Activate();

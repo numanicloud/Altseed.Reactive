@@ -3,10 +3,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using asd;
 using Nac.Altseed.Linq;
+using Nac.Altseed.ObjectSystem;
 
 namespace Nac.Altseed.UI
 {
-	public class ScrollLayer : Layer2D
+	public class ScrollLayer : ReactiveLayer2D
 	{
 		private Vector2DF starting_, ending_;
 		private Vector2DF position_, cameraSize_;

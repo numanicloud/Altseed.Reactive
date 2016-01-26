@@ -6,30 +6,37 @@ using asd;
 namespace Nac.Altseed.ObjectSystem
 {
 	/// <summary>
-	/// 特定のタイミングでイベントを発行する2Dテキストオブジェクト。
+	/// 特定のタイミングでイベントを発行する2Dテクスチャオブジェクト。
 	/// </summary>
 	public class ReactiveTextureObject2D : TextureObject2D, INotifyUpdated
 	{
 		private Subject<Unit> onAddedEvent_ = new Subject<Unit>();
+		private Subject<Unit> onRemovedEvent_ = new Subject<Unit>();
 		private Subject<Unit> onDisposeEvent_ = new Subject<Unit>();
 		private Subject<float> onUpdateEvent_ = new Subject<float>();
 
 		/// <summary>
-		/// 破棄されたときに発行されるイベント。破棄されたとき完了します。
-		/// </summary>
-		public IObservable<Unit> OnDisposeEvent => onDisposeEvent_;
-		/// <summary>
 		/// レイヤーに登録されたときに発行されるイベント。破棄されたとき完了します。
 		/// </summary>
 		public IObservable<Unit> OnAddedEvent => onAddedEvent_;
+		public IObservable<Unit> OnRemovedEvent => onRemovedEvent_;
 		/// <summary>
 		/// 更新されたときに発行されるイベント。破棄されたとき完了します。
 		/// </summary>
 		public IObservable<float> OnUpdateEvent => onUpdateEvent_;
+		/// <summary>
+		/// 破棄されたときに発行されるイベント。破棄されたとき完了します。
+		/// </summary>
+		public IObservable<Unit> OnDisposeEvent => onDisposeEvent_;
 
 		protected override void OnAdded()
 		{
 			onAddedEvent_.OnNext(Unit.Default);
+		}
+
+		protected override void OnRemoved()
+		{
+			onRemovedEvent_.OnNext(Unit.Default);
 		}
 
 		protected override void OnDispose()

@@ -16,7 +16,6 @@ namespace Nac.Altseed.Input
 	/// <summary>
 	/// キー入力によって選択肢の処理をするクラス。
 	/// </summary>
-	/// <typeparam name="TKeyCode">キーの識別子となる型。</typeparam>
 	public class Choice<TAbstractKey>
 	{
 		public static readonly int DisabledIndex = -1;
@@ -112,8 +111,7 @@ namespace Nac.Altseed.Input
 		/// Choiceクラスを生成します。
 		/// </summary>
 		/// <param name="size">選択肢の数。</param>
-		/// <param name="loop">選択肢間の移動をループさせるかどうか。</param>
-		/// <param name="keyIsHold">特定のキーが押下されているかどうかを取得するデリゲート。</param>
+		/// <param name="controller">選択処理の制御に用いるコントローラー。</param>
 		public Choice(int size, Controller<TAbstractKey> controller)
 		{
 			this.controller = controller;

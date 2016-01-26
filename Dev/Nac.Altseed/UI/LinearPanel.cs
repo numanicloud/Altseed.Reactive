@@ -76,6 +76,7 @@ namespace Nac.Altseed.UI
             items_ = new ObservableCollection<ItemInfo>();
             cancellations = new List<IDisposable>();
 			SetItemPosition = (o, v) => Observable.Return(v);
+			IsDrawn = false;
         }
 
 		public void SetEasingBehaviorUp(EasingStart start, EasingEnd end, int time)
@@ -88,7 +89,7 @@ namespace Nac.Altseed.UI
         public override void AddItem(Object2D item)
         {
             item.Position = GetPosition(items_.Count);
-            AddChild(item, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Position);
+            AddChild(item, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.Position);
             items_.Add(new ItemInfo(this, item));
             cancellations.Add(null);
 			onLayoutChanged_.OnNext(Unit.Default);
@@ -97,7 +98,7 @@ namespace Nac.Altseed.UI
         public override void InsertItem(int index, Object2D item)
         {
             item.Position = GetPosition(index);
-            AddChild(item, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Position);
+            AddChild(item, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.Position);
             items_.Insert(index, new ItemInfo(this, item));
             cancellations.Insert(index, null);
 

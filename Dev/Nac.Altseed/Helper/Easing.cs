@@ -55,8 +55,8 @@ namespace Nac.Altseed
 		/// <summary>
 		/// Easingの三次方程式の項3つを求める。
 		/// </summary>
-		/// <param name="a1">始点の角度</param>
-		/// <param name="a2">終点の角度</param>
+		/// <param name="s">始点の角度</param>
+		/// <param name="e">終点の角度</param>
 		/// <returns>項</returns>
 		public static float[] GetEasingFunction(EasingStart s, EasingEnd e)
 		{

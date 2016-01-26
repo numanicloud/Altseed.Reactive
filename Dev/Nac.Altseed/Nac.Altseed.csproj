@@ -33,8 +33,9 @@
     <DocumentationFile>bin\Release\Nac.Altseed.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Altseed">
-      <HintPath>.\Altseed.dll</HintPath>
+    <Reference Include="Altseed, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Altseed.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -96,12 +97,10 @@
     <Compile Include="Update\UpdatableSynchronizationContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Altseed_core.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Content Include="lib\Altseed_core.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

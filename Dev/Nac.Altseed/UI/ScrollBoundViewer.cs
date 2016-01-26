@@ -18,6 +18,7 @@ namespace Nac.Altseed.UI
 
 		public ScrollBoundViewer(ScrollLayer scrollLayer)
 		{
+			IsDrawn = false;
 			this.scrollLayer = scrollLayer;
 			debugCamera = new CameraObject2D()
 			{
@@ -46,11 +47,11 @@ namespace Nac.Altseed.UI
                 DrawingPriority = -2,
                 Color = new Color(255, 255, 0, 100),
             };
-			AddChild(debugCamera, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
-			AddChild(outerBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
-			AddChild(innerBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
-			AddChild(cameraBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
-			AddChild(seeingArea, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Vanishment, ChildTransformingMode.Nothing);
+			AddChild(debugCamera, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.Nothing);
+			AddChild(outerBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.Nothing);
+			AddChild(innerBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.Nothing);
+			AddChild(cameraBinding, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.Nothing);
+			AddChild(seeingArea, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.Nothing);
         }
 
 		protected override void OnUpdate()

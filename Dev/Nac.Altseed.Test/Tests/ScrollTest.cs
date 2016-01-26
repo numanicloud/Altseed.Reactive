@@ -40,9 +40,9 @@ namespace Nac.Altseed.Test
 			scroll.SubscribeSeeingArea(areaChanged);
 
 			var scene = new Scene();
+			Engine.ChangeScene(scene);
 			scene.AddLayer(scroll);
 			selector.RegisterLayer(scroll);
-			Engine.ChangeScene(scene);
 
 			for(int i = 0; i < 10; i++)
 			{
@@ -52,7 +52,6 @@ namespace Nac.Altseed.Test
 					Text = $"アイテム{i}",
 				};
 				selector.AddChoice(i, obj);
-				scroll.AddObject(obj);
 			}
 
 			var heart1 = new TextureObject2D()

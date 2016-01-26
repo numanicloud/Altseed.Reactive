@@ -64,9 +64,7 @@ namespace Nac.Altseed.Test
                 selector.AddChoice(i, obj);
             }
 
-			scene.OnUpdateEvent.Subscribe(f => selector.Update());
-
-            //selector.SetDebugCameraUp();
+            selector.SetDebugCameraUp();
         }
 
         protected override void OnUpdate()

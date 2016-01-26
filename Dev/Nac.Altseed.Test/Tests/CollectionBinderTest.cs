@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using asd;
+using Nac.Altseed.ObjectSystem;
 using Nac.Altseed.UI;
 
 namespace Nac.Altseed.Test
@@ -36,6 +37,9 @@ namespace Nac.Altseed.Test
         {
             collection = new ObservableCollection<int>();
 
+			var scene = new ReactiveScene();
+			var layer = new ReactiveLayer2D();
+
             var layout = new LinearPanel()
             {
                 ItemSpan = new Vector2DF(0, 36),
@@ -45,7 +49,6 @@ namespace Nac.Altseed.Test
             selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
             selector.BindKey(Control.Down, Control.Up, Control.Decide, Control.Cancel);
             selector.Loop = true;
-			selector.RegisterLayer((Layer2D)Engine.CurrentScene.Layers.First());
 
             font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 255, 255, 255), 0, new Color(0, 0, 0, 255));
             CollectionBinderForSelector<int>.Bind(selector, collection, c => new ListItem()
@@ -53,6 +56,10 @@ namespace Nac.Altseed.Test
                 Font = font,
                 Text = $"追加アイテム{c}",
             }, false);
+
+			Engine.ChangeScene(scene);
+			scene.AddLayer(layer);
+			selector.RegisterLayer(layer);
         }
 
         protected override void OnUpdate()

@@ -212,11 +212,6 @@ namespace Nac.Altseed.UI
 			ScrollLayer.Dispose();
 		}
 
-		public void Update()
-		{
-			selector.Update();
-		}
-
 
         private void ResetOuterBound()
         {
