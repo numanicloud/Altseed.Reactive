@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\CenterPosition.cs" />
+    <Compile Include="Helper\Debug.cs" />
     <Compile Include="Helper\Easing.cs" />
     <Compile Include="Helper\GeometoryHelper.cs" />
     <Compile Include="Linq\LinqHelper.cs" />

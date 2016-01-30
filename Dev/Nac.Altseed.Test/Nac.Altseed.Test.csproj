@@ -64,6 +64,7 @@
     <Compile Include="AltseedTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\AwaitCompleted.cs" />
     <Compile Include="Tests\BindCollectionForScrollingSelector.cs" />
     <Compile Include="Tests\CollectionBinderTest.cs" />
     <Compile Include="Tests\EasingTest.cs" />

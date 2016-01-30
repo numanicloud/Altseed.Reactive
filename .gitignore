@@ -20,6 +20,7 @@ ShaderCache/
 Altseed.XML
 Altseed.dll
 Altseed_core.dll
+*.nupkg
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/

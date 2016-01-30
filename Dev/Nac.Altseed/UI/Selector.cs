@@ -38,6 +38,7 @@ namespace Nac.Altseed.UI
 		private Vector2DF cursorOffset_ = new Vector2DF();
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
 		private BooleanDisposable revisingStatus;
+		private bool doWarningAboutKeyBind = true;
 
 		public bool IsActive { get; set; }
 		public int SelectedIndex { get; private set; }
@@ -209,6 +210,7 @@ namespace Nac.Altseed.UI
 			choiceSystem.BindKey(prev, ChoiceControl.Previous);
 			choiceSystem.BindKey(decide, ChoiceControl.Decide);
 			choiceSystem.BindKey(cancel, ChoiceControl.Cancel);
+			doWarningAboutKeyBind = false;
 		}
 
 		public Object2D GetItemForChocie(TChoice choice)
@@ -238,6 +240,11 @@ namespace Nac.Altseed.UI
 			if(IsActive)
 			{
 				choiceSystem.Update();
+				if(doWarningAboutKeyBind)
+				{
+					Debug.WriteWarning(this, $"キーと操作の対応付けが設定されていません。このセレクターは操作できません。{nameof(BindKey)}メソッドを呼び出してキーと操作を対応付けてください。");
+					doWarningAboutKeyBind = false;
+				}
 			}
 		}
 

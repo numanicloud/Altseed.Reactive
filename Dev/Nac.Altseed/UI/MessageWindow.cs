@@ -51,22 +51,26 @@ namespace Nac.Altseed.UI
 
 		public async Task TalkMessageAsync(params string[] message)
 		{
+			OutputWarningOfTextObject();
 			await OnUpdateEvent.SelectCorourine(FlowToShowText(message, true));
 		}
 
 		public async Task TalkMessageWithoutReadAsync(string message)
 		{
+			OutputWarningOfTextObject();
 			await OnUpdateEvent.SelectCorourine(FlowToShowText(new string[] { message }, false));
 		}
 
 		public void ShowMessage(string message)
 		{
+			OutputWarningOfTextObject();
 			TextObject.Text = message;
 		}
 
         public void Clear()
-        {
-            TextObject.Text = "";
+		{
+			OutputWarningOfTextObject();
+			TextObject.Text = "";
         }
 
 		
@@ -100,6 +104,14 @@ namespace Nac.Altseed.UI
 				}
 
 				yield return Unit.Default;
+			}
+		}
+
+		private void OutputWarningOfTextObject()
+		{
+			if(TextObject.Font == null)
+			{
+				Debug.WriteWarning(this, "TextObject.Font が null です。メッセージは表示されません。");
 			}
 		}
 	}
