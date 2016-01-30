@@ -22,6 +22,7 @@ namespace Nac.Altseed.UI
                 }
             }
             beVanished.ForEach(x => RemoveItem(x));
+			base.OnUpdate();
         }
     }
 }

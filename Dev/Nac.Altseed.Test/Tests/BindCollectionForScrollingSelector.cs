@@ -52,7 +52,7 @@ namespace Nac.Altseed.Test
 			}
 
 			var scene = new Scene();
-			selector.RegisterScene(scene);
+			scene.AddLayer(selector);
 			Engine.ChangeScene(scene);
 		}
 

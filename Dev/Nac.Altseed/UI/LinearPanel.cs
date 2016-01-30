@@ -81,7 +81,7 @@ namespace Nac.Altseed.UI
 
 		public void SetEasingBehaviorUp(EasingStart start, EasingEnd end, int time)
 		{
-			SetItemPosition = (o, v) => UpdateManager.Instance.FrameUpdate
+			SetItemPosition = (o, v) => OnUpdateEvent.TakeWhile(f => o.IsAlive)
 				.Select(t => o.Position)
 				.EasingVector2DF(v, start, end, time);
 		}

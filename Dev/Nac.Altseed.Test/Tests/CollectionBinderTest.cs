@@ -59,7 +59,7 @@ namespace Nac.Altseed.Test
 
 			Engine.ChangeScene(scene);
 			scene.AddLayer(layer);
-			selector.RegisterLayer(layer);
+			layer.AddObject(selector);
         }
 
         protected override void OnUpdate()

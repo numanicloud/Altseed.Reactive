@@ -42,7 +42,7 @@ namespace Nac.Altseed.Test
 			var scene = new Scene();
 			Engine.ChangeScene(scene);
 			scene.AddLayer(scroll);
-			selector.RegisterLayer(scroll);
+			scroll.AddObject(selector);
 
 			for(int i = 0; i < 10; i++)
 			{

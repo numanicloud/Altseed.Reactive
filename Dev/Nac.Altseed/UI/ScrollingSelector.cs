@@ -14,7 +14,7 @@ namespace Nac.Altseed.UI
         Horizontal, Vertical
     }
 
-    public class ScrollingSelector<TChoice, TAbstractKey> : ISelector<TChoice, TAbstractKey>
+    public class ScrollingSelector<TChoice, TAbstractKey> : ReactiveLayer2D, ISelector<TChoice, TAbstractKey>
     {
         private Orientation orientation_;
         private float lineSpan_, lineWidth_;
@@ -162,6 +162,9 @@ namespace Nac.Altseed.UI
             selector = new Selector<TChoice, TAbstractKey>(controller, layout);
             ScrollLayer = new ScrollLayer();
 
+			Name = "Selector";
+			ScrollLayer.Name = "Scroll";
+
             var areaChanged = selector.OnSelectionChanged
                 .Select(c => Unit.Default)
                 .Merge(selector.OnLayoutChanged)
@@ -180,7 +183,7 @@ namespace Nac.Altseed.UI
             ResetOuterBound();
             ResetBound();
 
-			selector.RegisterLayer(ScrollLayer);
+			ScrollLayer.AddObject(selector);
         }
 
         public void SetEasingScrollUp(EasingStart start, EasingEnd end, int time)
@@ -196,18 +199,17 @@ namespace Nac.Altseed.UI
             ScrollLayer.AddObject(viewer);
         }
 
-
-		public void RegisterScene(Scene scene)
+		protected override void OnAdded()
 		{
-			scene.AddLayer(ScrollLayer);
+			Scene.AddLayer(ScrollLayer);
 		}
 
-		public void UnregisterScene(Scene scene)
+		protected override void OnRemoved()
 		{
-			scene.RemoveLayer(ScrollLayer);
+			Scene.RemoveLayer(ScrollLayer);
 		}
 
-		public void Dispose()
+		protected override void OnDispose()
 		{
 			ScrollLayer.Dispose();
 		}

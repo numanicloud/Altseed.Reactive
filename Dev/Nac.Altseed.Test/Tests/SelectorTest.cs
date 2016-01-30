@@ -21,7 +21,7 @@ namespace Nac.Altseed.Test
 
             public void Activate()
             {
-                Color = new Color(0, 0, 0, 255);
+                Color = new Color(128, 0, 0, 255);
             }
 
             public void Disactivate()
@@ -87,7 +87,7 @@ namespace Nac.Altseed.Test
 
 			Engine.ChangeScene(scene);
 			scene.AddLayer(layer);
-			selector.RegisterLayer(layer);
+			layer.AddObject(selector);
 		}
 
         protected override void OnUpdate()
@@ -101,7 +101,6 @@ namespace Nac.Altseed.Test
                     Text = $"追加アイテム{index}",
                 };
                 selector.AddChoice(index, obj);
-                Engine.AddObject2D(obj);
             }
             else if(selector.ChoiceItems.Skip(3).Any() && Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push)
             {
@@ -112,7 +111,6 @@ namespace Nac.Altseed.Test
                     Text = $"挿入アイテム{index}",
                 };
                 selector.InsertChoice(3, index, obj);
-                Engine.AddObject2D(obj);
             }
 
             if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == KeyState.Hold)

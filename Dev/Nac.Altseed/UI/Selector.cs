@@ -18,7 +18,7 @@ namespace Nac.Altseed.UI
 		void Disactivate();
 	}
 
-	public class Selector<TChoice, TAbstractKey> : ISelector<TChoice, TAbstractKey>
+	public class Selector<TChoice, TAbstractKey> : ReactiveTextureObject2D, ISelector<TChoice, TAbstractKey>
 	{
 		public class ChoiceItem
 		{
@@ -34,10 +34,10 @@ namespace Nac.Altseed.UI
 
 		private List<ChoiceItem> choiceItems_ = new List<ChoiceItem>();
 		private Choice<TAbstractKey> choiceSystem;
-		private IDisposable cancellationOfCursorMoving = null, update = null;
+		private IDisposable cancellationOfCursorMoving = null;
 		private Vector2DF cursorOffset_ = new Vector2DF();
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
-        private BooleanDisposable revisingStatus;
+		private BooleanDisposable revisingStatus;
 
 		public bool IsActive { get; set; }
 		public int SelectedIndex { get; private set; }
@@ -47,8 +47,8 @@ namespace Nac.Altseed.UI
 		public IObservable<TChoice> OnDecide { get; private set; }
 		public IObservable<TChoice> OnCancel { get; private set; }
 		public IReadOnlyList<ChoiceItem> ChoiceItems => choiceItems_;
-        
-        public Layouter Layout { get; private set; }
+
+		public Layouter Layout { get; private set; }
 		public ReactiveTextureObject2D Cursor { get; private set; }
 		public Vector2DF CursorOffset
 		{
@@ -58,21 +58,21 @@ namespace Nac.Altseed.UI
 				cursorOffset_ = value;
 				if(choiceSystem.SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
 				{
-                    SuddenlyMoveCursor(choiceItems_[choiceSystem.SelectedIndex].Item);
+					SuddenlyMoveCursor(choiceItems_[choiceSystem.SelectedIndex].Item);
 				}
 			}
 		}
-        public Func<Object2D, Vector2DF, IObservable<Vector2DF>> SetCursorPosition { get; set; }
-        public bool IsControllerUpdated
-        {
-            get { return choiceSystem.IsControllerUpdated; }
-            set { choiceSystem.IsControllerUpdated = value; }
-        }
-        public bool Loop
-        {
-            get { return choiceSystem.Loop; }
-            set { choiceSystem.Loop = value; }
-        }
+		public Func<Object2D, Vector2DF, IObservable<Vector2DF>> SetCursorPosition { get; set; }
+		public bool IsControllerUpdated
+		{
+			get { return choiceSystem.IsControllerUpdated; }
+			set { choiceSystem.IsControllerUpdated = value; }
+		}
+		public bool Loop
+		{
+			get { return choiceSystem.Loop; }
+			set { choiceSystem.Loop = value; }
+		}
 
 		public TChoice SelectedChoice
 		{
@@ -92,30 +92,36 @@ namespace Nac.Altseed.UI
 		public Selector(Controller<TAbstractKey> controller, Layouter layout)
 		{
 			IsActive = true;
-            revisingStatus = new BooleanDisposable();
-            revisingStatus.Dispose();
-            this.Layout = layout;
+			revisingStatus = new BooleanDisposable();
+			revisingStatus.Dispose();
+			this.Layout = layout;
 
 			choiceSystem = new Choice<TAbstractKey>(0, controller);
 			OnSelectionChanged = choiceSystem.OnSelectionChanged
-                .Where(x => revisingStatus.IsDisposed)
-                .Where(x => x >= 0)
-                .Select(e => choiceItems_[e].Choice);
+				.TakeWhile(x => IsAlive)
+				.Where(x => revisingStatus.IsDisposed)
+				.Where(x => x >= 0)
+				.Select(e => choiceItems_[e].Choice);
 			OnMove = choiceSystem.OnMove
-                .Where(x => x >= 0)
-                .Select(e => choiceItems_[e].Choice);
+				.TakeWhile(x => IsAlive)
+				.Where(x => x >= 0)
+				.Select(e => choiceItems_[e].Choice);
 			OnDecide = choiceSystem.OnDecide
-                .Where(x => x >= 0)
-                .Select(e => choiceItems_[e].Choice);
+				.TakeWhile(x => IsAlive)
+				.Where(x => x >= 0)
+				.Select(e => choiceItems_[e].Choice);
 			OnCancel = choiceSystem.OnCancel
-                .Where(x => x >= 0)
-                .Select(e => choiceItems_[e].Choice);
+				.TakeWhile(x => IsAlive)
+				.Where(x => x >= 0)
+				.Select(e => choiceItems_[e].Choice);
 
 			choiceSystem.OnSelectionChanged.Subscribe(OnSelectionChangedHandler);
 			SelectedIndex = choiceSystem.SelectedIndex;
 
 			Cursor = new ReactiveTextureObject2D();
 			Cursor.IsDrawn = false;
+
+			AddChild(Layout, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.All);
 		}
 
 
@@ -133,42 +139,45 @@ namespace Nac.Altseed.UI
 
 		public void AddChoice(TChoice choice, Object2D item)
 		{
-            Layout.AddItem(item);
+			ThrowIfDisposed();
+			Layout.AddItem(item);
 			choiceItems_.Add(new ChoiceItem(choice, item));
 			choiceSystem.Size++;
 			onLayoutChanged_.OnNext(Unit.Default);
 		}
 
-        public void InsertChoice(int index, TChoice choice, Object2D item)
-        {
-            Layout.InsertItem(index, item);
-            choiceItems_.Insert(index, new ChoiceItem(choice, item));
-            if(index <= SelectedIndex)
-            {
-                using(revisingStatus = new BooleanDisposable())
-                {
-                    choiceSystem.SelectedIndex++;
-                }
-            }
-            choiceSystem.Size++;
+		public void InsertChoice(int index, TChoice choice, Object2D item)
+		{
+			ThrowIfDisposed();
+			Layout.InsertItem(index, item);
+			choiceItems_.Insert(index, new ChoiceItem(choice, item));
+			if(index <= SelectedIndex)
+			{
+				using(revisingStatus = new BooleanDisposable())
+				{
+					choiceSystem.SelectedIndex++;
+				}
+			}
+			choiceSystem.Size++;
 			onLayoutChanged_.OnNext(Unit.Default);
 		}
 
 		public Object2D RemoveChoice(TChoice choice)
 		{
+			ThrowIfDisposed();
 			var index = choiceItems_.IndexOf(c => c.Choice.Equals(choice));
-            if(index != -1)
+			if(index != -1)
 			{
 				var item = choiceItems_[index].Item;
 				choiceItems_.RemoveAt(index);
-                if(index <= SelectedIndex)
-                {
-                    using(revisingStatus = new BooleanDisposable())
-                    {
-                        choiceSystem.SelectedIndex--;
-                    }
-                }
-                choiceSystem.Size--;
+				if(index <= SelectedIndex)
+				{
+					using(revisingStatus = new BooleanDisposable())
+					{
+						choiceSystem.SelectedIndex--;
+					}
+				}
+				choiceSystem.Size--;
 				Layout.RemoveItem(item);
 				onLayoutChanged_.OnNext(Unit.Default);
 				return item;
@@ -179,11 +188,12 @@ namespace Nac.Altseed.UI
 			}
 		}
 
-        public void ClearChoice()
-        {
-            choiceItems_.Clear();
-            choiceSystem.Size = 0;
-            Layout.ClearItem();
+		public void ClearChoice()
+		{
+			ThrowIfDisposed();
+			choiceItems_.Clear();
+			choiceSystem.Size = 0;
+			Layout.ClearItem();
 			onLayoutChanged_.OnNext(Unit.Default);
 		}
 
@@ -207,55 +217,32 @@ namespace Nac.Altseed.UI
 		}
 
 
-		/// <summary>
-		/// 指定したレイヤーにこのマネージャーを登録します。
-		/// </summary>
-		/// <param name="layer">このマネージャーを登録するレイヤー。</param>
-		public void RegisterLayer(ReactiveLayer2D layer)
+		protected override void OnDispose()
 		{
-			layer.AddObject(Layout);
-			layer.AddObject(Cursor);
-			update = layer.OnUpdateEvent.Subscribe(f => Update());
-		}
-
-		/// <summary>
-		/// 指定したレイヤーからこのマネージャーを登録解除します。
-		/// </summary>
-		/// <param name="layer">このマネージャーを登録解除するレイヤー。</param>
-		public void UnregisterLayer(ReactiveLayer2D layer)
-		{
-			layer.RemoveObject(Layout);
-			layer.RemoveObject(Cursor);
-			update?.Dispose();
-		}
-
-		public void Dispose()
-		{
-			Layout.Dispose();
 			Cursor.Dispose();
-			update?.Dispose();
+			onLayoutChanged_.OnCompleted();
 		}
-        
-        private void Update()
-        {
-            if(IsActive)
-            {
-                choiceSystem.Update();
-            }
 
-            var beVanished = new List<TChoice>();
-            foreach(var item in choiceItems_)
-            {
-                if(!item.Item.IsAlive)
-                {
-                    beVanished.Add(item.Choice);
-                }
-            }
-            beVanished.ForEach(x => RemoveChoice(x));
-        }
+		protected override void OnUpdate()
+		{
+			var beVanished = new List<TChoice>();
+			foreach(var item in choiceItems_)
+			{
+				if(!item.Item.IsAlive)
+				{
+					beVanished.Add(item.Choice);
+				}
+			}
+			beVanished.ForEach(x => RemoveChoice(x));
+
+			if(IsActive)
+			{
+				choiceSystem.Update();
+			}
+		}
 
 
-        private void OnSelectionChangedHandler(int index)
+		private void OnSelectionChangedHandler(int index)
 		{
 			if(SelectedIndex != Choice<TAbstractKey>.DisabledIndex
 				&& SelectedIndex < choiceItems_.Count
@@ -266,51 +253,65 @@ namespace Nac.Altseed.UI
 
 			if(index != Choice<TAbstractKey>.DisabledIndex && choiceItems_[index].Item.IsAlive)
 			{
-				Cursor.IsDrawn = true;
+				if(Cursor.IsAlive)
+				{
+					Cursor.IsDrawn = true;
+				}
 				(choiceItems_[index].Item as IActivatableSelectionItem)?.Activate();
-                if(SelectedIndex == Choice<TAbstractKey>.DisabledIndex)
-                {
-                    SuddenlyMoveCursor(choiceItems_[index].Item);
-                }
-                else
-                {
-                    MoveCursor(choiceItems_[index].Item);
-                }
+				if(SelectedIndex == Choice<TAbstractKey>.DisabledIndex)
+				{
+					SuddenlyMoveCursor(choiceItems_[index].Item);
+				}
+				else
+				{
+					MoveCursor(choiceItems_[index].Item);
+				}
 			}
 			else
 			{
-				Cursor.IsDrawn = false;
+				if(Cursor.IsAlive)
+				{
+					Cursor.IsDrawn = false; 
+				}
 			}
 
 			SelectedIndex = choiceSystem.SelectedIndex;
 		}
 
-        private void SuddenlyMoveCursor(Object2D obj)
-        {
-            cancellationOfCursorMoving?.Dispose();
-            cancellationOfCursorMoving = null;
+		private void SuddenlyMoveCursor(Object2D obj)
+		{
+			cancellationOfCursorMoving?.Dispose();
+			cancellationOfCursorMoving = null;
 
 			Cursor.Parent?.RemoveChild(Cursor);
-            obj.AddChild(Cursor, ChildManagementMode.Nothing, ChildTransformingMode.All);
-            Cursor.Position = CursorOffset;
-        }
+			obj.AddChild(Cursor, ChildManagementMode.Nothing, ChildTransformingMode.All);
+			Cursor.Position = CursorOffset;
+		}
 
 		private void MoveCursor(Object2D obj)
 		{
-            if(SetCursorPosition == null)
-            {
-                SuddenlyMoveCursor(obj);
-            }
-            else
-            {
-                cancellationOfCursorMoving?.Dispose();
-                
-                Cursor.Position = Cursor.GetGlobalPosition() - obj.GetGlobalPosition();
+			if(SetCursorPosition == null)
+			{
+				SuddenlyMoveCursor(obj);
+			}
+			else
+			{
+				cancellationOfCursorMoving?.Dispose();
+
+				Cursor.Position = Cursor.GetGlobalPosition() - obj.GetGlobalPosition();
 				Cursor.Parent?.RemoveChild(Cursor);
 				obj.AddChild(Cursor, ChildManagementMode.Nothing, ChildTransformingMode.All);
-                cancellationOfCursorMoving = SetCursorPosition(Cursor, CursorOffset)
-                    .Subscribe(p => Cursor.Position = p, () => cancellationOfCursorMoving = null);
-            }
+				cancellationOfCursorMoving = SetCursorPosition(Cursor, CursorOffset)
+					.Subscribe(p => Cursor.Position = p, () => cancellationOfCursorMoving = null);
+			}
+		}
+
+		private void ThrowIfDisposed()
+		{
+			if(!IsAlive)
+			{
+				throw new ObjectDisposedException(GetType().FullName);
+			}
 		}
 	}
 }

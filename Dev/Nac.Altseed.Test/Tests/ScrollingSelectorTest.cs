@@ -49,8 +49,8 @@ namespace Nac.Altseed.Test
 				DrawingPriority = 1,
 			});
 			scene.AddLayer(background);
-			
-			selector.RegisterScene(scene);
+
+			scene.AddLayer(selector);
 			Engine.ChangeScene(scene);
 
 			for(int i = 0; i < 15; i++)
