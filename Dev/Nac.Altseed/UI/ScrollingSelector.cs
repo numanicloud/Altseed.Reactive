@@ -201,16 +201,19 @@ namespace Nac.Altseed.UI
 
 		protected override void OnAdded()
 		{
+			base.OnAdded();
 			Scene.AddLayer(ScrollLayer);
 		}
 
 		protected override void OnRemoved()
 		{
+			base.OnRemoved();
 			Scene.RemoveLayer(ScrollLayer);
 		}
 
 		protected override void OnDispose()
 		{
+			base.OnDispose();
 			ScrollLayer.Dispose();
 		}
 

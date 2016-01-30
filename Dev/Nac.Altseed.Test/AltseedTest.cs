@@ -11,7 +11,7 @@ namespace Nac.Altseed.Test
 {
     public enum Control
     {
-        Left, Right, Up, Down, Decide, Cancel
+        Left, Right, Up, Down, Decide, Cancel, Sub
     }
 
 	class AltseedTest
@@ -56,6 +56,7 @@ namespace Nac.Altseed.Test
             controller.BindDirection(Control.Left, Control.Right, Control.Up, Control.Down);
             controller.BindKey(Keys.Z, Control.Decide);
             controller.BindKey(Keys.X, Control.Cancel);
+			controller.BindKey(Keys.C, Control.Sub);
 
 			var stepping = new SteppingController<Control>(controller);
 			stepping.IsChildUpdated = true;

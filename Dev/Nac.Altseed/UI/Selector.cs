@@ -138,7 +138,7 @@ namespace Nac.Altseed.UI
 			};
 		}
 
-		public void AddChoice(TChoice choice, Object2D item)
+		public virtual void AddChoice(TChoice choice, Object2D item)
 		{
 			ThrowIfDisposed();
 			Layout.AddItem(item);
@@ -147,11 +147,12 @@ namespace Nac.Altseed.UI
 			onLayoutChanged_.OnNext(Unit.Default);
 		}
 
-		public void InsertChoice(int index, TChoice choice, Object2D item)
+		public virtual void InsertChoice(int index, TChoice choice, Object2D item)
 		{
 			ThrowIfDisposed();
 			Layout.InsertItem(index, item);
 			choiceItems_.Insert(index, new ChoiceItem(choice, item));
+			choiceSystem.Size++;
 			if(index <= SelectedIndex)
 			{
 				using(revisingStatus = new BooleanDisposable())
@@ -159,11 +160,10 @@ namespace Nac.Altseed.UI
 					choiceSystem.SelectedIndex++;
 				}
 			}
-			choiceSystem.Size++;
 			onLayoutChanged_.OnNext(Unit.Default);
 		}
 
-		public Object2D RemoveChoice(TChoice choice)
+		public virtual Object2D RemoveChoice(TChoice choice)
 		{
 			ThrowIfDisposed();
 			var index = choiceItems_.IndexOf(c => c.Choice.Equals(choice));
@@ -189,7 +189,7 @@ namespace Nac.Altseed.UI
 			}
 		}
 
-		public void ClearChoice()
+		public virtual void ClearChoice()
 		{
 			ThrowIfDisposed();
 			choiceItems_.Clear();
@@ -221,12 +221,15 @@ namespace Nac.Altseed.UI
 
 		protected override void OnDispose()
 		{
+			base.OnDispose();
 			Cursor.Dispose();
 			onLayoutChanged_.OnCompleted();
 		}
 
 		protected override void OnUpdate()
 		{
+			base.OnUpdate();
+
 			var beVanished = new List<TChoice>();
 			foreach(var item in choiceItems_)
 			{
@@ -281,7 +284,7 @@ namespace Nac.Altseed.UI
 					Cursor.IsDrawn = false; 
 				}
 			}
-
+			
 			SelectedIndex = choiceSystem.SelectedIndex;
 		}
 
