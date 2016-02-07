@@ -83,18 +83,22 @@
     <Compile Include="ObjectSystem\ReactiveScene.cs" />
     <Compile Include="ObjectSystem\ReactiveTextObject2D.cs" />
     <Compile Include="ObjectSystem\ReactiveTextureObject2D.cs" />
-    <Compile Include="UI\CollectionBinderForSelector.cs" />
-    <Compile Include="UI\ISelectableList.cs" />
+    <Compile Include="UI\Selector\CollectionBinderForSelector.cs" />
+    <Compile Include="UI\Selector\IMultiSelector.cs" />
+    <Compile Include="UI\Selector\IScrollingSelector.cs" />
+    <Compile Include="UI\Selector\ISelector.cs" />
     <Compile Include="UI\Layouter.cs" />
     <Compile Include="UI\LinearPanel.cs" />
-    <Compile Include="UI\MultiSelector.cs" />
     <Compile Include="UI\ScrollBoundViewer.cs" />
-    <Compile Include="UI\ScrollingSelector.cs" />
+    <Compile Include="UI\Selector\MultiSelector.cs" />
+    <Compile Include="UI\Selector\ScrollingMultiSelector.cs" />
+    <Compile Include="UI\Selector\ScrollingSelector.cs" />
     <Compile Include="UI\ScrollLayer.cs" />
+    <Compile Include="UI\Selector\ScrollingSelectorBase.cs" />
     <Compile Include="Update\IUpdatable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\MessageWindow.cs" />
-    <Compile Include="UI\Selector.cs" />
+    <Compile Include="UI\Selector\Selector.cs" />
     <Compile Include="Update\UpdateManager.cs" />
     <Compile Include="Update\UpdatableSynchronizationContext.cs" />
   </ItemGroup>

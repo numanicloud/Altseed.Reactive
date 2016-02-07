@@ -71,6 +71,7 @@
     <Compile Include="Tests\LinearLayouterTest.cs" />
     <Compile Include="Tests\MessageWindowTest.cs" />
     <Compile Include="Tests\MultiSelectorTest.cs" />
+    <Compile Include="Tests\ScrollingMultiSelectorTest.cs" />
     <Compile Include="Tests\ScrollingSelectorTest.cs" />
     <Compile Include="Tests\ScrollTest.cs" />
     <Compile Include="Tests\SelectorTest.cs" />

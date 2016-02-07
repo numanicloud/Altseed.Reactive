@@ -11,7 +11,8 @@ using Nac.Altseed.Linq;
 
 namespace Nac.Altseed.UI
 {
-	public class MultiSelector<TChoice, TAbstractKey> : Selector<TChoice, TAbstractKey>
+	public class MultiSelector<TChoice, TAbstractKey>
+		: Selector<TChoice, TAbstractKey>, IMultiSelector<TChoice, TAbstractKey>, ISelector<TChoice, TAbstractKey>
 	{
 		class SelectionOfMultiSelection
 		{
@@ -24,14 +25,14 @@ namespace Nac.Altseed.UI
 		private List<SelectionOfMultiSelection> selections;
 		private Controller<TAbstractKey> controller;
 		private IDisposable multiKeyBind;
+		private Func<Object2D> createCursor { get; set; }
 
-		public Func<Object2D> CreateCursor { get; set; }
 		public IObservable<TChoice> OnAdd => onAddSubject_;
 		public IObservable<TChoice> OnRemove => onRemoveSubject_;
-		public IObservable<TChoice> OnDecideForSingle { get; set; }
-		public IObservable<IEnumerable<ChoiceItem>> OnDecideForMulti { get; set; }
+		public IObservable<TChoice> OnDecideForSingle { get; private set; }
+		public IObservable<IEnumerable<ChoiceItem>> OnDecideForMulti { get; private set; }
 
-		public MultiSelector(Controller<TAbstractKey> controller, Layouter layout)
+		public MultiSelector(Controller<TAbstractKey> controller, Layouter layout, Func<Object2D> createCursor)
 			: base(controller, layout)
 		{
 			this.controller = controller;
@@ -39,11 +40,16 @@ namespace Nac.Altseed.UI
 			OnDecideForSingle = OnDecide.Where(x => !selections.Any());
 			OnDecideForMulti = OnDecide.Where(x => selections.Any())
 				.Select(x => selections.Select(y => ChoiceItems[y.Index]));
+			this.createCursor = createCursor;
 		}
-
-		public void BindKey(TAbstractKey next, TAbstractKey previous, TAbstractKey decide, TAbstractKey cancel, TAbstractKey multi)
+		
+		public void BindKey(TAbstractKey next,
+			TAbstractKey prev,
+			TAbstractKey decide,
+			TAbstractKey cancel,
+			TAbstractKey multi)
 		{
-			base.BindKey(next, previous, decide, cancel);
+			base.BindKey(next, prev, decide, cancel);
 			multiKeyBind?.Dispose();
 			multiKeyBind = OnUpdateEvent.Select(t => controller.GetState(multi))
 				.Where(x => x == InputState.Push)
@@ -65,7 +71,7 @@ namespace Nac.Altseed.UI
 			var selection = new SelectionOfMultiSelection
 			{
 				Index = SelectedIndex,
-				Cursor = CreateCursor(),
+				Cursor = createCursor(),
 			};
 			ChoiceItems[SelectedIndex].Item.AddChild(
 				selection.Cursor,
@@ -89,17 +95,6 @@ namespace Nac.Altseed.UI
 			selections.Clear();
 		}
 
-		public override void InsertChoice(int index, TChoice choice, Object2D item)
-		{
-			base.InsertChoice(index, choice, item);
-			foreach(var s in selections)
-			{
-				if(index <= s.Index)
-				{
-					s.Index++;
-				}
-			}
-		}
 
 		public override Object2D RemoveChoice(TChoice choice)
 		{
@@ -117,6 +112,26 @@ namespace Nac.Altseed.UI
 				selections.RemoveAll(x => x.Index == index);
 			}
 			return result;
+		}
+
+		public override void InsertChoice(int index, TChoice choice, Object2D obj)
+		{
+			base.InsertChoice(index, choice, obj);
+			foreach(var s in selections)
+			{
+				if(index <= s.Index)
+				{
+					s.Index++;
+				}
+			}
+		}
+
+		void ISelector<TChoice, TAbstractKey>.BindKey(TAbstractKey next,
+			TAbstractKey prev,
+			TAbstractKey decide,
+			TAbstractKey cancel)
+		{
+			base.BindKey(next, prev, decide, cancel);
 		}
 	}
 }

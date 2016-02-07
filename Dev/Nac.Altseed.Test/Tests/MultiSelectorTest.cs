@@ -43,7 +43,13 @@ namespace Nac.Altseed.Test
 				Position = new Vector2DF(20, 20),
 			};
 			layout.SetEasingBehaviorUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
-			selector = new MultiSelector<int, Control>(CreateController(), layout)
+			Func<Object2D> cursorCreator = () => new TextureObject2D()
+			{
+				Texture = Engine.Graphics.CreateTexture2D("ListCursor.png"),
+				Color = new Color(0, 255, 0, 128),
+			};
+
+			selector = new MultiSelector<int, Control>(CreateController(), layout, cursorCreator)
 			{
 				Loop = true,
 				CursorOffset = new Vector2DF(-5, -3),
@@ -51,11 +57,6 @@ namespace Nac.Altseed.Test
 			selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
 			selector.BindKey(Control.Down, Control.Up, Control.Decide, Control.Cancel, Control.Sub);
 			selector.SetEasingBehaviorUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
-			selector.CreateCursor = () => new TextureObject2D()
-			{
-				Texture = Engine.Graphics.CreateTexture2D("ListCursor.png"),
-				Color = new Color(0, 255, 0, 128),
-			};
 
 			font = Engine.Graphics.CreateDynamicFont("", 20, new Color(255, 255, 255, 255), 0, new Color(0, 0, 0, 255));
 			for(int i = 0; i < 8; i++)
