@@ -83,6 +83,7 @@
     <Compile Include="ObjectSystem\ReactiveScene.cs" />
     <Compile Include="ObjectSystem\ReactiveTextObject2D.cs" />
     <Compile Include="ObjectSystem\ReactiveTextureObject2D.cs" />
+    <Compile Include="UI\AsIsLayout.cs" />
     <Compile Include="UI\Selector\CollectionBinderForSelector.cs" />
     <Compile Include="UI\Selector\IMultiSelector.cs" />
     <Compile Include="UI\Selector\IScrollingSelector.cs" />

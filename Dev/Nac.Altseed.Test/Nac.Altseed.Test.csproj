@@ -64,17 +64,18 @@
     <Compile Include="AltseedTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\AsIsLayoutTest.cs" />
     <Compile Include="Tests\AwaitCompleted.cs" />
-    <Compile Include="Tests\BindCollectionForScrollingSelector.cs" />
-    <Compile Include="Tests\CollectionBinderTest.cs" />
+    <Compile Include="Selector\BindCollectionForScrollingSelector.cs" />
+    <Compile Include="Selector\CollectionBinderTest.cs" />
     <Compile Include="Tests\EasingTest.cs" />
     <Compile Include="Tests\LinearLayouterTest.cs" />
     <Compile Include="Tests\MessageWindowTest.cs" />
-    <Compile Include="Tests\MultiSelectorTest.cs" />
-    <Compile Include="Tests\ScrollingMultiSelectorTest.cs" />
-    <Compile Include="Tests\ScrollingSelectorTest.cs" />
+    <Compile Include="Selector\MultiSelectorTest.cs" />
+    <Compile Include="Selector\ScrollingMultiSelectorTest.cs" />
+    <Compile Include="Selector\ScrollingSelectorTest.cs" />
     <Compile Include="Tests\ScrollTest.cs" />
-    <Compile Include="Tests\SelectorTest.cs" />
+    <Compile Include="Selector\SelectorTest.cs" />
     <Compile Include="Tests\WiggleTest.cs" />
   </ItemGroup>
   <ItemGroup>

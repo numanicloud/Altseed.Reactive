@@ -9,7 +9,7 @@ namespace Nac.Altseed.UI
         public abstract void InsertItem(int index, Object2D obj);
         public abstract void RemoveItem(Object2D obj);
         public abstract void ClearItem();
-        protected abstract IEnumerable<Object2D> ObjectsInternal { get; }
+        internal abstract IEnumerable<Object2D> ObjectsInternal { get; }
 
         protected override void OnUpdate()
         {

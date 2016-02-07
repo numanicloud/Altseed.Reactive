@@ -36,7 +36,8 @@ namespace Nac.Altseed.UI
 			{
 				LayoutedPosition = goal;
 				Cancellation?.Dispose();
-				Cancellation = owner.SetItemPosition(Object, goal)
+				Cancellation = owner.GetNewItemPosition(Object, goal)
+					.Where(p => Object.IsAlive)
 					.Subscribe(p => Object.Position = p);
 			}
 		}
@@ -46,7 +47,7 @@ namespace Nac.Altseed.UI
         private Vector2DF startingOffset, itemSpan;
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
 
-        protected override IEnumerable<Object2D> ObjectsInternal => items_.Select(x => x.Object);
+        internal override IEnumerable<Object2D> ObjectsInternal => items_.Select(x => x.Object);
 
 		public IObservable<Unit> OnLayoutChanged => onLayoutChanged_;
 		public INotifyCollectionChanged ObjectsNotification => items_;
@@ -69,19 +70,19 @@ namespace Nac.Altseed.UI
                 ResetPosition();
             }
         }
-        public Func<Object2D, Vector2DF, IObservable<Vector2DF>> SetItemPosition { get; set; }
+        public Func<Object2D, Vector2DF, IObservable<Vector2DF>> GetNewItemPosition { get; set; }
 
         public LinearPanel()
         {
             items_ = new ObservableCollection<ItemInfo>();
             cancellations = new List<IDisposable>();
-			SetItemPosition = (o, v) => Observable.Return(v);
+			GetNewItemPosition = (o, v) => Observable.Return(v);
 			IsDrawn = false;
         }
 
 		public void SetEasingBehaviorUp(EasingStart start, EasingEnd end, int time)
 		{
-			SetItemPosition = (o, v) => OnUpdateEvent.TakeWhile(f => o.IsAlive)
+			GetNewItemPosition = (o, v) => OnUpdateEvent.TakeWhile(f => o.IsAlive)
 				.Select(t => o.Position)
 				.EasingVector2DF(v, start, end, time);
 		}
