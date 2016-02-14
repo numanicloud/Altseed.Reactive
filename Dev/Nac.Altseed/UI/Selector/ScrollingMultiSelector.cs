@@ -172,7 +172,7 @@ namespace Nac.Altseed.UI
 			}
 		}
 
-		public IObservable<IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem>> OnDecideForMulti
+		public IObservable<IEnumerable<TChoice>> OnDecideForMulti
 		{
 			get
 			{
@@ -321,6 +321,11 @@ namespace Nac.Altseed.UI
 		{
 			base.OnDispose();
 			scrollingSelector.ScrollLayer.Dispose();
+		}
+
+		public Object2D GetItemForChoice(TChoice choice)
+		{
+			return multiSelector.GetItemForChocie(choice);
 		}
 	}
 }

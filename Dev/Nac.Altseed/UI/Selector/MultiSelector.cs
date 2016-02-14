@@ -30,7 +30,7 @@ namespace Nac.Altseed.UI
 		public IObservable<TChoice> OnAdd => onAddSubject_;
 		public IObservable<TChoice> OnRemove => onRemoveSubject_;
 		public IObservable<TChoice> OnDecideForSingle { get; private set; }
-		public IObservable<IEnumerable<ChoiceItem>> OnDecideForMulti { get; private set; }
+		public IObservable<IEnumerable<TChoice>> OnDecideForMulti { get; private set; }
 
 		public MultiSelector(Controller<TAbstractKey> controller, Layouter layout, Func<Object2D> createCursor)
 			: base(controller, layout)
@@ -39,7 +39,7 @@ namespace Nac.Altseed.UI
 			selections = new List<SelectionOfMultiSelection>();
 			OnDecideForSingle = OnDecide.Where(x => !selections.Any());
 			OnDecideForMulti = OnDecide.Where(x => selections.Any())
-				.Select(x => selections.Select(y => ChoiceItems[y.Index]));
+				.Select(x => selections.Select(y => ChoiceItems[y.Index].Choice));
 			this.createCursor = createCursor;
 		}
 		

@@ -78,12 +78,12 @@ namespace Nac.Altseed.Test
 			selector.OnCancel.Subscribe(i => Engine.Sound.Play(cancelSound));
 			selector.OnAdd.Subscribe(i => Engine.Sound.Play(decideSound));
 			selector.OnRemove.Subscribe(i => Engine.Sound.Play(cancelSound));
-			selector.OnDecideForMulti.Subscribe((xs) =>
+			selector.OnDecideForMulti.Subscribe(xs =>
 			{
 				foreach(var x in xs.ToList())
 				{
-					selector.RemoveChoice(x.Choice);
-					x.Item.Dispose();
+					selector.GetItemForChoice(x)?.Dispose();
+					selector.RemoveChoice(x);
 				}
 			});
 
