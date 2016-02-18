@@ -218,6 +218,17 @@ namespace Nac.Altseed.UI
 			return choiceItems_.Find(x => x.Choice.Equals(choice))?.Item;
 		}
 
+		protected override void OnAdded()
+		{
+			base.OnAdded();
+			Layer.AddObject(Cursor);
+		}
+
+		protected override void OnRemoved()
+		{
+			base.OnRemoved();
+			Layer.RemoveObject(Cursor);
+		}
 
 		protected override void OnDispose()
 		{
@@ -312,7 +323,10 @@ namespace Nac.Altseed.UI
 				Cursor.Parent?.RemoveChild(Cursor);
 				obj.AddChild(Cursor, ChildManagementMode.Nothing, ChildTransformingMode.All);
 				cancellationOfCursorMoving = SetCursorPosition(Cursor, CursorOffset)
-					.Subscribe(p => Cursor.Position = p, () => cancellationOfCursorMoving = null);
+					.Subscribe(p => Cursor.Position = p, () =>
+					{
+						cancellationOfCursorMoving = null;
+					});
 			}
 		}
 

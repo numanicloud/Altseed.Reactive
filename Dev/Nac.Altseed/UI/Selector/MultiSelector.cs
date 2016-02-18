@@ -55,6 +55,7 @@ namespace Nac.Altseed.UI
 				.Where(x => x == InputState.Push)
 				.Subscribe(x =>
 				{
+					Console.WriteLine($"Multi:{SelectedIndex}");
 					if(selections.Any(y => y.Index == SelectedIndex))
 					{
 						RemoveSelectedIndex();
@@ -73,6 +74,7 @@ namespace Nac.Altseed.UI
 				Index = SelectedIndex,
 				Cursor = createCursor(),
 			};
+			selection.Cursor.Position = CursorOffset;
 			ChoiceItems[SelectedIndex].Item.AddChild(
 				selection.Cursor,
 				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal,
