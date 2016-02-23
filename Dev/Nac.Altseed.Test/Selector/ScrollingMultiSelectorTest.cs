@@ -75,9 +75,9 @@ namespace Nac.Altseed.Test
 
 			selector.OnSelectionChanged.Subscribe(i =>
 			{
-				Engine.Sound.Play(moveSound);
-				Console.WriteLine($"{i}({selector.SelectedIndex})");
-            });
+				var handle = Engine.Sound.Play(moveSound);
+				Engine.Sound.SetVolume(handle, 0.3f);
+			});
 			selector.OnDecide.Subscribe(i =>
 			{
 				var handle = Engine.Sound.Play(decideSound);

@@ -10,7 +10,7 @@ namespace Nac.Altseed.Test
     {
         static void Main(string[] args)
         {
-            AltseedTest test = new ScrollingMultiSelectorTest();
+            AltseedTest test = new Study.DisposeChild();
             test.Run();
         }
     }

@@ -55,7 +55,6 @@ namespace Nac.Altseed.UI
 				.Where(x => x == InputState.Push)
 				.Subscribe(x =>
 				{
-					Console.WriteLine($"Multi:{SelectedIndex}");
 					if(selections.Any(y => y.Index == SelectedIndex))
 					{
 						RemoveSelectedIndex();
@@ -69,6 +68,11 @@ namespace Nac.Altseed.UI
 
 		public void AddSelectedIndex()
 		{
+			if(SelectedIndex == Choice<TAbstractKey>.DisabledIndex)
+			{
+				return;
+			}
+
 			var selection = new SelectionOfMultiSelection
 			{
 				Index = SelectedIndex,

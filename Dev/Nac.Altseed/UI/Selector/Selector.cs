@@ -311,7 +311,7 @@ namespace Nac.Altseed.UI
 
 		private void MoveCursor(Object2D obj)
 		{
-			if(SetCursorPosition == null)
+			if(SetCursorPosition == null || Cursor.Parent == null)
 			{
 				SuddenlyMoveCursor(obj);
 			}
