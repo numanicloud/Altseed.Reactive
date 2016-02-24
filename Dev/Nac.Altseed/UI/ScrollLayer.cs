@@ -73,7 +73,7 @@ namespace Nac.Altseed.UI
 		{
 			camera = new CameraObject2D();
 			AddObject(camera);
-			getCameraMoving = p => Observable.Return(camera.Src.ToFloat().WithPosition(p));
+			getCameraMoving = p => Observable.Return(camera.Src.ToF().WithPosition(p));
 		}
 
 		public void SubscribeSeeingArea(IObservable<RectF> onSeeingAreaChanged)
@@ -91,7 +91,7 @@ namespace Nac.Altseed.UI
 			getCameraMoving = target => UpdateManager.Instance.FrameUpdate
 				.Select(t => camera.Src.Position.To2DF())
 				.EasingVector2DF(target, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, time)
-				.Select(p => camera.Src.ToFloat().WithPosition(p));
+				.Select(p => camera.Src.ToF().WithPosition(p));
         }
 
 
@@ -111,14 +111,14 @@ namespace Nac.Altseed.UI
 				Starting.Y,
 				Ending.X - Starting.X,
 				Ending.Y - Starting.Y);
-			offset -= GetJut(camera.Src.ToFloat().WithPosition(cameraTargetPosition + offset), outerBindingRect);
+			offset -= GetJut(camera.Src.ToF().WithPosition(cameraTargetPosition + offset), outerBindingRect);
 
 			if(offset != new Vector2DF(0, 0))
 			{
 				cameraTargetPosition = cameraTargetPosition + offset;
 				scrollDisposable?.Dispose();
 				scrollDisposable = getCameraMoving(cameraTargetPosition)
-					.Subscribe(r => camera.Src = r.ToInt());
+					.Subscribe(r => camera.Src = r.ToI());
 			}
 		}
 
@@ -153,8 +153,8 @@ namespace Nac.Altseed.UI
 
 		private void ResetCamera()
 		{
-			camera.Src = new RectF(camera.Src.X, camera.Src.Y, CameraSize.X, CameraSize.Y).ToInt();
-			camera.Dst = new RectF(Position.X, Position.Y, CameraSize.X, CameraSize.Y).ToInt();
+			camera.Src = new RectF(camera.Src.X, camera.Src.Y, CameraSize.X, CameraSize.Y).ToI();
+			camera.Dst = new RectF(Position.X, Position.Y, CameraSize.X, CameraSize.Y).ToI();
 			ReviseCamera(seeingArea);
 		}
 	}
