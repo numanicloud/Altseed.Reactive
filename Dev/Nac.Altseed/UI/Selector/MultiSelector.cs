@@ -51,7 +51,8 @@ namespace Nac.Altseed.UI
 		{
 			base.BindKey(next, prev, decide, cancel);
 			multiKeyBind?.Dispose();
-			multiKeyBind = OnUpdateEvent.Select(t => controller.GetState(multi))
+			multiKeyBind = OnUpdateEvent.Where(t => IsAlive && IsActive)
+				.Select(t => controller.GetState(multi))
 				.Where(x => x == InputState.Push)
 				.Subscribe(x =>
 				{

@@ -131,8 +131,7 @@ namespace Nac.Altseed.UI
 			SetCursorPosition = (o, target) =>
 			{
 				var f = Easing.GetEasingFunction(start, end);
-				return UpdateManager.Instance.FrameUpdate
-					.Select(u => o.Position)
+				return OnUpdateEvent.Select(u => o.Position)
 					.Select((v, i) => Easing.GetNextValue(v, target, i, time, f))
 					.Take(time + 1);
 			};
@@ -292,10 +291,10 @@ namespace Nac.Altseed.UI
 			{
 				if(Cursor.IsAlive)
 				{
-					Cursor.IsDrawn = false; 
+					Cursor.IsDrawn = false;
 				}
 			}
-			
+
 			SelectedIndex = choiceSystem.SelectedIndex;
 		}
 
