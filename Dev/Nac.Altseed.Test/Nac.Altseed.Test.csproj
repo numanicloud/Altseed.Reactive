@@ -64,6 +64,7 @@
     <Compile Include="AltseedTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Selector\BindCollectionForMultiSelector.cs" />
     <Compile Include="Study\DisposeAndChangeParent.cs" />
     <Compile Include="Study\DisposeChild.cs" />
     <Compile Include="Tests\AsIsLayoutTest.cs" />
