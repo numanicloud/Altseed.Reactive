@@ -93,6 +93,7 @@ namespace Nac.Altseed.UI
 		public Selector(Controller<TAbstractKey> controller, Layouter layout)
 		{
 			IsActive = true;
+			IsDrawn = false;
 			revisingStatus = new BooleanDisposable();
 			revisingStatus.Dispose();
 			this.Layout = layout;

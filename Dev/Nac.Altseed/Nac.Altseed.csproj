@@ -83,13 +83,13 @@
     <Compile Include="ObjectSystem\ReactiveScene.cs" />
     <Compile Include="ObjectSystem\ReactiveTextObject2D.cs" />
     <Compile Include="ObjectSystem\ReactiveTextureObject2D.cs" />
-    <Compile Include="UI\AsIsLayout.cs" />
+    <Compile Include="UI\Layout\AsIsLayout.cs" />
     <Compile Include="UI\Selector\CollectionBinderForSelector.cs" />
     <Compile Include="UI\Selector\IMultiSelector.cs" />
     <Compile Include="UI\Selector\IScrollingSelector.cs" />
     <Compile Include="UI\Selector\ISelector.cs" />
-    <Compile Include="UI\Layouter.cs" />
-    <Compile Include="UI\LinearPanel.cs" />
+    <Compile Include="UI\Layout\Layouter.cs" />
+    <Compile Include="UI\Layout\LinearPanel.cs" />
     <Compile Include="UI\ScrollBoundViewer.cs" />
     <Compile Include="UI\Selector\MultiSelector.cs" />
     <Compile Include="UI\Selector\ScrollingMultiSelector.cs" />

@@ -47,7 +47,7 @@ namespace Nac.Altseed.UI
         private Vector2DF startingOffset, itemSpan;
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
 
-        internal override IEnumerable<Object2D> ObjectsInternal => items_.Select(x => x.Object);
+        protected override IEnumerable<Object2D> ObjectsInternal => items_.Select(x => x.Object);
 
 		public IObservable<Unit> OnLayoutChanged => onLayoutChanged_;
 		public INotifyCollectionChanged ObjectsNotification => items_;
