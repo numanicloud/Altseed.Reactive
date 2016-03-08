@@ -93,6 +93,7 @@ namespace Nac.Altseed.UI
 		public Selector(Controller<TAbstractKey> controller, Layouter layout)
 		{
 			IsActive = true;
+			IsDrawn = false;
 			revisingStatus = new BooleanDisposable();
 			revisingStatus.Dispose();
 			this.Layout = layout;
@@ -131,8 +132,7 @@ namespace Nac.Altseed.UI
 			SetCursorPosition = (o, target) =>
 			{
 				var f = Easing.GetEasingFunction(start, end);
-				return UpdateManager.Instance.FrameUpdate
-					.Select(u => o.Position)
+				return OnUpdateEvent.Select(u => o.Position)
 					.Select((v, i) => Easing.GetNextValue(v, target, i, time, f))
 					.Take(time + 1);
 			};
@@ -218,6 +218,17 @@ namespace Nac.Altseed.UI
 			return choiceItems_.Find(x => x.Choice.Equals(choice))?.Item;
 		}
 
+		protected override void OnAdded()
+		{
+			base.OnAdded();
+			Layer.AddObject(Cursor);
+		}
+
+		protected override void OnRemoved()
+		{
+			base.OnRemoved();
+			Layer.RemoveObject(Cursor);
+		}
 
 		protected override void OnDispose()
 		{
@@ -281,10 +292,10 @@ namespace Nac.Altseed.UI
 			{
 				if(Cursor.IsAlive)
 				{
-					Cursor.IsDrawn = false; 
+					Cursor.IsDrawn = false;
 				}
 			}
-			
+
 			SelectedIndex = choiceSystem.SelectedIndex;
 		}
 
@@ -300,7 +311,7 @@ namespace Nac.Altseed.UI
 
 		private void MoveCursor(Object2D obj)
 		{
-			if(SetCursorPosition == null)
+			if(SetCursorPosition == null || Cursor.Parent == null)
 			{
 				SuddenlyMoveCursor(obj);
 			}
@@ -312,7 +323,10 @@ namespace Nac.Altseed.UI
 				Cursor.Parent?.RemoveChild(Cursor);
 				obj.AddChild(Cursor, ChildManagementMode.Nothing, ChildTransformingMode.All);
 				cancellationOfCursorMoving = SetCursorPosition(Cursor, CursorOffset)
-					.Subscribe(p => Cursor.Position = p, () => cancellationOfCursorMoving = null);
+					.Subscribe(p => Cursor.Position = p, () =>
+					{
+						cancellationOfCursorMoving = null;
+					});
 			}
 		}
 

@@ -73,8 +73,16 @@ namespace Nac.Altseed.Test
 			var decideSound = Engine.Sound.CreateSoundSource("pi78.wav", true);
 			var cancelSound = Engine.Sound.CreateSoundSource("pi11.wav", true);
 
-			selector.OnSelectionChanged.Subscribe(i => Engine.Sound.Play(moveSound));
-			selector.OnDecide.Subscribe(i => Engine.Sound.Play(decideSound));
+			selector.OnSelectionChanged.Subscribe(i =>
+			{
+				var handle = Engine.Sound.Play(moveSound);
+				Engine.Sound.SetVolume(handle, 0.3f);
+			});
+			selector.OnDecide.Subscribe(i =>
+			{
+				var handle = Engine.Sound.Play(decideSound);
+				Engine.Sound.SetVolume(handle, 0.3f);
+			});
 			selector.OnCancel.Subscribe(i => Engine.Sound.Play(cancelSound));
 			selector.OnAdd.Subscribe(i => Engine.Sound.Play(decideSound));
 			selector.OnRemove.Subscribe(i => Engine.Sound.Play(cancelSound));
@@ -87,7 +95,7 @@ namespace Nac.Altseed.Test
 				}
 			});
 
-			selector.SetDebugCameraUp();
+			//selector.SetDebugCameraUp();
 		}
 
 		protected override void OnUpdate()

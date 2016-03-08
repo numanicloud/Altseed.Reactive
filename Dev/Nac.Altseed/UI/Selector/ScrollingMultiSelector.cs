@@ -223,6 +223,8 @@ namespace Nac.Altseed.UI
 			}
 		}
 
+		public TChoice SelectedChoice => multiSelector.SelectedChoice;
+
 		public IObservable<TChoice> OnSelectionChanged
 		{
 			get

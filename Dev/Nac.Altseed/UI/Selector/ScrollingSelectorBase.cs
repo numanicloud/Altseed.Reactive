@@ -120,9 +120,7 @@ namespace Nac.Altseed.UI
 				.Select(c => Unit.Default)
 				.Merge(selector.OnLayoutChanged)
 				.Where(u => selector.SelectedIndex != -1)
-				.Select(p => GeometoryHelper.GetRectFromVector(
-					this.layout.ItemSpan * selector.SelectedIndex + selector.CursorOffset,
-					GetSize(1)));
+				.Select(p => new RectF(this.layout.ItemSpan * selector.SelectedIndex + selector.CursorOffset, GetSize(1)));
 			scrollLayer_.SubscribeSeeingArea(areaChanged);
 			this.layout.OnLayoutChanged.Subscribe(u => ResetOuterBound());
 
@@ -174,7 +172,7 @@ namespace Nac.Altseed.UI
 			var bindStarting = layout.ItemSpan * ExtraLinesOnStarting;
 			var bindSize = GetSize(BoundLines);
 			scrollLayer_.CameraSize = GetSize(ExtraLinesOnStarting + BoundLines + ExtraLinesOnEnding);
-			scrollLayer_.BindingAreaRange = GeometoryHelper.GetRectFromVector(bindStarting, bindSize);
+			scrollLayer_.BindingAreaRange = new RectF(bindStarting, bindSize);
 		}
 
 		private Vector2DF GetSize(int lines)

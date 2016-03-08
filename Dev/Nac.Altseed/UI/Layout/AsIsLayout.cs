@@ -11,7 +11,7 @@ namespace Nac.Altseed.UI
 	{
 		private List<Object2D> objects_;
 
-		internal override IEnumerable<Object2D> ObjectsInternal => objects_;
+		protected override IEnumerable<Object2D> ObjectsInternal => objects_;
 
 		public IEnumerable<Object2D> Items => objects_;
 

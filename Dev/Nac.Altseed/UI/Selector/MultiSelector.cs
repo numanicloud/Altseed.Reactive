@@ -51,7 +51,8 @@ namespace Nac.Altseed.UI
 		{
 			base.BindKey(next, prev, decide, cancel);
 			multiKeyBind?.Dispose();
-			multiKeyBind = OnUpdateEvent.Select(t => controller.GetState(multi))
+			multiKeyBind = OnUpdateEvent.Where(t => IsAlive && IsActive)
+				.Select(t => controller.GetState(multi))
 				.Where(x => x == InputState.Push)
 				.Subscribe(x =>
 				{
@@ -68,11 +69,17 @@ namespace Nac.Altseed.UI
 
 		public void AddSelectedIndex()
 		{
+			if(SelectedIndex == Choice<TAbstractKey>.DisabledIndex)
+			{
+				return;
+			}
+
 			var selection = new SelectionOfMultiSelection
 			{
 				Index = SelectedIndex,
 				Cursor = createCursor(),
 			};
+			selection.Cursor.Position = CursorOffset;
 			ChoiceItems[SelectedIndex].Item.AddChild(
 				selection.Cursor,
 				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal,

@@ -16,6 +16,8 @@ namespace Nac.Altseed.Test
 
 	class AltseedTest
 	{
+		public int TimeCount { get; set; }
+
 		public void Run()
 		{
             var syncContext = new UpdatableSynchronizationContext();
@@ -32,6 +34,7 @@ namespace Nac.Altseed.Test
                 UpdateManager.Instance.Update();
                 OnUpdate();
                 syncContext.Update();
+				++TimeCount;
 			}
 
 			OnTerminate();

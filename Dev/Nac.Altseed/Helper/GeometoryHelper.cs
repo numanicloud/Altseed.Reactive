@@ -27,16 +27,6 @@ namespace Nac.Altseed
 		#endregion
 
 		#region RectI
-		public static RectI GetRectFromVector(Vector2DI position, Vector2DI size)
-		{
-			return new RectI(position.X, position.Y, size.X, size.Y);
-		}
-
-		public static RectF ToFloat(this RectI rect)
-		{
-			return new RectF(rect.X, rect.Y, rect.Width, rect.Height);
-		}
-
 		public static RectI WithX(this RectI rect, int x)
 		{
 			return new RectI(x, rect.Y, rect.Width, rect.Height);
@@ -64,16 +54,6 @@ namespace Nac.Altseed
 		#endregion
 
 		#region RectF
-		public static RectF GetRectFromVector(Vector2DF position, Vector2DF size)
-		{
-			return new RectF(position.X, position.Y, size.X, size.Y);
-		}
-
-		public static RectI ToInt(this RectF rect)
-		{
-			return new RectI((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
-		}
-
 		public static RectF WithX(this RectF rect, float x)
 		{
 			return new RectF(x, rect.Y, rect.Width, rect.Height);
@@ -99,5 +79,10 @@ namespace Nac.Altseed
 			return $"({rect.X}, {rect.Y}, {rect.Width}, {rect.Height})";
 		}
 		#endregion
+
+		public static Color WithAlpha(this Color source, byte alpha)
+		{
+			return new Color(source.R, source.G, source.B, alpha);
+		}
 	}
 }
