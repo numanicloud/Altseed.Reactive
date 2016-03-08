@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reactive.Threading.Tasks;
+using System.Threading;
 using System.Threading.Tasks;
 using asd;
 using Nac.Altseed.Input;
@@ -49,24 +51,40 @@ namespace Nac.Altseed.UI
             isReadKeyPushed = () => controller.GetState(readKey) == InputState.Push;
         }
 
-		public async Task TalkMessageAsync(params string[] message)
+		public Task TalkMessageAsync(string[] message)
 		{
-			if(!IsAlive)
-			{
-				return;
-			}
-			OutputWarningOfTextObject();
-			await OnUpdateEvent.SelectCorourine(FlowToShowText(message, true));
+			return TalkMessageAsync(message, new CancellationToken());
 		}
 
-		public async Task TalkMessageWithoutReadAsync(string message)
+		public Task TalkMessageWithoutReadAsync(string message)
+		{
+			return TalkMessageWithoutReadAsync(message, new CancellationToken());
+		}
+
+		/// <summary>
+		/// メッセージ文字列の配列を表示します。読み進める操作が入力されるたびに次の要素を表示します。
+		/// </summary>
+		/// <param name="message">表示するメッセージの配列。</param>
+		/// <param name="ct">キャンセル トークン。</param>
+		/// <returns></returns>
+		public async Task TalkMessageAsync(string[] message, CancellationToken ct)
 		{
 			if(!IsAlive)
 			{
 				return;
 			}
 			OutputWarningOfTextObject();
-			await OnUpdateEvent.SelectCorourine(FlowToShowText(new string[] { message }, false));
+			await OnUpdateEvent.SelectCorourine(FlowToShowText(message, true)).ToTask(ct);
+		}
+
+		public async Task TalkMessageWithoutReadAsync(string message, CancellationToken ct)
+		{
+			if(!IsAlive)
+			{
+				return;
+			}
+			OutputWarningOfTextObject();
+			await OnUpdateEvent.SelectCorourine(FlowToShowText(new string[] { message }, false)).ToTask(ct);
 		}
 
 		public void ShowMessage(string message)
