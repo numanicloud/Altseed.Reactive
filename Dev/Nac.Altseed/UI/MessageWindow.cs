@@ -77,6 +77,12 @@ namespace Nac.Altseed.UI
 			await OnUpdateEvent.SelectCorourine(FlowToShowText(message, true)).ToTask(ct);
 		}
 
+		/// <summary>
+		/// メッセージ文字列を表示します。
+		/// </summary>
+		/// <param name="message">表示するメッセージ。</param>
+		/// <param name="ct">キャンセル トークン。</param>
+		/// <returns></returns>
 		public async Task TalkMessageWithoutReadAsync(string message, CancellationToken ct)
 		{
 			if(!IsAlive)
@@ -87,6 +93,10 @@ namespace Nac.Altseed.UI
 			await OnUpdateEvent.SelectCorourine(FlowToShowText(new string[] { message }, false)).ToTask(ct);
 		}
 
+		/// <summary>
+		/// 文字列をウィンドウに表示します。タイプライター風のアニメーションをしません。
+		/// </summary>
+		/// <param name="message">表示するメッセージ。</param>
 		public void ShowMessage(string message)
 		{
 			if(!IsAlive)

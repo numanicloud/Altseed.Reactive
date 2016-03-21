@@ -241,6 +241,11 @@ namespace Nac.Altseed.UI
 		{
 			base.OnUpdate();
 
+			if (!IsAlive)
+			{
+				return;
+			}
+
 			var beVanished = new List<TChoice>();
 			foreach(var item in choiceItems_)
 			{
