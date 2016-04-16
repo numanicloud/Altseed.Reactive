@@ -18,13 +18,13 @@ namespace Nac.Altseed.Test
         {
             selector = new ScrollingSelector<int, Control>(CreateController())
             {
-                Position = new Vector2DF(60, 35),
+                Position = new Vector2DF(60, 32),
                 CursorOffset = new Vector2DF(-5, 3),
                 LineSpan = 36,
                 LineWidth = 360,
-                BoundLines = 9,
+                BoundLines = 8,
                 ExtraLinesOnStarting = 1,
-                ExtraLinesOnEnding = 0,
+                ExtraLinesOnEnding = 1,
                 IsControllerUpdated = true,
 				Loop = true,
             };

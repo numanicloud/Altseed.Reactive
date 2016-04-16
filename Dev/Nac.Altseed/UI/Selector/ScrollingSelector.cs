@@ -121,14 +121,18 @@ namespace Nac.Altseed.UI
             set { selector.IsActive = value; }
         }
         public IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem> ChoiceItems => selector.ChoiceItems;
-        public int SelectedIndex => selector.SelectedIndex;
 		public TChoice SelectedChoice => selector.SelectedChoice;
         public IObservable<TChoice> OnSelectionChanged => selector.OnSelectionChanged;
         public IObservable<TChoice> OnMove => selector.OnMove;
         public IObservable<TChoice> OnDecide => selector.OnDecide;
         public IObservable<TChoice> OnCancel => selector.OnCancel;
 
-        public void AddChoice(TChoice choice, Object2D obj)
+		public int SelectedIndex
+		{
+			get { return selector.SelectedIndex; }
+		}
+
+		public void AddChoice(TChoice choice, Object2D obj)
         {
             selector.AddChoice(choice, obj);
         }
@@ -142,6 +146,11 @@ namespace Nac.Altseed.UI
         {
             return selector.GetItemForChocie(choice);
         }
+
+	    public void ChangeSelection(int index)
+	    {
+		    selector.ChangeSelection(index);
+	    }
 
         public void InsertChoice(int index, TChoice choice, Object2D obj)
         {
@@ -172,7 +181,9 @@ namespace Nac.Altseed.UI
                 .Select(c => Unit.Default)
                 .Merge(selector.OnLayoutChanged)
                 .Where(u => selector.SelectedIndex != -1)
-				.Select(p => new RectF(layout.ItemSpan * selector.SelectedIndex + selector.CursorOffset, GetSize(1)));
+				.Select(u => selector.ChoiceItems[selector.SelectedIndex].Item)
+				.Select(o => (o as TextureObject2D)?.CenterPosition ?? new Vector2DF(0, 0))
+				.Select(c => new RectF(layout.ItemSpan * selector.SelectedIndex - c, GetSize(1)));
             scrollLayer_.SubscribeSeeingArea(areaChanged);
             layout.OnLayoutChanged.Subscribe(u => ResetOuterBound());
 
@@ -223,8 +234,10 @@ namespace Nac.Altseed.UI
 
         private void ResetOuterBound()
         {
-			scrollLayer_.Starting = LayoutStarting + selector.CursorOffset;
-            scrollLayer_.Ending = GetSize(layout.Items.Count()) + LayoutStarting + selector.CursorOffset;
+	        var offset = (selector.ChoiceItems.FirstOrDefault()?.Item as TextureObject2D)?.CenterPosition ??
+	                     new Vector2DF(0, 0);
+			scrollLayer_.Starting = LayoutStarting - offset;
+            scrollLayer_.Ending = GetSize(layout.Items.Count()) + LayoutStarting - offset;
         }
 
         private void ResetBound()

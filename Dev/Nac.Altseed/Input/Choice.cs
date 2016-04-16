@@ -66,7 +66,7 @@ namespace Nac.Altseed.Input
 			}
 		}
 		/// <summary>
-		/// 現在選択されている項目のインデックスを取得します。
+		/// 現在選択されている項目のインデックスを取得または設定します。
 		/// </summary>
 		public int SelectedIndex
 		{

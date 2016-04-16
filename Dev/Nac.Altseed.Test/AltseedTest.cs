@@ -31,7 +31,6 @@ namespace Nac.Altseed.Test
 			while(Engine.DoEvents())
 			{
 				Engine.Update();
-                UpdateManager.Instance.Update();
                 OnUpdate();
                 syncContext.Update();
 				++TimeCount;

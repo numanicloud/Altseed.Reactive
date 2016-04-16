@@ -39,9 +39,16 @@ namespace Nac.Altseed.UI
 		private Subject<Unit> onLayoutChanged_ = new Subject<Unit>();
 		private BooleanDisposable revisingStatus;
 		private bool doWarningAboutKeyBind = true;
+		private int selectedIndex_;
 
 		public bool IsActive { get; set; }
-		public int SelectedIndex { get; private set; }
+
+		public int SelectedIndex
+		{
+			get { return selectedIndex_; }
+			private set { selectedIndex_ = value; }
+		}
+
 		public IObservable<Unit> OnLayoutChanged => onLayoutChanged_;
 		public IObservable<TChoice> OnSelectionChanged { get; private set; }
 		public IObservable<TChoice> OnMove { get; private set; }
@@ -218,6 +225,11 @@ namespace Nac.Altseed.UI
 			return choiceItems_.Find(x => x.Choice.Equals(choice))?.Item;
 		}
 
+		public void ChangeSelection(int index)
+		{
+			choiceSystem.SelectedIndex = index;
+		}
+
 		protected override void OnAdded()
 		{
 			base.OnAdded();
@@ -241,7 +253,7 @@ namespace Nac.Altseed.UI
 		{
 			base.OnUpdate();
 
-			if (!IsAlive)
+			if(!IsAlive)
 			{
 				return;
 			}

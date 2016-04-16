@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nac.Altseed.Test.Selector;
 
 namespace Nac.Altseed.Test
 {
@@ -10,7 +11,7 @@ namespace Nac.Altseed.Test
     {
         static void Main(string[] args)
         {
-            AltseedTest test = new ScrollingMultiSelectorTest();
+            AltseedTest test = new ScrollingSelectorTest();
             test.Run();
         }
     }

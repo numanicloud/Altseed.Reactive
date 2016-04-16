@@ -65,8 +65,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Selector\BindCollectionForMultiSelector.cs" />
+    <Compile Include="Selector\ScrollAndCenterPositionTest.cs" />
     <Compile Include="Study\DisposeAndChangeParent.cs" />
     <Compile Include="Study\DisposeChild.cs" />
+    <Compile Include="Study\DisposeScrollSelector.cs" />
     <Compile Include="Tests\AsIsLayoutTest.cs" />
     <Compile Include="Tests\AwaitCompleted.cs" />
     <Compile Include="Selector\BindCollectionForScrollingSelector.cs" />

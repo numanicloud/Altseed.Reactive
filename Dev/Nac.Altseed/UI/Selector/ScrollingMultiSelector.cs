@@ -329,5 +329,10 @@ namespace Nac.Altseed.UI
 		{
 			return multiSelector.GetItemForChocie(choice);
 		}
+
+		public void ChangeSelection(int index)
+		{
+			multiSelector.ChangeSelection(index);
+		}
 	}
 }

@@ -88,7 +88,7 @@ namespace Nac.Altseed.UI
 
 		public void SetEasingBehaviorUp(EasingStart start, EasingEnd end, int time)
 		{
-			getCameraMoving = target => UpdateManager.Instance.FrameUpdate
+			getCameraMoving = target => OnUpdateEvent
 				.Select(t => camera.Src.Position.To2DF())
 				.EasingVector2DF(target, EasingStart.StartRapidly2, EasingEnd.EndSlowly3, time)
 				.Select(p => camera.Src.ToF().WithPosition(p));
