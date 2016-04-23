@@ -11,7 +11,7 @@ namespace Nac.Altseed.Test
     {
         static void Main(string[] args)
         {
-            AltseedTest test = new ScrollingSelectorTest();
+            AltseedTest test = new ScrollAndCenterPositionTest();
             test.Run();
         }
     }

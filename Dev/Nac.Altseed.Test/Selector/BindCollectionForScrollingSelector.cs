@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using asd;
+using Nac.Altseed.Test.Selector;
 using Nac.Altseed.UI;
 
 namespace Nac.Altseed.Test
@@ -40,11 +41,7 @@ namespace Nac.Altseed.Test
 				collection.Add(i);
 			}
 
-			CollectionBinderForSelector<int>.Bind(selector, collection, i => new TextObject2D()
-			{
-				Font = font,
-				Text = $"アイテム{i}",
-			}, true);
+			CollectionBinderForSelector<int>.Bind(selector, collection, i => new ActivatableItem($"アイテム{i}"), true);
 
 			for(int i = 5; i < 10; i++)
 			{
@@ -63,9 +60,9 @@ namespace Nac.Altseed.Test
 				var index = collection.Any() ? collection.Max() + 1 : 0;
 				collection.Add(index);
 			}
-			else if(collection.Skip(2).Any() && Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push)
+			else if(collection.Skip(0).Any() && Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push)
 			{
-				collection.RemoveAt(2);
+				collection.RemoveAt(0);
 			}
 		}
 	}

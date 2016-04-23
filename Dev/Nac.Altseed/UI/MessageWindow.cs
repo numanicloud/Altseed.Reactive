@@ -29,6 +29,7 @@ namespace Nac.Altseed.UI
 			{
 				Text = "",
 				DrawingPriority = 1,
+				TextureFilterType = TextureFilterType.Linear
 			};
 			WaitIndicator = new TextureObject2D()
 			{

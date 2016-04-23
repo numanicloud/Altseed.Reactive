@@ -178,7 +178,11 @@ namespace Nac.Altseed.UI
 			{
 				var item = choiceItems_[index].Item;
 				choiceItems_.RemoveAt(index);
-				if(index <= SelectedIndex)
+				if (index == 0 && SelectedIndex == 0)
+				{
+					OnSelectionChangedHandler(0);
+				}
+				else if(index <= SelectedIndex)
 				{
 					using(revisingStatus = new BooleanDisposable())
 					{

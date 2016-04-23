@@ -185,7 +185,7 @@ namespace Nac.Altseed.UI
 				.Select(o => (o as TextureObject2D)?.CenterPosition ?? new Vector2DF(0, 0))
 				.Select(c => new RectF(layout.ItemSpan * selector.SelectedIndex - c, GetSize(1)));
             scrollLayer_.SubscribeSeeingArea(areaChanged);
-            layout.OnLayoutChanged.Subscribe(u => ResetOuterBound());
+            selector.OnLayoutChanged.Subscribe(u => ResetOuterBound());
 
             Position = new Vector2DF();
             orientation_ = Orientation.Vertical;
