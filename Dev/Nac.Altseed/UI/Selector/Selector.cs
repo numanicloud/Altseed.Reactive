@@ -130,7 +130,10 @@ namespace Nac.Altseed.UI
 			Cursor = new ReactiveTextureObject2D();
 			Cursor.IsDrawn = false;
 
-			AddChild(Layout, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.All);
+			AddDrawnChild(Layout,
+				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal,
+				ChildTransformingMode.All,
+				ChildDrawingMode.DrawingPriority);
 		}
 
 
@@ -243,7 +246,7 @@ namespace Nac.Altseed.UI
 		protected override void OnRemoved()
 		{
 			base.OnRemoved();
-			Layer.RemoveObject(Cursor);
+			Cursor.Layer.RemoveObject(Cursor);
 		}
 
 		protected override void OnDispose()
