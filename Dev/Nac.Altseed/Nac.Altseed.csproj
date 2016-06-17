@@ -86,6 +86,7 @@
     <Compile Include="UI\Layout\AsIsLayout.cs" />
     <Compile Include="UI\Selector\CollectionBinderForSelector.cs" />
     <Compile Include="UI\Selector\IMultiSelector.cs" />
+    <Compile Include="UI\Selector\IReadOnlySelector.cs" />
     <Compile Include="UI\Selector\IScrollingSelector.cs" />
     <Compile Include="UI\Selector\ISelector.cs" />
     <Compile Include="UI\Layout\Layouter.cs" />
