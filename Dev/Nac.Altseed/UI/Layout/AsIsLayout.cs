@@ -7,6 +7,9 @@ using asd;
 
 namespace Nac.Altseed.UI
 {
+	/// <summary>
+	/// オブジェクトの配置を変えないレイアウト クラス。
+	/// </summary>
 	public class AsIsLayout : Layouter
 	{
 		private List<Object2D> objects_;
@@ -20,24 +23,40 @@ namespace Nac.Altseed.UI
 			objects_ = new List<Object2D>();
 		}
 
-		public override void AddItem(Object2D obj)
+		/// <summary>
+		/// 2Dオブジェクトをこのレイアウトの末尾に配置します。
+		/// </summary>
+		/// <param name="item">配置する2Dオブジェクト。</param>
+		public override void AddItem(Object2D item)
 		{
-			objects_.Add(obj);
+			objects_.Add(item);
 		}
 
+		/// <summary>
+		/// このレイアウトから全ての要素を取り除きます。
+		/// </summary>
 		public override void ClearItem()
 		{
 			objects_.Clear();
 		}
 
-		public override void InsertItem(int index, Object2D obj)
+		/// <summary>
+		/// 2Dオブジェクトをこのレイアウト上に挿入します。
+		/// </summary>
+		/// <param name="index">挿入する位置のインデックス。</param>
+		/// <param name="item">挿入する2Dオブジェクト。</param>
+		public override void InsertItem(int index, Object2D item)
 		{
-			objects_.Insert(index, obj);
+			objects_.Insert(index, item);
 		}
 
-		public override void RemoveItem(Object2D obj)
+		/// <summary>
+		/// 2Dオブジェクトをこのレイアウトから取り除きます。
+		/// </summary>
+		/// <param name="item">取り除く2Dオブジェクト。</param>
+		public override void RemoveItem(Object2D item)
 		{
-			objects_.Remove(obj);
+			objects_.Remove(item);
 		}
 	}
 }

@@ -15,7 +15,13 @@ namespace Nac.Altseed.ObjectSystem
 		private Subject<float> onUpdatedEvent_ = new Subject<float>();
 		private Subject<Unit> onVanisEvent_ = new Subject<Unit>();
 
+		/// <summary>
+		/// レイヤーに追加された時に通知するイベントを取得します。
+		/// </summary>
 		public IObservable<Unit> OnAddedEvent => onAddedEvent_;
+		/// <summary>
+		/// レイヤーから削除された時に通知するイベントを取得します。
+		/// </summary>
 		public IObservable<Unit> OnRemovedEvent => onRemovedEvent_;
 		/// <summary>
 		/// 更新されたときに発行されるイベント。破棄されたとき完了します。
