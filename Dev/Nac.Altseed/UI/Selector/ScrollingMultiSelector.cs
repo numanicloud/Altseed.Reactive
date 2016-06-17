@@ -257,6 +257,11 @@ namespace Nac.Altseed.UI
 			}
 		}
 
+		public IObservable<bool> OnActivationStateChanged
+		{
+			get { return ((ISelector<TChoice, TAbstractKey>)multiSelector).OnActivationStateChanged; }
+		}
+
 		public void BindKey(TAbstractKey next, TAbstractKey prev, TAbstractKey decide, TAbstractKey cancel)
 		{
 			((ISelector<TChoice, TAbstractKey>)multiSelector).BindKey(next, prev, decide, cancel);
@@ -299,6 +304,14 @@ namespace Nac.Altseed.UI
 			set { scrollingSelector.CursorOffset = value; }
 		}
 		public IEnumerable<Selector<TChoice, TAbstractKey>.ChoiceItem> ChoiceItems => multiSelector.ChoiceItems;
+
+		public IEnumerable<TChoice> AvailableChoices
+		{
+			get
+			{
+				return ((ISelector<TChoice, TAbstractKey>)multiSelector).AvailableChoices;
+			}
+		}
 
 		public ScrollingMultiSelector(Controller<TAbstractKey> controller, Func<Object2D> createCursor)
 		{
