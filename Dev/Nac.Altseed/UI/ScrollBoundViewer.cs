@@ -23,8 +23,8 @@ namespace Nac.Altseed.UI
 			debugCamera = new CameraObject2D()
 			{
 				Src = new RectI(
-					(scrollLayer.Starting - new Vector2DF(30, 30)).To2DI(),
-					(scrollLayer.Ending - scrollLayer.Starting + new Vector2DF(60, 60)).To2DI()),
+					(scrollLayer.BoundaryStartingPosition - new Vector2DF(30, 30)).To2DI(),
+					(scrollLayer.BoundaryEndingPosition - scrollLayer.BoundaryStartingPosition + new Vector2DF(60, 60)).To2DI()),
 				Dst = new RectI(Engine.WindowSize.X / 2, 0, Engine.WindowSize.X / 2, Engine.WindowSize.Y),
 			};
 			outerBinding = new GeometryObject2D()
@@ -58,7 +58,7 @@ namespace Nac.Altseed.UI
 		{
 			outerBinding.Shape = new RectangleShape()
 			{
-				DrawingArea = new RectI(scrollLayer.Starting.To2DI(), (scrollLayer.Ending - scrollLayer.Starting).To2DI()).ToF(),
+				DrawingArea = new RectI(scrollLayer.BoundaryStartingPosition.To2DI(), (scrollLayer.BoundaryEndingPosition - scrollLayer.BoundaryStartingPosition).To2DI()).ToF(),
 			};
 			innerBinding.Shape = new RectangleShape()
 			{

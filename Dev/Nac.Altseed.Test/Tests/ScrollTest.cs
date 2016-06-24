@@ -31,8 +31,8 @@ namespace Nac.Altseed.Test
 				Position = new Vector2DF(30, 30),
 				CameraSize = new Vector2DF(200, 200),
 				BindingAreaRange = new RectF(0, 25, 200, 150),
-				Starting = new Vector2DF(0, 0),
-				Ending = layout.ItemSpan * 10 + new Vector2DF(200, 0),
+				BoundaryStartingPosition = new Vector2DF(0, 0),
+				BoundaryEndingPosition = layout.ItemSpan * 10 + new Vector2DF(200, 0),
 			};
 			var areaChanged = selector.OnSelectionChanged
 				.Select(c => selector.GetItemForChocie(c).Position)
@@ -56,13 +56,13 @@ namespace Nac.Altseed.Test
 
 			var heart1 = new TextureObject2D()
 			{
-				Position = scroll.Ending - new Vector2DF(50, 50),
+				Position = scroll.BoundaryEndingPosition - new Vector2DF(50, 50),
 				Texture = Engine.Graphics.CreateTexture2D("Heart.png"),
 			};
 			scroll.AddObject(heart1);
 			var heart2 = new TextureObject2D()
 			{
-				Position = scroll.Starting - new Vector2DF(0, 50),
+				Position = scroll.BoundaryStartingPosition - new Vector2DF(0, 50),
 				Texture = Engine.Graphics.CreateTexture2D("Heart.png"),
 			};
 			scroll.AddObject(heart2);

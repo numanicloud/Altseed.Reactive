@@ -153,8 +153,8 @@ namespace Nac.Altseed.UI
 
 		private void ResetOuterBound()
 		{
-			scrollLayer_.Starting = LayoutStarting + selector.CursorOffset;
-			scrollLayer_.Ending = GetSize(layout.Items.Count()) + LayoutStarting + selector.CursorOffset;
+			scrollLayer_.BoundaryStartingPosition = LayoutStarting + selector.CursorOffset;
+			scrollLayer_.BoundaryEndingPosition = GetSize(layout.Items.Count()) + LayoutStarting + selector.CursorOffset;
 		}
 
 		private void ResetBound()

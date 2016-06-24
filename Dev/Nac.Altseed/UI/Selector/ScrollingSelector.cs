@@ -86,6 +86,10 @@ namespace Nac.Altseed.UI
                 ResetBound();
             }
         }
+		/// <summary>
+		/// 選択肢の端まで達していてもスクロールするかどうかの真偽値を取得または設定します。
+		/// </summary>
+	    public bool ScrollIntoVoid { get; set; }
 
         public Vector2DF LayoutStarting
         {
@@ -163,6 +167,8 @@ namespace Nac.Altseed.UI
 		{
 			get { return Selector.SelectedIndex; }
 		}
+
+	    public Object2D SelectedItem => Selector.SelectedItem;
 
 		public IEnumerable<TChoice> AvailableChoices
 		{
@@ -250,8 +256,8 @@ namespace Nac.Altseed.UI
             lineSpan_ = 20;
             lineWidth_ = 200;
             boundLines_ = 1;
-            extraLinesOnStarting_ = 1;
-            extraLinesOnEnding_ = 1;
+            extraLinesOnStarting_ = 0;
+            extraLinesOnEnding_ = 0;
             ResetOuterBound();
             ResetBound();
 
@@ -303,8 +309,13 @@ namespace Nac.Altseed.UI
         {
 	        var offset = (Selector.ChoiceItems.FirstOrDefault()?.Item as TextureObject2D)?.CenterPosition ??
 	                     new Vector2DF(0, 0);
-			scrollLayer_.Starting = LayoutStarting - offset;
-            scrollLayer_.Ending = GetSize(layout.Items.Count()) + LayoutStarting - offset;
+			scrollLayer_.BoundaryStartingPosition = LayoutStarting - offset;
+            scrollLayer_.BoundaryEndingPosition = GetSize(layout.Items.Count()) + LayoutStarting - offset;
+	        if (ScrollIntoVoid)
+	        {
+		        scrollLayer_.BoundaryStartingPosition -= GetSize(ExtraLinesOnStarting);
+		        scrollLayer_.BoundaryEndingPosition += GetSize(ExtraLinesOnEnding);
+	        }
         }
 
         private void ResetBound()

@@ -13,14 +13,14 @@ namespace Nac.Altseed.UI
 		private Vector2DF position_, cameraSize_;
 		private RectF bindingAreaRange_;
 
-		private CameraObject2D camera { get; set; }
-		private RectF seeingArea { get; set; }
-		private IDisposable disposableForSeeingArea { get; set; }
-		private IDisposable scrollDisposable { get; set; }
-		private Vector2DF cameraTargetPosition { get; set; }
-		private Func<Vector2DF, IObservable<RectF>> getCameraMoving { get; set; }
+		private CameraObject2D camera;
+		private RectF seeingArea;
+		private IDisposable disposableForSeeingArea;
+		private IDisposable scrollDisposable;
+		private Vector2DF cameraPositionGoalOfAnimation;
+		private Func<Vector2DF, IObservable<RectF>> getCameraMoving;
 
-		public Vector2DF Starting
+		public Vector2DF BoundaryStartingPosition
 		{
 			get { return starting_; }
 			set
@@ -29,7 +29,7 @@ namespace Nac.Altseed.UI
 				ReviseCamera(seeingArea);
 			}
 		}
-		public Vector2DF Ending
+		public Vector2DF BoundaryEndingPosition
 		{
 			get { return ending_; }
 			set
@@ -100,24 +100,24 @@ namespace Nac.Altseed.UI
 			var offset = new Vector2DF();
 
 			var innerBindingRect = new RectF(
-				cameraTargetPosition.X + BindingAreaRange.X,
-				cameraTargetPosition.Y + BindingAreaRange.Y,
+				cameraPositionGoalOfAnimation.X + BindingAreaRange.X,
+				cameraPositionGoalOfAnimation.Y + BindingAreaRange.Y,
 				BindingAreaRange.Width,
 				BindingAreaRange.Height);
 			offset += GetJut(rect, innerBindingRect);
 
 			var outerBindingRect = new RectF(
-				Starting.X,
-				Starting.Y,
-				Ending.X - Starting.X,
-				Ending.Y - Starting.Y);
-			offset -= GetJut(camera.Src.ToF().WithPosition(cameraTargetPosition + offset), outerBindingRect);
+				BoundaryStartingPosition.X,
+				BoundaryStartingPosition.Y,
+				BoundaryEndingPosition.X - BoundaryStartingPosition.X,
+				BoundaryEndingPosition.Y - BoundaryStartingPosition.Y);
+			offset -= GetJut(camera.Src.ToF().WithPosition(cameraPositionGoalOfAnimation + offset), outerBindingRect);
 
 			if(offset != new Vector2DF(0, 0))
 			{
-				cameraTargetPosition = cameraTargetPosition + offset;
+				cameraPositionGoalOfAnimation = cameraPositionGoalOfAnimation + offset;
 				scrollDisposable?.Dispose();
-				scrollDisposable = getCameraMoving(cameraTargetPosition)
+				scrollDisposable = getCameraMoving(cameraPositionGoalOfAnimation)
 					.Subscribe(r => camera.Src = r.ToI());
 			}
 		}
