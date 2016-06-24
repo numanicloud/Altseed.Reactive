@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nac.Altseed.Test.Selector;
+using Nac.Altseed.Test.Tests;
 
 namespace Nac.Altseed.Test
 {
@@ -11,7 +12,7 @@ namespace Nac.Altseed.Test
     {
         static void Main(string[] args)
         {
-            AltseedTest test = new ScrollingSelectorViewingOutside();
+            AltseedTest test = new ScrollLayersInitialState();
             test.Run();
         }
     }

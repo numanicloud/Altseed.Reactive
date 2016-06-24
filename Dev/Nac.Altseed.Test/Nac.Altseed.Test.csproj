@@ -81,6 +81,7 @@
     <Compile Include="Selector\MultiSelectorTest.cs" />
     <Compile Include="Selector\ScrollingMultiSelectorTest.cs" />
     <Compile Include="Selector\ScrollingSelectorTest.cs" />
+    <Compile Include="Tests\ScrollLayersInitialState.cs" />
     <Compile Include="Tests\ScrollTest.cs" />
     <Compile Include="Selector\SelectorTest.cs" />
     <Compile Include="Tests\WiggleTest.cs" />
