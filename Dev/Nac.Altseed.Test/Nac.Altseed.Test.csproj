@@ -68,6 +68,7 @@
     <Compile Include="Selector\BindCollectionForMultiSelector.cs" />
     <Compile Include="Selector\ScrollAndCenterPositionTest.cs" />
     <Compile Include="Selector\ScrollingSelectorViewingOutside.cs" />
+    <Compile Include="Selector\SelectorForSelector.cs" />
     <Compile Include="Study\DisposeAndChangeParent.cs" />
     <Compile Include="Study\DisposeChild.cs" />
     <Compile Include="Study\DisposeScrollSelector.cs" />

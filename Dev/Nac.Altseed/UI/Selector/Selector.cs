@@ -60,6 +60,7 @@ namespace Nac.Altseed.UI
 		private Vector2DF cursorOffset_;
 		private bool doWarningAboutKeyBind_ = true;
 		private bool isActive_;
+		private bool hideSelection_;
 
 		/// <summary>
 		/// この選択UIにおける選択肢オブジェクトの配置を決定するレイアウトを取得します。
@@ -124,6 +125,31 @@ namespace Nac.Altseed.UI
 		}
 
 		/// <summary>
+		/// 選択状態を隠すかどうかの真偽値を取得または設定します。
+		/// </summary>
+		public bool HideSelection
+		{
+			get { return hideSelection_; }
+			set
+			{
+				hideSelection_ = value;
+				if (!value)
+				{
+					Cursor.IsDrawn = GetChoiceItemAt(SelectedIndex) != null;
+					(SelectedItem as IActivatableSelectionItem)?.Activate();
+				}
+				else
+				{
+					Cursor.IsDrawn = false;
+					foreach (var choiceItem in ChoiceItems)
+					{
+						(choiceItem.Item as IActivatableSelectionItem)?.Disactivate();
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// この選択UIに登録されている、選択肢と選択肢オブジェクトの組のコレクションを取得します。
 		/// </summary>
 		public IReadOnlyList<ChoiceItem> ChoiceItems => choiceItems_;
@@ -131,7 +157,7 @@ namespace Nac.Altseed.UI
 		public IEnumerable<TChoice> AvailableChoices => ChoiceItems.Select(x => x.Choice);
 
 		/// <summary>
-		/// 選択中の選択肢のインデックスを取得または設定します。
+		/// 選択中の選択肢のインデックスを取得します。
 		/// </summary>
 		public int SelectedIndex { get; private set; }
 
@@ -142,28 +168,15 @@ namespace Nac.Altseed.UI
 		{
 			get
 			{
-				if (SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
-				{
-					return ChoiceItems[SelectedIndex].Choice;
-				}
-				return default(TChoice);
+				var choiceItem = GetChoiceItemAt(SelectedIndex);
+				return choiceItem != null ? choiceItem.Choice : default(TChoice);
 			}
 		}
 
 		/// <summary>
 		/// 選択中の選択肢オブジェクトを取得します。
 		/// </summary>
-		public Object2D SelectedItem
-		{
-			get
-			{
-				if (SelectedIndex != Choice<TAbstractKey>.DisabledIndex)
-				{
-					return ChoiceItems[SelectedIndex].Item;
-				}
-				return null;
-			}
-		}
+		public Object2D SelectedItem => GetChoiceItemAt(SelectedIndex)?.Item;
 
 		/// <summary>
 		/// 選択が移動したことを通知するイベントを取得または設定します。
@@ -441,38 +454,45 @@ namespace Nac.Altseed.UI
 
 		private void OnSelectionChangedHandler(int index)
 		{
-			if (SelectedIndex != Choice<TAbstractKey>.DisabledIndex
-			    && SelectedIndex < choiceItems_.Count
-			    && choiceItems_[SelectedIndex].Item.IsAlive)
+			var prev = GetChoiceItemAt(SelectedIndex);
+			var next = GetChoiceItemAt(index);
+
+			if (!HideSelection)
 			{
-				(choiceItems_[SelectedIndex].Item as IActivatableSelectionItem)?.Disactivate();
+				(prev?.Item as IActivatableSelectionItem)?.Disactivate();
+				(next?.Item as IActivatableSelectionItem)?.Activate();
 			}
 
-			if (index != Choice<TAbstractKey>.DisabledIndex && choiceItems_[index].Item.IsAlive)
+			if (next != null)
 			{
-				if (Cursor.IsAlive)
+				if (!HideSelection)
 				{
 					Cursor.IsDrawn = true;
 				}
-				(choiceItems_[index].Item as IActivatableSelectionItem)?.Activate();
-				if (SelectedIndex == Choice<TAbstractKey>.DisabledIndex)
+				if (prev != null)
 				{
-					SuddenlyMoveCursor(choiceItems_[index].Item);
+					MoveCursor(next.Item);
 				}
 				else
 				{
-					MoveCursor(choiceItems_[index].Item);
+					SuddenlyMoveCursor(next.Item);
 				}
 			}
 			else
 			{
-				if (Cursor.IsAlive)
-				{
-					Cursor.IsDrawn = false;
-				}
+				Cursor.IsDrawn = false;
 			}
 
 			SelectedIndex = choiceSystem_.SelectedIndex;
+		}
+
+		private ChoiceItem GetChoiceItemAt(int index)
+		{
+			if (index == Choice<TAbstractKey>.DisabledIndex || index > choiceItems_.Count)
+			{
+				return null;
+			}
+			return choiceItems_[index];
 		}
 
 		private void SuddenlyMoveCursor(Object2D obj)
