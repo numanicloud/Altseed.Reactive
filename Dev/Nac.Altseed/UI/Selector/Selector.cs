@@ -488,7 +488,7 @@ namespace Nac.Altseed.UI
 
 		private ChoiceItem GetChoiceItemAt(int index)
 		{
-			if (index == Choice<TAbstractKey>.DisabledIndex || index > choiceItems_.Count)
+			if (index == Choice<TAbstractKey>.DisabledIndex || index >= choiceItems_.Count)
 			{
 				return null;
 			}
