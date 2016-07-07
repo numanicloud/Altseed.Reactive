@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using asd;
 using Nac.Altseed.Input;
 using Nac.Altseed.UI;
+using Nac.Altseed.UI.Selector;
 
 namespace Nac.Altseed.Sample.Selector
 {
@@ -20,23 +21,13 @@ namespace Nac.Altseed.Sample.Selector
 		{
 			asd.Engine.Initialize("Selector_Basic", 640, 480, new asd.EngineOption());
 
-			var controller = new KeyboardController<Control>();
-			controller.BindKey(Keys.Down, Control.Down);
-			controller.BindKey(Keys.Up, Control.Up);
-			controller.BindKey(Keys.Z, Control.Decide);
-			controller.BindKey(Keys.X, Control.Cancel);
+			var selector = new SimpleSelector<int>();
+			selector.ItemSpan = new Vector2DF(0, 40);
+			selector.Cursor.Texture = asd.Engine.Graphics.CreateTexture2D("Data/Selector/ListCursor.png");
+			selector.BindKey(Keys.Down, Keys.Up, Keys.Z, Keys.X);
+			Engine.AddObject2D(selector);
 
-			var linearPanel = new LinearPanel()
-			{
-				ItemSpan = new Vector2DF(0, 40)
-			};
-
-			var selector = new Selector<int, Control>(controller, linearPanel);
-			selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("Data/Selector/ListCursor.png");
-			selector.BindKey(Control.Down, Control.Up, Control.Decide, Control.Cancel);
-			selector.IsActive = true;
-
-			var font = Engine.Graphics.CreateDynamicFont("", 28, new Color(255, 0, 0), 1, new Color(255, 255, 255));
+			var font = Engine.Graphics.CreateDynamicFont("", 28, new Color(255, 0, 0), 0, new Color(255, 255, 255));
 			for (int i = 0; i < 9; i++)
 			{
 				var obj = new TextObject2D()
@@ -46,8 +37,6 @@ namespace Nac.Altseed.Sample.Selector
 				};
 				selector.AddChoice(i, obj);
 			}
-
-			Engine.AddObject2D(selector);
 			
 			while(asd.Engine.DoEvents())
 			{

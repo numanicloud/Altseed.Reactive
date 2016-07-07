@@ -97,6 +97,7 @@
     <Compile Include="UI\Selector\ScrollingSelector.cs" />
     <Compile Include="UI\ScrollLayer.cs" />
     <Compile Include="UI\Selector\ScrollingSelectorBase.cs" />
+    <Compile Include="UI\Selector\SimpleSelector.cs" />
     <Compile Include="Update\IUpdatable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\MessageWindow.cs" />

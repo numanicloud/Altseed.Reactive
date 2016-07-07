@@ -83,7 +83,6 @@
     <Compile Include="Browser\PointingSelector.cs" />
     <Compile Include="Browser\SampleBrowser.cs" />
     <Compile Include="Browser\SampleBrowserLayer.cs" />
-    <Compile Include="Browser\SampleCUI.cs" />
     <Compile Include="Browser\SampleInfoLayer.cs" />
     <Compile Include="Browser\SampleItem.cs" />
     <Compile Include="Browser\TableLayouter.cs" />
@@ -93,7 +92,6 @@
     <Compile Include="Selector\Selector_Basic.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

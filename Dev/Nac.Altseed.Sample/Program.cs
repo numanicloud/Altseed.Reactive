@@ -14,15 +14,6 @@ namespace Nac.Altseed.Sample
 			var samples = new ISample[]
 			{
 				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
-				new Selector.Selector_Basic(),
 			};
 
 			var browser = new SampleBrowser(samples);

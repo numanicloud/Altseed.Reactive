@@ -17,6 +17,9 @@ namespace Nac.Altseed.UI.Selector
 		/// </summary>
 		bool IsActive { get; }
 
+		/// <summary>
+		/// この選択UIに登録されている選択肢のコレクションを取得します。
+		/// </summary>
 		IEnumerable<TChoice> AvailableChoices { get; }
 
 		/// <summary>

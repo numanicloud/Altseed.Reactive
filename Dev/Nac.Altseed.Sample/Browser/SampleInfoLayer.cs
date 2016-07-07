@@ -4,7 +4,6 @@ namespace sample_cs
 {
 	internal class SampleInfoLayer : Layer2D
 	{
-		private static readonly float PanelHeight = 65;
 		private static readonly float ScrollBerWidth = 16;
 		private static readonly float ScrollBarX = 640 - ScrollBerWidth - SampleBrowser.Margin;
 
@@ -36,10 +35,10 @@ namespace sample_cs
 			{
 				Shape = new RectangleShape
 				{
-					DrawingArea = new RectF(0, 0, 640, PanelHeight)
+					DrawingArea = new RectF(0, 0, 640, SampleBrowser.DescriptionHeight)
 				},
 				Color = new Color(16, 16, 16, 255),
-				Position = new Vector2DF(0, 480 - PanelHeight)
+				Position = new Vector2DF(0, 480 - SampleBrowser.DescriptionHeight)
 			};
 
 			var font = Engine.Graphics.CreateDynamicFont("", 12, new Color(255, 255, 255, 255), 1, new Color(0, 0, 0, 255));

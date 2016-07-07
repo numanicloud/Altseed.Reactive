@@ -39,6 +39,7 @@ namespace Nac.Altseed.Sample.Browser
 
 		public PointingSelector(Layouter layouter)
 		{
+			IsDrawn = false;
 			this.layouter_ = layouter;
 			AddDrawnChild(layouter, ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal, ChildTransformingMode.Position, ChildDrawingMode.DrawingPriority);
 

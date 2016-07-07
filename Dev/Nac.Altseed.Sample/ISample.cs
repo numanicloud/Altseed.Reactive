@@ -18,7 +18,7 @@ class Recorder
 		{
 			if(time == currentTime)
 			{
-				var path = "../../../Sample_SS/" + name + ".jpg";
+				var path = "SS/" + name + ".jpg";
 				asd.Engine.TakeScreenshot(path);
 			}
 
@@ -37,7 +37,7 @@ class Recorder
 		{
 			if (time == currentTime)
 			{
-				var path = "../../../Sample_SS/" + name + ".gif";
+				var path = "SS/" + name + ".gif";
 				asd.Engine.CaptureScreenAsGifAnimation(path, frame, freq_rate, scale);
 			}
 
