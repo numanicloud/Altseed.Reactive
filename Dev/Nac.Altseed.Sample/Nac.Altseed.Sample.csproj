@@ -86,6 +86,9 @@
     <Compile Include="Browser\SampleInfoLayer.cs" />
     <Compile Include="Browser\SampleItem.cs" />
     <Compile Include="Browser\TableLayouter.cs" />
+    <Compile Include="Controller\Controller_Keyboard.cs" />
+    <Compile Include="Controller\Controller_Bundle.cs" />
+    <Compile Include="Controller\Controller_Stepping.cs" />
     <Compile Include="ISample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -13,6 +13,9 @@ namespace Nac.Altseed.Sample
 		{
 			var samples = new ISample[]
 			{
+				new Controller.Controller_Keyboard(),
+				new Controller.Controller_Bundle(),
+				new Controller.Controller_Stepping(),
 				new Selector.Selector_Basic(),
 			};
 

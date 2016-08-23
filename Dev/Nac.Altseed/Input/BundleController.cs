@@ -22,7 +22,7 @@ namespace Nac.Altseed.Input
 		/// <summary>
 		/// このコントローラに登録されているコントローラを自動で更新するかどうかを表す真偽値。
 		/// </summary>
-		public bool IsChildrenUpdated { get; set; }
+		public bool IsChildrenUpdated { get; set; } = true;
 
 		/// <summary>
 		/// コンストラクタ

@@ -9,6 +9,10 @@ using Nac.Altseed.ObjectSystem;
 
 namespace Nac.Altseed.UI.Selector
 {
+	/// <summary>
+	/// 選択UIの表示と操作を扱うクラス。<see cref="Selector{TChoice,TAbstractKey}"/>と比べてカスタマイズ性を犠牲に簡単に使えます。
+	/// </summary>
+	/// <typeparam name="TChoice">選択肢の型。</typeparam>
 	public class SimpleSelector<TChoice> : ReactiveTextureObject2D, ISelector<TChoice>
 	{
 		private enum SelectorControl
@@ -20,6 +24,9 @@ namespace Nac.Altseed.UI.Selector
 		private readonly KeyboardController<SelectorControl> controller_;
 		private readonly Selector<TChoice, SelectorControl> selector_;
 
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
 		public SimpleSelector()
 		{
 			IsDrawn = false;
@@ -51,12 +58,18 @@ namespace Nac.Altseed.UI.Selector
 			controller_.BindKey(keyToCancel, SelectorControl.Cancel);
 		}
 
+		/// <summary>
+		/// 選択肢オブジェクトどうしの間の間隔を取得または設定します。
+		/// </summary>
 		public Vector2DF ItemSpan
 		{
 			get { return layout_.ItemSpan; }
 			set { layout_.ItemSpan = value; }
 		}
 
+		/// <summary>
+		/// カーソルを表すオブジェクトを取得します。
+		/// </summary>
 		public ReactiveTextureObject2D Cursor => selector_.Cursor;
 
 		#region Selectorへの委譲
