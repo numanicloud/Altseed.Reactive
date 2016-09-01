@@ -149,6 +149,18 @@ namespace Nac.Altseed.UI
 			onLayoutChanged_.OnNext(Unit.Default);
         }
 
+		public void AddItem(DrawnObject2D item, ChildDrawingMode drawingMode)
+		{
+			item.Position = GetPosition(items_.Count);
+			AddDrawnChild(item,
+				ChildManagementMode.RegistrationToLayer | ChildManagementMode.Disposal,
+				ChildTransformingMode.Position,
+				drawingMode);
+			items_.Add(new ItemInfo(this, item));
+			Cancellations.Add(null);
+			onLayoutChanged_.OnNext(Unit.Default);
+		}
+
 		/// <summary>
 		/// 2Dオブジェクトをこのレイアウト上に挿入します。
 		/// </summary>
