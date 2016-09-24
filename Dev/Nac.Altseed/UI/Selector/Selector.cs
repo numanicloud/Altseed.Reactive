@@ -119,8 +119,11 @@ namespace Nac.Altseed.UI
 			get { return isActive_; }
 			set
 			{
-				isActive_ = value;
-				onActivationStateChanged_.OnNext(value);
+				if (isActive_ != value)
+				{
+					isActive_ = value;
+					onActivationStateChanged_.OnNext(value);
+				}
 			}
 		}
 
