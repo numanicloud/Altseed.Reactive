@@ -98,11 +98,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Altseed_core.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Nac.Altseed\Nac.Altseed.csproj">
       <Project>{7cd6e31e-b11f-48cd-9288-a34e76f1c56a}</Project>
       <Name>Nac.Altseed</Name>
