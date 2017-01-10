@@ -121,7 +121,7 @@ namespace Nac.Altseed.UI
 		
 		private IEnumerator<Unit> FlowToShowText(string[] text, bool readKeyIsNecessary)
 		{
-			foreach(var message in text)
+			foreach (var message in text)
 			{
 				float charCount = 0;
 				while(charCount < message.Length)

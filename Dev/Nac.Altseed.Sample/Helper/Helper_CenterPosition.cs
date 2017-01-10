@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using asd;
+﻿using asd;	// Engineクラスなどをフルネームで書かずに済ますように
 
 namespace Nac.Altseed.Sample.Helper
 {

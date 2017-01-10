@@ -9,6 +9,7 @@ namespace Nac.Altseed.Sample
 {
 	class Program
 	{
+		[STAThread]
 		static void Main(string[] args)
 		{
 			var samples = new ISample[]
@@ -19,6 +20,7 @@ namespace Nac.Altseed.Sample
 				new Selector.Selector_Basic(),
 				new Selector.Selector_Event(),
 				new Helper.Helper_CenterPosition(),
+				new UI.MessageWindow_Basic(), 
 			};
 
 			var browser = new SampleBrowser(samples);

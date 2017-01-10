@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using asd;
-using Nac.Altseed.UI.Selector;
+using asd;                      // Engineクラスなどをフルネームで書かずに済ますように
+using Nac.Altseed.UI.Selector;	// SimpleSelectorクラスなどをフルネームで書かずに済ますように
 
 namespace Nac.Altseed.Sample.Selector
 {
