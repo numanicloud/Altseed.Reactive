@@ -37,24 +37,28 @@ namespace Nac.Altseed.Sample.Controller
 			//ボタンを押したときに表示するオブジェクトたちを作成
 			var font = Engine.Graphics.CreateDynamicFont("", 24, new Color(255, 255, 255, 255), 0, new Color());
 
+			// あとで右キーを押したときに表示するようにするためのオブジェクトです。
 			var advanceText = new TextObject2D();
 			advanceText.Position = new Vector2DF(0, 0);
 			advanceText.Text = "Advance";
 			advanceText.Font = font;
 			Engine.AddObject2D(advanceText);
 
+			// あとで左キーを押したときに表示するようにするためのオブジェクトです。
 			var backText = new TextObject2D();
 			backText.Position = new Vector2DF(0, 30);
 			backText.Text = "Back";
 			backText.Font = font;
 			Engine.AddObject2D(backText);
 
+			// あとでZキーを押したときに表示するようにするためのオブジェクトです。
 			var jumpText = new TextObject2D();
 			jumpText.Position = new Vector2DF(0, 60);
 			jumpText.Text = "Jump";
 			jumpText.Font = font;
 			Engine.AddObject2D(jumpText);
 
+			// あとでXキーを押したときに表示するようにするためのオブジェクトです。
 			var attackText = new TextObject2D();
 			attackText.Position = new Vector2DF(0, 90);
 			attackText.Text = "Attack!";
@@ -64,11 +68,14 @@ namespace Nac.Altseed.Sample.Controller
 			// メインループ
 			while(Engine.DoEvents())
 			{
-				// "Advance"アクションに対応付けられたキーが押されているとき、"Advance"と表示する。以下もほぼ同じ
-				// 合体して作ったBundleControllerのGetStateを呼び出せば、登録したコントローラーの入力を統合した結果が得られる
+				// BundleControllerでKeyboardとJoystickを合体したので、どちらのデバイスからも操作できる
+				// "Advance"アクションに対応付けられたキー(=右キー)が押されているとき、"Advance"の文字列を黄色くする。
 				advanceText.IsDrawn = bundle.GetState(MyAction.Advance) == InputState.Hold;
+				// "Back"アクションに対応付けられたキー(=左キー)が押されているとき、"Advance"の文字列を黄色くする。
 				backText.IsDrawn = bundle.GetState(MyAction.Back) == InputState.Hold;
+				// "Jump"アクションに対応付けられたキー(=Zキー)が押されているとき、"Advance"の文字列を黄色くする。
 				jumpText.IsDrawn = bundle.GetState(MyAction.Jump) == InputState.Hold;
+				// "Attack"アクションに対応付けられたキー(=Xキー)が押されているとき、"Advance"の文字列を黄色くする。
 				attackText.IsDrawn = bundle.GetState(MyAction.Attack) == InputState.Hold;
 
 				bundle.Update();	// コントローラーの処理を進める

@@ -87,6 +87,8 @@ namespace Nac.Altseed.Input
 		Joystick joystick;
 		Dictionary<TAbstractKey, JoystickInput> binding;
 
+		public bool IsValid { get; private set; }
+
 		/// <summary>
 		/// なんらかの入力に対応付けられている操作のコレクションを取得します。
 		/// </summary>
@@ -101,9 +103,10 @@ namespace Nac.Altseed.Input
 		/// <param name="index"></param>
 		public JoystickController(int index)
 		{
+			IsValid = true;
 			if (!Engine.JoystickContainer.GetIsPresentAt(index))
 			{
-				throw new InvalidOperationException("指定したインデックスのジョイスティックは接続されていません。");
+				IsValid = false;
 			}
 
 			joystick = Engine.JoystickContainer.GetJoystickAt(index);
@@ -153,6 +156,10 @@ namespace Nac.Altseed.Input
 		/// <returns></returns>
 		public override InputState? GetState(TAbstractKey key)
 		{
+			if (!IsValid)
+			{
+				return null;
+			}
 			if (binding.ContainsKey(key))
 			{
 				return ConvertToInputState(binding[key].GetState(joystick));
@@ -180,6 +187,10 @@ namespace Nac.Altseed.Input
 		/// </summary>
 		public override void Update()
 		{
+			if (!IsValid)
+			{
+				return;
+			}
 			foreach (var item in binding)
 			{
 				item.Value.Update(joystick);

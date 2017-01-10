@@ -17,6 +17,8 @@ namespace Nac.Altseed.Sample
 				new Controller.Controller_Bundle(),
 				new Controller.Controller_Stepping(),
 				new Selector.Selector_Basic(),
+				new Selector.Selector_Event(),
+				new Helper.Helper_CenterPosition(),
 			};
 
 			var browser = new SampleBrowser(samples);

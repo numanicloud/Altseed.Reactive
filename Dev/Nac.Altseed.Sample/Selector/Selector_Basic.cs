@@ -9,11 +9,16 @@ namespace Nac.Altseed.Sample.Selector
 		{
 			Engine.Initialize("Selector_Basic", 640, 480, new EngineOption());
 
-			var selector = new SimpleSelector<int>();				// Selectorクラスを作成する。
-			selector.ItemSpan = new Vector2DF(0, 40);				// 選択肢オブジェクトの位置同士の間のベクトル
-			selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("Data/Selector/ListCursor.png");	// カーソルのテクスチャを設定
-			selector.BindKey(Keys.Down, Keys.Up, Keys.Z, Keys.X);	// 操作方法を設定
-			Engine.AddObject2D(selector);							// Altseedのシステムに追加
+			// Selectorクラスを作成する。
+			var selector = new SimpleSelector<int>();
+			// 選択肢オブジェクトの位置同士の間のベクトル
+			selector.ItemSpan = new Vector2DF(0, 40);
+			// カーソルのテクスチャを設定
+			selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("Data/Selector/ListCursor.png");
+			// 操作方法を設定
+			selector.BindKey(Keys.Down, Keys.Up, Keys.Z, Keys.X);
+			// Altseedのシステムに追加
+			Engine.AddObject2D(selector);
 
 			// 選択肢オブジェクトを作成する
 			var font = Engine.Graphics.CreateDynamicFont("", 28, new Color(255, 0, 0), 0, new Color(255, 255, 255));

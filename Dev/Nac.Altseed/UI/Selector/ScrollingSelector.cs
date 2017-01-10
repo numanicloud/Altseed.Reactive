@@ -207,13 +207,13 @@ namespace Nac.Altseed.UI
 		    Selector.ChangeSelection(index);
 	    }
 
-	    /// <summary>
-	    /// UIに選択肢を挿入します。
-	    /// </summary>
-	    /// <param name="index">挿入する位置。</param>
-	    /// <param name="choice">挿入する選択肢。</param>
-	    /// <param name="item">挿入する選択肢を表示する2Dオブジェクト。</param>
-	    public void InsertChoice(int index, TChoice choice, Object2D obj)
+		/// <summary>
+		/// UIに選択肢を挿入します。
+		/// </summary>
+		/// <param name="index">挿入する位置。</param>
+		/// <param name="choice">挿入する選択肢。</param>
+		/// <param name="obj">挿入する選択肢を表示する2Dオブジェクト。</param>
+		public void InsertChoice(int index, TChoice choice, Object2D obj)
         {
             Selector.InsertChoice(index, choice, obj);
         }

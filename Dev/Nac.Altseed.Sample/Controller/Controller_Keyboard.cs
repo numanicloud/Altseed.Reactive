@@ -16,6 +16,12 @@ namespace Nac.Altseed.Sample.Controller
 			Advance, Back, Jump, Attack
 		}
 
+		// キーが押されていれば黄色を、そうでなければ白を返す関数。
+		public Color KeyStateToColor(InputState? state)
+		{
+			return state == InputState.Hold ? new Color(255, 255, 0, 255) : new Color(255, 255, 255, 255);
+		}
+
 		public void Run()
 		{
 			/*
@@ -36,24 +42,29 @@ namespace Nac.Altseed.Sample.Controller
 			//ボタンを押したときに表示するオブジェクトたちを作成
 			var font = Engine.Graphics.CreateDynamicFont("", 24, new Color(255, 255, 255, 255), 0, new Color());
 
+			// あとで右キーを押したときに表示するようにするためのオブジェクトです。
 			var advanceText = new TextObject2D();
 			advanceText.Position = new Vector2DF(0, 0);
 			advanceText.Text = "Advance";
 			advanceText.Font = font;
 			Engine.AddObject2D(advanceText);
 
+			// あとで左キーを押したときに表示するようにするためのオブジェクトです。
 			var backText = new TextObject2D();
 			backText.Position = new Vector2DF(0, 30);
 			backText.Text = "Back";
 			backText.Font = font;
 			Engine.AddObject2D(backText);
 
+			// あとでZキーを押したときに表示するようにするためのオブジェクトです。
 			var jumpText = new TextObject2D();
 			jumpText.Position = new Vector2DF(0, 60);
 			jumpText.Text = "Jump";
 			jumpText.Font = font;
 			Engine.AddObject2D(jumpText);
 
+
+			// あとでXキーを押したときに表示するようにするためのオブジェクトです。
 			var attackText = new TextObject2D();
 			attackText.Position = new Vector2DF(0, 90);
 			attackText.Text = "Attack!";
@@ -63,11 +74,14 @@ namespace Nac.Altseed.Sample.Controller
 			// メインループ
 			while(Engine.DoEvents())
 			{
-				// "Advance"アクションに対応付けられたキーが押されているとき、"Advance"と表示する。以下もほぼ同じ
-				advanceText.IsDrawn = controller.GetState(MyAction.Advance) == InputState.Hold;
-				backText.IsDrawn = controller.GetState(MyAction.Back) == InputState.Hold;
-				jumpText.IsDrawn = controller.GetState(MyAction.Jump) == InputState.Hold;
-				attackText.IsDrawn = controller.GetState(MyAction.Attack) == InputState.Hold;
+				// "Advance"アクションに対応付けられたキー(=右キー)が押されているとき、"Advance"の文字列を黄色くする。
+				advanceText.Color = KeyStateToColor(controller.GetState(MyAction.Advance));
+				// "Back"アクションに対応付けられたキー(=左キー)が押されているとき、"Advance"の文字列を黄色くする。
+				backText.Color = KeyStateToColor(controller.GetState(MyAction.Back));
+				// "Jump"アクションに対応付けられたキー(=Zキー)が押されているとき、"Advance"の文字列を黄色くする。
+				jumpText.Color = KeyStateToColor(controller.GetState(MyAction.Jump));
+				// "Attack"アクションに対応付けられたキー(=Xキー)が押されているとき、"Advance"の文字列を黄色くする。
+				attackText.Color = KeyStateToColor(controller.GetState(MyAction.Attack));
 
 				Engine.Update();
 				Recorder.TakeScreenShot(nameof(Controller_Keyboard), 60);

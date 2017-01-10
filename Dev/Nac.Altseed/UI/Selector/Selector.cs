@@ -264,7 +264,7 @@ namespace Nac.Altseed.UI
 			choiceSystem_.Size++;
 			onLayoutChanged_.OnNext(Unit.Default);
 		}
-
+		
 		/// <summary>
 		/// UIに選択肢を挿入します。
 		/// </summary>
