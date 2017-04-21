@@ -37,8 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Altseed, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\AltseedDotNet.1.1.0\lib\net45\Altseed.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\AltseedDotNet.1.1.0.1\lib\net45\Altseed.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -72,6 +71,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Easings\EasingComponent.cs" />
     <Compile Include="Easings\Library\BounceEasing.cs" />
     <Compile Include="Easings\Library\CubicEasing.cs" />
     <Compile Include="Easings\EasingExtention.cs" />
@@ -131,6 +131,13 @@
     <Content Include="lib\Altseed_core.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\AltseedDotNet.1.1.0.1\build\net45\AltseedDotNet.targets" Condition="Exists('..\packages\AltseedDotNet.1.1.0.1\build\net45\AltseedDotNet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\AltseedDotNet.1.1.0.1\build\net45\AltseedDotNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AltseedDotNet.1.1.0.1\build\net45\AltseedDotNet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

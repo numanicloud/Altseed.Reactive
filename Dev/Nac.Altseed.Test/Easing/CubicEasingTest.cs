@@ -62,7 +62,7 @@ namespace Nac.Altseed.Test.Easing
 	{
 		protected override void OnStart()
 		{
-			int easingTime = 30;
+			int easingTime = 90;
 			int waitTime = 30;
 
 			int GetTimeInEasing(int frame)
@@ -86,8 +86,11 @@ namespace Nac.Altseed.Test.Easing
 			{
 				var obj = new EasingVisual(null, easingTime);
 				Engine.AddObject2D(obj);
-				obj.UpdateTime.LinearEasingNormalValue()
+				obj.UpdateTime.Do(x => Console.Write(x + ","))
+					.LinearEasingNormalValue()
 					.Generalize(easingTime, 100, 500)
+					.Do(x => Console.WriteLine(x))
+					.Repeat()
 					.Subscribe(x => obj.Position = new Vector2DF(x, 80));
 			}
 
@@ -108,6 +111,7 @@ namespace Nac.Altseed.Test.Easing
 				Engine.AddObject2D(obj);
 				obj.UpdateTime.CubicEasingsNormalValue(CubicEasing.Speed.Rapidly2, CubicEasing.Speed.Slowly3)
 					.Generalize(easingTime, 100, 500)
+					.Repeat()
 					.Subscribe(x => obj.Position = new Vector2DF(x, 180));
 			}
 			
@@ -133,6 +137,31 @@ namespace Nac.Altseed.Test.Easing
 				}
 
 				Engine.AddObject2D(new EasingVisual(BouncePosition, easingTime));
+			}
+
+			{
+				var obj = new EasingVisual(null, easingTime)
+				{
+					Position = new Vector2DF(100, 330)
+				};
+				var component = new EasingComponent(new LinearEasing(), EasingComponent.ApplyPositionX, easingTime, 100, 500);
+				Engine.AddObject2D(obj);
+				obj.AddComponent(component, "Easing");
+			}
+
+			{
+				var obj = new GeometryObject2D
+				{
+					Position = new Vector2DF(25, 25),
+					Shape = new CircleShape
+					{
+						OuterDiameter = 25,
+						NumberOfCorners = 36
+					}
+				};
+				var component = new EasingComponent(new CubicEasing(), EasingComponent.ApplyColorAlpha, easingTime, 0, 255);
+				Engine.AddObject2D(obj);
+				obj.AddComponent(component, "Easing");
 			}
 		}
 	}

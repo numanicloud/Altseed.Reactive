@@ -31,7 +31,7 @@ namespace Nac.Altseed.Easings.Library
 		private float a, b, c;
 
 		/// <summary>
-		/// 始点と終点の速度を指定して、三次曲線によるイージングを初期化します。
+		/// 始点と終点の速度を指定して、CubicEasing の新しいインスタンスを初期化します。
 		/// </summary>
 		/// <param name="startSpeed">アニメーション始点の速度。</param>
 		/// <param name="endSpeed">アニメーション終点の速度。</param>
@@ -44,6 +44,14 @@ namespace Nac.Altseed.Easings.Library
 			a = tan1 + tan2 - 2;
 			b = 1 - tan1 - a;
 			c = tan1;
+		}
+
+		/// <summary>
+		/// デフォルトの設定を利用して、CubicEasing の新しいインスタンスを初期化します。
+		/// </summary>
+		public CubicEasing()
+			: this(Speed.Rapidly2, Speed.Slowly3)
+		{
 		}
 
 		/// <summary>

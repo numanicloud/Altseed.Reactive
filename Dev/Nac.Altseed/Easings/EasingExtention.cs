@@ -36,7 +36,7 @@ namespace Nac.Altseed.Easings
 		/// <summary>
 		/// 指定したプロバイダーを、三次曲線によってアニメーションする値が通知されるプロバイダーに射影します。
 		/// </summary>
-		/// <param name="timeSource">0~1の間の現在の時間が通知されるプロバイダー。</param>
+		/// <param name="timeSource">区間[0,1]の現在の時間が通知されるプロバイダー。</param>
 		/// <param name="startSpeed">始点の速度。</param>
 		/// <param name="endSpeed">終点の速度。</param>
 		/// <returns>三次曲線によってアニメーションする正規化された値が通知されるプロバイダー。</returns>
@@ -50,9 +50,20 @@ namespace Nac.Altseed.Easings
 		}
 
 		/// <summary>
+		/// 指定したプロバイダーを、三次曲線によってアニメーションする値が通知されるプロバイダーに射影します。
+		/// </summary>
+		/// <param name="timeSource">区間[0,1]の現在の時間が通知されるプロバイダー。</param>
+		/// <returns></returns>
+		public static EasingNormalValueObservable CubicEasingsNormalValue(this IObservable<float> timeSource)
+		{
+			var cubic = new CubicEasing();
+			return new EasingNormalValueObservable(timeSource, cubic);
+		}
+
+		/// <summary>
 		/// 指定したプロバイダーを、線形にアニメーションする値が通知されるプロバイダーに射影します。
 		/// </summary>
-		/// <param name="timeSource">0~1の間の現在の時間が通知されるプロバイダー。</param>
+		/// <param name="timeSource">区間[0,1]の現在の時間が通知されるプロバイダー。</param>
 		/// <returns>線形にアニメーションする正規化された値が通知されるプロバイダー。</returns>
 		public static EasingNormalValueObservable LinearEasingNormalValue(this IObservable<float> timeSource)
 		{

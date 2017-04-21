@@ -13,7 +13,7 @@ namespace Nac.Altseed.Test
 	{
 		static void Main(string[] args)
 		{
-			AltseedTest test = new Easing.EasingManagerTest();
+			AltseedTest test = new Easing.CubicEasingTest();
 			test.Run();
 		}
 	}

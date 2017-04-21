@@ -15,7 +15,7 @@ namespace Nac.Altseed.Easings
 		/// 指定した時間における0~1のイージングの値を取得します。
 		/// </summary>
 		/// <param name="time">イージング中の地点を表す時間。0~1である必要があります。</param>
-		/// <returns></returns>
+		/// <returns>指定した時間における0~1のイージングの値。</returns>
 		float GetNormalValue(float time);
 	}
 }

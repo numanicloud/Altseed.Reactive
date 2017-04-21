@@ -155,5 +155,10 @@ namespace Nac.Altseed.Linq
 					return center + new Vector2DF(x, y);
 				});
 		}
+
+		public static IObservable<T> Append<T>(this IObservable<T> source, T value)
+		{
+			return source.Concat(Observable.Return(value));
+		}
 	}
 }
