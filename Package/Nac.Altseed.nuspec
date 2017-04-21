@@ -1,27 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Nac.Altseed</id>
-        <version>0.1.2-build1</version>
+        <version>0.1.5</version>
         <title>Nac.Altseed</title>
         <authors>NumAniCloud</authors>
         <owners>NumAniCloud</owners>
         <projectUrl>https://github.com/NumAniCloud/Nac.Altseed</projectUrl>
         <iconUrl>http://numani.info/icon/AltseedCyan.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Extention for Altseed.
-Now installing this package add reference for Altseed.</description>
-        <releaseNotes>working.</releaseNotes>
+        <description>Altseedの拡張ライブラリです。</description>
+        <releaseNotes>テスト版</releaseNotes>
         <copyright>Copyright 2015</copyright>
         <language>ja-JP</language>
         <tags>Altseed Reactive GameEngine</tags>
         <dependencies>
-            <dependency id="AltseedDotNet" version="0.9.2" />
-            <dependency id="System.Reactive" version="3.0.0" />
+            <dependency id="AltseedDotNet" version="1.1.0" />
+            <dependency id="System.Reactive" version="3.1.1" />
         </dependencies>
     </metadata>
     <files>
-        <file src="..\Dev\Nac.Altseed\bin\Release\Nac.Altseed.dll" target="lib\Nac.Altseed.dll" />
-        <file src="..\Dev\Nac.Altseed\bin\Release\Nac.Altseed.xml" target="lib\Nac.Altseed.xml" />
+        <file src="..\Dev\Nac.Altseed\bin\Release\Nac.Altseed.dll" target="lib\net461\Nac.Altseed.dll" />
+        <file src="..\Dev\Nac.Altseed\bin\Release\Nac.Altseed.xml" target="lib\net461\Nac.Altseed.xml" />
     </files>
 </package>

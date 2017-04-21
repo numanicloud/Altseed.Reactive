@@ -105,7 +105,7 @@ namespace Nac.Altseed.UI
 				return;
 			}
 			OutputWarningOfTextObject();
-			TextObject.Text = message;
+			TextObject.Text = message ?? "";
 		}
 
         public void Clear()
