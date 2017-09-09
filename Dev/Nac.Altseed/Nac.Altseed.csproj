@@ -100,10 +100,13 @@
     <Compile Include="ObjectSystem\ReactiveScene.cs" />
     <Compile Include="ObjectSystem\ReactiveTextObject2D.cs" />
     <Compile Include="ObjectSystem\ReactiveTextureObject2D.cs" />
+    <Compile Include="UI\ChoiceList\IBoundChoiceList.cs" />
     <Compile Include="UI\ChoiceList\IChoiceList.cs" />
     <Compile Include="UI\ChoiceList\LinearChoiceList.cs" />
     <Compile Include="UI\Cursor\Cursor.cs" />
+    <Compile Include="UI\Cursor\CursorComponent.cs" />
     <Compile Include="UI\Cursor\EasingCursor.cs" />
+    <Compile Include="UI\Cursor\EasingCursorComponent.cs" />
     <Compile Include="UI\Layout\AsIsLayout.cs" />
     <Compile Include="UI\SelectorFacade.cs" />
     <Compile Include="UI\Selector\CollectionBinderForSelector.cs" />

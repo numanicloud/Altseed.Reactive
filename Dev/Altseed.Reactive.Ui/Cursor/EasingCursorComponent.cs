@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive.Subjects;
+using Altseed.Reactive.Easings;
+using Altseed.Reactive.Easings.Library;
 using asd;
-using Nac.Altseed.Easings;
-using Nac.Altseed.Easings.Library;
 
-namespace Nac.Altseed.UI.Cursor
+namespace Altseed.Reactive.Ui.Cursor
 {
 	/// <summary>
 	/// 他のオブジェクトに滑らかに追従するカーソルを描画するオブジェクト。
 	/// </summary>
-	public class EasingCursor : Cursor
+	public class EasingCursorComponent : CursorComponent
 	{
 		private IDisposable animationSubscription;
+		private Subject<Unit> onUpdate;
 
 		/// <summary>
 		/// アニメーションに用いるイージングを表すインスタンスを取得または設定します。
@@ -29,10 +29,16 @@ namespace Nac.Altseed.UI.Cursor
 		/// <summary>
 		/// 初期値を使用して、EasingCursor の新しいインスタンスを生成します。
 		/// </summary>
-		public EasingCursor()
+		public EasingCursorComponent()
 		{
+			onUpdate = new Subject<Unit>();
 			Easing = new CubicEasing(CubicEasing.Speed.Rapidly2, CubicEasing.Speed.Slowly3);
 			EasingDurationFrame = 10;
+		}
+
+		protected override void OnUpdate()
+		{
+			onUpdate.OnNext(Unit.Default);
 		}
 
 		/// <summary>
@@ -41,12 +47,12 @@ namespace Nac.Altseed.UI.Cursor
 		protected override void AnimateMove()
 		{
 			animationSubscription?.Dispose();
-			var initial = Position;
+			var initial = Owner.Position;
 			var goal = new Vector2DF(0, 0);
-			animationSubscription = OnUpdateEvent.Select((x, i) =>
+			animationSubscription = onUpdate.Select((x, i) =>
 					Easing.GetGeneralValue(i, EasingDurationFrame, 0, 1))
 				.Select(x => initial * (1 - x) + goal * x)
-				.Subscribe(x => Position = x);
+				.Subscribe(x => Owner.Position = x);
 		}
 	}
 }

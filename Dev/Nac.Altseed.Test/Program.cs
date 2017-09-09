@@ -13,7 +13,7 @@ namespace Nac.Altseed.Test
 	{
 		static void Main(string[] args)
 		{
-			AltseedTest test = new Input.BundleControllerTest();
+			AltseedTest test = new ScrollingSelectorTest();
 			test.Run();
 		}
 	}

@@ -1,10 +1,10 @@
-﻿using Nac.Altseed.Easings.Library;
+﻿using Altseed.Reactive.Easings.Library;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nac.Altseed.Easings
+namespace Altseed.Reactive.Easings
 {
 	/// <summary>
 	/// イージング機能に対する拡張メソッドを公開します。

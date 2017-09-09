@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 using asd;
-using Nac.Altseed.UI.ChoiceList;
-using Nac.Altseed.UI.Cursor;
+using Altseed.Reactive.Ui.ChoiceList;
+using Altseed.Reactive.Ui.Cursor;
 using System.Reactive.Linq;
 using System.Reactive;
-using Nac.Altseed.Linq;
-using Nac.Altseed.Input;
-using Nac.Altseed.ObjectSystem;
-using Nac.Altseed.Easings;
+using Altseed.Reactive.Object;
+using Altseed.Reactive.Input;
 
-namespace Nac.Altseed.UI
+namespace Altseed.Reactive.Ui
 {
 	/// <summary>
 	/// 選択肢UIを提供するクラス。

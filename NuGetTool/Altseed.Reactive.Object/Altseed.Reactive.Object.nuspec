@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>Altseed.Reactive.Object</id>
+		<version>0.1.0</version>
+		<authors>NumAniCloud</authors>
+		<owners>NumAniCloud</owners>
+		<copyright>Copyrighted by NumAniCloud 2017.</copyright>
+		<projectUrl>https://github.com/NumAniCloud/Nac.Altseed</projectUrl>
+		<iconUrl>http://numani.info/icon/AltseedCyan.png</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Altseedの拡張ライブラリ。オブジェクトシステム機能を中心に、Rxを用いて自由度の高いプログラミングを提供します。</description>
+		<releaseNotes>テスト版</releaseNotes>
+		<language>ja-JP</language>
+		<tags>Altseed Reactive GameEngine</tags>
+		<dependencies>
+			<dependency id="AltseedDotNet" version="[1.1.0,]"/>
+			<dependency id="System.Reactive" version="[3.1.1,]"/>
+			<dependency id="Altseed.Reactive.Helper" version="[0.1.0,]"/>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="../../Dev/Altseed.Reactive.Object/bin/Release/Altseed.Reactive.Object.dll" target="lib"/>
+		<file src="../../Dev/Altseed.Reactive.Object/bin/Release/Altseed.Reactive.Object.xml" target="lib"/>
+	</files>
+</package>

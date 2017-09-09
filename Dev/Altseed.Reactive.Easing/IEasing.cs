@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nac.Altseed.Easings
+namespace Altseed.Reactive.Easings
 {
 	/// <summary>
 	/// イージングによってアニメーションする値を取得する機能を公開します。

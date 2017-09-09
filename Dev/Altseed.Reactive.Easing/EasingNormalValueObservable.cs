@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reactive.Linq;
 
-namespace Nac.Altseed.Easings
+namespace Altseed.Reactive.Easings
 {
 	/// <summary>
 	/// イージングの0~1の値が発行される IObservable の実装を提供します。

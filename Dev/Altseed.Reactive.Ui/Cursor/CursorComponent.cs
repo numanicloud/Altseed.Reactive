@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using asd;
-using Nac.Altseed.ObjectSystem;
 
-namespace Nac.Altseed.UI.Cursor
+namespace Altseed.Reactive.Ui.Cursor
 {
 	/// <summary>
-	/// 他のオブジェクトに追従するカーソルを描画するオブジェクト。
+	/// オブジェクトが他のオブジェクトに追従するようにするコンポーネント。
 	/// </summary>
-	public class Cursor : ReactiveTextureObject2D
+	public class CursorComponent : asd.Object2DComponent
 	{
 		private bool isHidden_;
 
@@ -29,22 +28,24 @@ namespace Nac.Altseed.UI.Cursor
 
 				if (value)
 				{
-					IsDrawn = false;
-					if (Parent is IActivatableSelectionItem item)
+					Owner.IsDrawn = false;
+					if (Owner.Parent is IActivatableSelectionItem item)
 					{
 						item.Disactivate();
 					}
 				}
 				else
 				{
-					IsDrawn = true;
-					if (Parent is IActivatableSelectionItem item)
+					Owner.IsDrawn = true;
+					if (Owner.Parent is IActivatableSelectionItem item)
 					{
 						item.Activate();
 					}
 				}
 			}
 		}
+
+		public Vector2DF Offset;
 
 		/// <summary>
 		/// このカーソルの追従するオブジェクトを変更します。
@@ -55,7 +56,7 @@ namespace Nac.Altseed.UI.Cursor
 		{
 			if (!IsHidden)
 			{
-				if (Parent is IActivatableSelectionItem item)
+				if (Owner.Parent is IActivatableSelectionItem item)
 				{
 					item.Disactivate();
 				}
@@ -71,7 +72,7 @@ namespace Nac.Altseed.UI.Cursor
 				{
 					IsHidden = false;
 				}
-				if (Parent != null)
+				if (Owner.Parent != null)
 				{
 					MoveCursor(target);
 				}
@@ -88,15 +89,15 @@ namespace Nac.Altseed.UI.Cursor
 
 		private void MoveCursor(Object2D target)
 		{
-			Position = GetGlobalPosition() - target.GetGlobalPosition();
-			Parent?.RemoveChild(this);
-			target.AddChild(this, ChildManagementMode.Nothing, ChildTransformingMode.All);
+			Owner.Position = Owner.GetGlobalPosition() - target.GetGlobalPosition();
+			Owner.Parent?.RemoveChild(Owner);
+			target.AddChild(Owner, ChildManagementMode.Nothing, ChildTransformingMode.All);
 			AnimateMove();
 		}
 
 		private void SuddenlyMoveCursor(Object2D target)
 		{
-			Position = new Vector2DF(0, 0);
+			Owner.Position = Offset;
 		}
 
 		/// <summary>
@@ -105,7 +106,7 @@ namespace Nac.Altseed.UI.Cursor
 		/// <remarks>追従先のオブジェクトの子オブジェクトとなるため、(0, 0)の位置が追従先のオブジェクトの位置となります。</remarks>
 		protected virtual void AnimateMove()
 		{
-			Position = new Vector2DF(0, 0);
+			Owner.Position = Offset;
 		}
 	}
 }

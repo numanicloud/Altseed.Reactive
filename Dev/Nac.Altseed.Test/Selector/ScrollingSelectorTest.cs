@@ -13,10 +13,12 @@ namespace Nac.Altseed.Test
     {
         Font font;
         ScrollingSelector<int, Control> selector;
+		Nac.Altseed.Input.Controller<Control> controller;
 
         protected override void OnStart()
         {
-            selector = new ScrollingSelector<int, Control>(CreateController())
+			controller = CreateController();
+            selector = new ScrollingSelector<int, Control>(controller)
             {
                 Position = new Vector2DF(60, 32),
                 CursorOffset = new Vector2DF(-5, 3),
@@ -25,8 +27,8 @@ namespace Nac.Altseed.Test
                 BoundLines = 8,
                 ExtraLinesOnStarting = 1,
                 ExtraLinesOnEnding = 1,
-                IsControllerUpdated = true,
 				Loop = true,
+				IsActive = true
             };
             selector.BindKey(Control.Down, Control.Up, Control.Decide, Control.Cancel);
             selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
@@ -73,6 +75,7 @@ namespace Nac.Altseed.Test
             {
                 selector.ChoiceItems.Skip(2).FirstOrDefault()?.Item?.Dispose();
             }
+			controller.Update();
         }
     }
 }

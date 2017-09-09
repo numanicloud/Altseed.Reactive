@@ -4,22 +4,15 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
-using Nac.Altseed.Linq;
+using Altseed.Reactive.Helper;
 
-namespace Nac.Altseed.UI.ChoiceList
+namespace Altseed.Reactive.Ui.ChoiceList
 {
-	public enum LinearChoiceListControl
-	{
-		Previous, Next
-	}
-
-
 	/// <summary>
 	/// 一方向に並ぶ選択肢に関する操作を提供するクラス。
 	/// </summary>
-	/// <typeparam name="TChoice"></typeparam>
+	/// <typeparam name="TChoice">選択肢の型。</typeparam>
 	public class LinearChoiceList<TChoice>
-		: IChoiceList<TChoice, LinearChoiceListControl>, IBoundChoiceList<TChoice>
 	{
 		/// <summary>
 		/// 選択肢が0個の場合に選択されている位置のインデックス。
@@ -255,24 +248,6 @@ namespace Nac.Altseed.UI.ChoiceList
 			var prev = SelectedIndex;
 			SelectedIndex = choices_.IndexOf(choice);
 			return prev != SelectedIndex;
-		}
-
-		/// <summary>
-		/// 指定した操作に応じて選択を移動します。
-		/// </summary>
-		/// <param name="control">選択を動かす方向などを表す値。</param>
-		/// <returns>選択肢が変更されたかどうかを表す真偽値。</returns>
-		public bool MoveSelection(LinearChoiceListControl control)
-		{
-			switch (control)
-			{
-			case LinearChoiceListControl.Previous:
-				return SelectPreviousIndex();
-
-			case LinearChoiceListControl.Next:
-				return SelectNextIndex();
-			}
-			return false;
 		}
 	}
 }
