@@ -8,18 +8,19 @@
 		<copyright>Copyrighted by NumAniCloud 2017.</copyright>
 		<projectUrl>https://github.com/NumAniCloud/Nac.Altseed</projectUrl>
 		<iconUrl>http://numani.info/icon/AltseedCyan.png</iconUrl>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>Altseedの拡張ライブラリ。ヘルパー機能を中心に、Rxを用いて自由度の高いプログラミングを提供します。</description>
 		<releaseNotes>テスト版</releaseNotes>
 		<language>ja-JP</language>
 		<tags>Altseed Reactive GameEngine</tags>
+		<licenseUrl>https://github.com/NumAniCloud/Nac.Altseed/blob/master/license.txt</licenseUrl>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<dependencies>
 			<dependency id="AltseedDotNet" version="[1.1.0,]"/>
 			<dependency id="System.Reactive" version="[3.1.1,]"/>
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="../../Dev/Altseed.Reactive.Helper/bin/Release/Altseed.Reactive.Helper.dll" target="lib"/>
-		<file src="../../Dev/Altseed.Reactive.Helper/bin/Release/Altseed.Reactive.Helper.xml" target="lib"/>
+		<file src="..\..\Dev\Altseed.Reactive.Helper\bin\Release\Altseed.Reactive.Helper.dll" target="lib"/>
+		<file src="..\..\Dev\Altseed.Reactive.Helper\bin\Release\Altseed.Reactive.Helper.xml" target="lib"/>
 	</files>
 </package>
