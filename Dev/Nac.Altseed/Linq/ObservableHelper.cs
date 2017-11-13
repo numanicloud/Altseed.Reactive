@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using asd;
+using System.Reactive.Disposables;
 
 namespace Nac.Altseed.Linq
 {
@@ -159,6 +160,11 @@ namespace Nac.Altseed.Linq
 		public static IObservable<T> Append<T>(this IObservable<T> source, T value)
 		{
 			return source.Concat(Observable.Return(value));
+		}
+
+		internal static void AddTo(this IDisposable disposable, CompositeDisposable composite)
+		{
+			composite.Add(disposable);
 		}
 	}
 }

@@ -90,6 +90,7 @@
     <Compile Include="Selector\CollectionBinderTest.cs" />
     <Compile Include="Tests\EasingTest.cs" />
     <Compile Include="Tests\LinearLayouterTest.cs" />
+    <Compile Include="Tests\MessageWindowSkipTest.cs" />
     <Compile Include="Tests\MessageWindowTest.cs" />
     <Compile Include="Selector\MultiSelectorTest.cs" />
     <Compile Include="Selector\ScrollingMultiSelectorTest.cs" />

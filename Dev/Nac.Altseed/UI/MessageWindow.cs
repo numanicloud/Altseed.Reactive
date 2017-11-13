@@ -10,6 +10,7 @@ using asd;
 using Nac.Altseed.Input;
 using Nac.Altseed.Linq;
 using Nac.Altseed.ObjectSystem;
+using System.Reactive.Disposables;
 
 namespace Nac.Altseed.UI
 {
@@ -17,6 +18,7 @@ namespace Nac.Altseed.UI
 	{
 		private Subject<Unit> onRead_ = new Subject<Unit>();
         private Func<bool> isReadKeyPushed;
+		private bool isSkipping;
 
 		public TextObject2D TextObject { get; private set; }
 		public TextureObject2D WaitIndicator { get; private set; }
@@ -45,12 +47,36 @@ namespace Nac.Altseed.UI
 				ChildTransformingMode.All,
 				ChildDrawingMode.DrawingPriority);
 			TextSpeed = 1;
+			isSkipping = false;
 		}
 
         public void SetReadControl<TAbstractKey>(Controller<TAbstractKey> controller, TAbstractKey readKey)
         {
             isReadKeyPushed = () => controller.GetState(readKey) == InputState.Push;
         }
+
+		public void SetSkipControl<TAbstractKey>(Controller<TAbstractKey> controller, TAbstractKey skipKey, float requiredHoldTime)
+		{
+			var disposable = new CompositeDisposable();
+
+			var push = OnUpdateEvent.Where(x => controller.GetState(skipKey) == InputState.Push);
+			var release = OnUpdateEvent.Where(x => controller.GetState(skipKey) == InputState.Release);
+
+			// 1秒間押し続けるとスキップ起動
+			var inner = OnUpdateEvent.Select<float, Unit?>(x => Unit.Default)
+				.TakeUntil(release)
+				.SkipUntil(Observable.Timer(TimeSpan.FromSeconds(requiredHoldTime)))
+				.FirstOrDefaultAsync();
+			push.SelectMany(inner)
+				.Where(x => x != null)
+				.Subscribe(x => isSkipping = true)
+				.AddTo(disposable);
+			// ボタンを離すとスキップ終了
+			release.Subscribe(x => isSkipping = false)
+				.AddTo(disposable);
+
+			OnDisposeEvent.Subscribe(x => disposable.Dispose());
+		}
 
 		public Task TalkMessageAsync(string[] message)
 		{
@@ -128,7 +154,7 @@ namespace Nac.Altseed.UI
 				{
 					charCount += TextSpeed;
 
-					if(isReadKeyPushed?.Invoke() == true)
+					if(isReadKeyPushed?.Invoke() == true || isSkipping)
 					{
 						charCount = message.Length;
 					}
@@ -140,7 +166,7 @@ namespace Nac.Altseed.UI
 				if(readKeyIsNecessary)
 				{
 					WaitIndicator.IsDrawn = true;
-					while(isReadKeyPushed?.Invoke() != true)
+					while(isReadKeyPushed?.Invoke() != true && !isSkipping)
 					{
 						yield return Unit.Default;
 					}
