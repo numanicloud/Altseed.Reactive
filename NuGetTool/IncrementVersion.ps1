@@ -17,7 +17,7 @@ process
         for($i = $versionInc + 1; $i -lt $version.Length; ++$i)
         {
             $version[$i] = 0;
-        }   
+        }
     }
     
     $spec.package.metadata.version = [string]::Join(".", $version)

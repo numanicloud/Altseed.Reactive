@@ -25,6 +25,7 @@ namespace Altseed.Reactive.Object
 		public IObservable<Unit> OnRemovedEvent => onRemovedEvent_;
 		/// <summary>
 		/// 更新されたときに発行されるイベント。破棄されたとき完了します。
+		/// 値として Engine.DeltaTime が流れます。
 		/// </summary>
 		public IObservable<float> OnUpdateEvent => onUpdatedEvent_;
 		/// <summary>

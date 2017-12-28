@@ -29,6 +29,7 @@ namespace Altseed.Reactive.Object
 		public IObservable<Unit> OnUnregisteredEvent => onUnregistered_;
 		/// <summary>
 		/// 更新されたときに発行されるイベント。このシーンが破棄されると完了します。
+		/// 値として Engine.DeltaTime が流れます。
 		/// </summary>
 		public IObservable<float> OnUpdateEvent => onUpdatedEvent_;
 

@@ -1,13 +1,4 @@
-#Nac.Altseed
-Nac.Altseed ‚Í Altseedƒ‰ƒCƒuƒ‰ƒŠ‚ÌŠg’£ƒ‰ƒCƒuƒ‰ƒŠ‚Å‚·BNumAniCloud‚ªŒÂl“I‚ÉŠJ”­‚µ‚Ä‚¢‚Ü‚·B
+ï»¿#Nac.Altseed
 
-## ‹@”\
-Œ»ÝAˆÈ‰º‚Ì‹@”\‚ª—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·B‚»‚ê‚¼‚ê‚Ü‚¾‰ü‘P‚Ì—]’n‚ª‚ ‚è‚»‚¤‚Å‚ ‚èAissue‚È‚Ç‚Å—v–]‚ð‹³‚¦‚Ä‚­‚¾‚³‚é‚Æ•‚©‚è‚Ü‚·B
-
-* ƒL[ƒRƒ“ƒtƒBƒOŽx‰‡
-* ƒL[ƒ{[ƒhEƒWƒ‡ƒCƒXƒeƒBƒbƒN“ü—Í‚ÉŠÖ‚·‚é•¡ŽG‚ÈƒVƒiƒŠƒI‚ÌƒTƒ|[ƒg
-    * ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Á‚Ï‚È‚µ‚É‚·‚é‚Æ˜A‘±‚Å“ü—Í‚µ‚½‚æ‚¤‚Éˆµ‚¤Žd‘g‚Ý
-    * ƒL[ƒ{[ƒh‚ÆƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ì“ü—Í‚ð“¯Žž‚ÉŽó‚¯•t‚¯‚é
-* ‘I‘ðŽˆUI
-* ƒC[ƒWƒ“ƒO
-* 2DƒIƒuƒWƒFƒNƒg‚ÌƒŒƒCƒAƒEƒg
+Nac.Altseed ã¯ Altseedãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®æ‹¡å¼µãƒ©ã‚¤ãƒ–ãƒ©ãƒªã§ã™ã€‚NumAniCloudãŒå€‹äººçš„ã«é–‹ç™ºã—ã¦ã„ã¾ã™ã€‚
+è©³ã—ãã¯wikiã‚’ã”è¦§ãã ã•ã„ã€‚

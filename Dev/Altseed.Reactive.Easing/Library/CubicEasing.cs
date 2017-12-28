@@ -57,7 +57,7 @@ namespace Altseed.Reactive.Easings.Library
 		/// <summary>
 		/// 指定した時間における0~1のイージングの値を取得します。
 		/// </summary>
-		/// <param name="time">イージング中の地点を表す時間。</param>
+		/// <param name="time">イージング中の地点を表す時間。0~1である必要があります。</param>
 		/// <returns></returns>
 		public float GetNormalValue(float time)
 		{

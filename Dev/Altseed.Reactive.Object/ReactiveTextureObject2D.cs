@@ -16,16 +16,17 @@ namespace Altseed.Reactive.Object
 		private Subject<float> onUpdateEvent_ = new Subject<float>();
 
 		/// <summary>
-		/// レイヤーに登録されたときに発行されるイベント。破棄されたとき完了します。
+		/// レイヤーに登録されたときに発行されるイベント。オブジェクトが破棄されたとき完了します。
 		/// </summary>
 		public IObservable<Unit> OnAddedEvent => onAddedEvent_;
 		public IObservable<Unit> OnRemovedEvent => onRemovedEvent_;
 		/// <summary>
-		/// 更新されたときに発行されるイベント。破棄されたとき完了します。
+		/// 更新されたときに発行されるイベント。オブジェクトが破棄されたとき完了します。
+		/// 値として Engine.DeltaTime が流れます。
 		/// </summary>
 		public IObservable<float> OnUpdateEvent => onUpdateEvent_;
 		/// <summary>
-		/// 破棄されたときに発行されるイベント。破棄されたとき完了します。
+		/// 破棄されたときに発行されるイベント。オブジェクトが破棄されたとき完了します。
 		/// </summary>
 		public IObservable<Unit> OnDisposeEvent => onDisposeEvent_;
 
