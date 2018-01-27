@@ -22,6 +22,17 @@ namespace Altseed.Reactive.Helper
 		}
 
 		/// <summary>
+		/// 流れてきた値を累計して後続に流します。
+		/// </summary>
+		/// <param name="source">累計される値のシーケンス。</param>
+		/// <returns></returns>
+		public static IObservable<long> Total(this IObservable<long> source)
+		{
+			long total = 0;
+			return source.Do(f => total += f).Select(x => total);
+		}
+
+		/// <summary>
 		/// シーケンスをコルーチンの呼び出しにマッピングします。イベントの発行がコルーチンを１回進めます。
 		/// </summary>
 		/// <typeparam name="T">シーケンスの型。</typeparam>

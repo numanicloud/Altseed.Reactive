@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltseedTest.cs" />
+    <Compile Include="Object\ReactiveTextObject2DTest.cs" />
     <Compile Include="Object\ReactiveTextureObject2DTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

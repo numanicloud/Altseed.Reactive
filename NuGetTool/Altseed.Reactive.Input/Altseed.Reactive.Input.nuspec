@@ -6,7 +6,7 @@
         <authors>NumAniCloud</authors>
         <owners>NumAniCloud</owners>
         <licenseUrl>https://github.com/NumAniCloud/Nac.Altseed/blob/master/license.txt</licenseUrl>
-        <projectUrl>https://github.com/NumAniCloud/Nac.Altseed</projectUrl>
+        <projectUrl>https://github.com/NumAniCloud/Altseed.Reactive</projectUrl>
         <iconUrl>http://numani.info/icon/AltseedCyan.png</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>Altseedの拡張ライブラリ。入力機能を中心に、Rxを用いて自由度の高いプログラミングを提供します。</description>
