@@ -125,7 +125,7 @@ namespace Altseed.Reactive.Ui
 			getCameraMoving_ = target =>
 			{
 				var initial = camera_.Src.Position.To2DF();
-				return OnUpdateEvent.Select((x, i) => easing.GetGeneralValue(i, time, 0, 1))
+				return OnUpdatedEvent.Select((x, i) => easing.GetGeneralValue(i, time, 0, 1))
 					.Select(t => initial * (1 - t) + target * t)
 					.Select(x => camera_.Src.ToF().WithPosition(x));
 			};

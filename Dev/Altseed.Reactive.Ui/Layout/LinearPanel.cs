@@ -135,7 +135,7 @@ namespace Altseed.Reactive.Ui
 			GetNewItemPosition = (o, v) =>
 			{
 				var initial = o.Position;
-				return OnUpdateEvent.TakeWhile(f => o.IsAlive)
+				return OnUpdatedEvent.TakeWhile(f => o.IsAlive)
 					.Select((x, i) => easing.GetGeneralValue(i, time, 0, 1))
 					.Select(t => o.Position = initial * (1 - t) + v * t);
 			};

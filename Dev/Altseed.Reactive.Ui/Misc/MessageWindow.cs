@@ -74,7 +74,7 @@ namespace Altseed.Reactive.Ui
 				return;
 			}
 			OutputWarningOfTextObject();
-			await OnUpdateEvent.SelectCorourine(FlowToShowText(message, true)).ToTask(ct);
+			await OnUpdatedEvent.SelectCorourine(FlowToShowText(message, true)).ToTask(ct);
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace Altseed.Reactive.Ui
 				return;
 			}
 			OutputWarningOfTextObject();
-			await OnUpdateEvent.SelectCorourine(FlowToShowText(new string[] { message }, false)).ToTask(ct);
+			await OnUpdatedEvent.SelectCorourine(FlowToShowText(new string[] { message }, false)).ToTask(ct);
 		}
 
 		/// <summary>

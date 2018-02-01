@@ -11,6 +11,6 @@ namespace Altseed.Reactive.Object
 		/// このオブジェクトシステムのインスタンスが更新されたときに値が流れるイベント。
 		/// 値として Engine.DeltaTime が流れます。
 		/// </summary>
-		IObservable<long> OnUpdateEvent { get; }
+		IObservable<long> OnUpdatedEvent { get; }
 	}
 }

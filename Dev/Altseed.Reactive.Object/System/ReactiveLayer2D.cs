@@ -36,7 +36,7 @@ namespace Altseed.Reactive.Object
 		/// 更新された直後に発行されるイベント。破棄されたとき完了します。
 		/// 値として何個目のイベントかのインデックスが流れます。
 		/// </summary>
-		public IObservable<long> OnUpdateEvent => onUpdatedEvent_.Total();
+		public IObservable<long> OnUpdatedEvent => onUpdatedEvent_.Total();
 		/// <summary>
 		/// このレイヤーが破棄されたときに発行されるイベント。発行されると同時に完了します。
 		/// </summary>

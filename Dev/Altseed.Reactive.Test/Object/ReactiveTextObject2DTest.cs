@@ -3,7 +3,7 @@
 namespace Altseed.Reactive.Test.Object
 {
 	/// <summary>
-	/// ハートが右に移動していくテスト。
+	/// 文字列が右に移動していくテスト。
 	/// </summary>
 	class ReactiveTextObject2DTest
 	{
@@ -19,12 +19,12 @@ namespace Altseed.Reactive.Test.Object
 
 			// このオブジェクトがUpdateされるときに呼ばれる関数を登録
 			// 関数内では、オブジェクトの位置を動かしている
-			obj.OnUpdateEvent
+			obj.OnUpdatedEvent
 				.Subscribe(x => obj.Position += new asd.Vector2DF(1, 0));
 
 			asd.Engine.AddObject2D(obj);
 
-			asd.Engine.CaptureScreenAsGifAnimation("Output/ReactiveTextureObject2DTest.gif", 60, 0.5f, 0.5f);
+			asd.Engine.CaptureScreenAsGifAnimation("Output/ReactiveTextObject2DTest.gif", 60, 0.5f, 0.5f);
 
 			while (asd.Engine.DoEvents())
 			{

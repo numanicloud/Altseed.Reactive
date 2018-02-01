@@ -195,9 +195,9 @@ namespace Altseed.Reactive.Ui
 			TControl controlPrev,
 			TControl controlNext)
 		{
-			OnUpdateEvent.Where(x => controller.GetState(controlPrev) == InputState.Push)
+			OnUpdatedEvent.Where(x => controller.GetState(controlPrev) == InputState.Push)
 				.Subscribe(x => SelectPreviousIndex());
-			OnUpdateEvent.Where(x => controller.GetState(controlNext) == InputState.Push)
+			OnUpdatedEvent.Where(x => controller.GetState(controlNext) == InputState.Push)
 				.Subscribe(x => SelectNextIndex());
 		}
 

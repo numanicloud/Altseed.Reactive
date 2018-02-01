@@ -65,6 +65,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltseedTest.cs" />
+    <Compile Include="Object\ReactiveGeometryObject2DTest.cs" />
+    <Compile Include="Object\ReactiveLayer2DTest.cs" />
+    <Compile Include="Object\ReactiveObjectsEventsTest.cs" />
+    <Compile Include="Object\ReactiveSceneTest.cs" />
     <Compile Include="Object\ReactiveTextObject2DTest.cs" />
     <Compile Include="Object\ReactiveTextureObject2DTest.cs" />
     <Compile Include="Program.cs" />

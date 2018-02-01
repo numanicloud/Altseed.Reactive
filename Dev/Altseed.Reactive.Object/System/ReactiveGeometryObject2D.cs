@@ -31,7 +31,7 @@ namespace Altseed.Reactive.Object
 		/// 更新されたときに発行されるイベント。オブジェクトが破棄されたとき完了します。
 		/// 値として何個目のイベントかのインデックスが流れます。
 		/// </summary>
-		public IObservable<long> OnUpdateEvent => onUpdateEvent_.Total();
+		public IObservable<long> OnUpdatedEvent => onUpdateEvent_.Total();
 		/// <summary>
 		/// 破棄されたときに発行されるイベント。オブジェクトが破棄されたとき完了します。
 		/// </summary>

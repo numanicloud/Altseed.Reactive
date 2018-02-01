@@ -51,7 +51,7 @@ namespace Altseed.Reactive.Object
 		/// 更新された直後に発行されるイベント。このシーンが破棄されると完了します。
 		/// 値として何個目のイベントかのインデックスが流れます。
 		/// </summary>
-		public IObservable<long> OnUpdateEvent => onUpdatedEvent_.Total();
+		public IObservable<long> OnUpdatedEvent => onUpdatedEvent_.Total();
 		/// <summary>
 		/// 更新される直前に発行されるイベント。このシーンが破棄されると完了します。
 		/// 値として何個目のイベントかのインデックスが流れます。
@@ -114,6 +114,7 @@ namespace Altseed.Reactive.Object
 			onUpdatedEvent_.OnCompleted();
 			onUpdatingEvent_.OnCompleted();
 			onDisposeEvent_.OnCompleted();
+			disposable.Dispose();
 		}
 
 		/// <summary>
