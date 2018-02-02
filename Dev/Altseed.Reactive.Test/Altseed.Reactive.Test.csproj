@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltseedTest.cs" />
+    <Compile Include="Object\CompositeDisposableTest.cs" />
     <Compile Include="Object\ReactiveGeometryObject2DTest.cs" />
     <Compile Include="Object\ReactiveLayer2DTest.cs" />
     <Compile Include="Object\ReactiveObjectsEventsTest.cs" />

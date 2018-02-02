@@ -10,7 +10,7 @@ namespace Altseed.Reactive.Test
 	{
 		static void Main(string[] args)
 		{
-			var test = new Object.ReactiveLayer2DTest();
+			var test = new Object.CompositeDisposableTest();
 			test.Run();
 		}
 	}
