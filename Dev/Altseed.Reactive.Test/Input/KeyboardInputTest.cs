@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Altseed.Reactive.Input;
 
 namespace Altseed.Reactive.Test.Input
 {
@@ -42,7 +43,7 @@ namespace Altseed.Reactive.Test.Input
 			asd.Engine.AddObject2D(attack);
 
 			// コントローラーを初期化
-			var input = new Altseed.Reactive.Input.KeyboardController<Control>();
+			var input = new KeyboardController<Control>();
 
 			// 操作とキーを結びつける
 			input.BindKey(asd.Keys.Left, Control.Left);		// 左キーを左移動に結びつける
@@ -55,10 +56,10 @@ namespace Altseed.Reactive.Test.Input
 			while (asd.Engine.DoEvents())
 			{
 				// 押しているキーに対応づいた文字列だけを表示する
-				left.IsDrawn = input.GetState(Control.Left) == Reactive.Input.InputState.Hold;
-				right.IsDrawn = input.GetState(Control.Right) == Reactive.Input.InputState.Hold;
-				jump.IsDrawn = input.GetState(Control.Jump) == Reactive.Input.InputState.Hold;
-				attack.IsDrawn = input.GetState(Control.Attack) == Reactive.Input.InputState.Hold;
+				left.IsDrawn = input.GetState(Control.Left) == InputState.Hold;
+				right.IsDrawn = input.GetState(Control.Right) == InputState.Hold;
+				jump.IsDrawn = input.GetState(Control.Jump) == InputState.Hold;
+				attack.IsDrawn = input.GetState(Control.Attack) == InputState.Hold;
 
 				asd.Engine.Update();
 			}
