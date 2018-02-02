@@ -10,7 +10,7 @@ namespace Altseed.Reactive.Test
 	{
 		static void Main(string[] args)
 		{
-			var test = new Object.CompositeDisposableTest();
+			var test = new Input.KeyboardInputTest();
 			test.Run();
 		}
 	}

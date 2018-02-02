@@ -1,11 +1,7 @@
 ﻿using Altseed.Reactive.Object;
 using asd;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Altseed.Reactive.Test.Object
 {
@@ -26,7 +22,7 @@ namespace Altseed.Reactive.Test.Object
 			target.Position = new Vector2DF(10, 100);
 			Engine.AddObject2D(target);
 
-			// 0.5秒ごとに target オブジェクトを右に移動する。
+			// 0.25秒ごとに target オブジェクトを右に移動する。
 			// obj が破棄されると停止する。
 			Observable.Interval(TimeSpan.FromSeconds(0.25))
 				.Subscribe(x => target.Position += new Vector2DF(20, 0))
