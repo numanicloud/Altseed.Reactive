@@ -10,8 +10,14 @@ namespace Nac.Altseed.Test.Input
 {
 	class BundleControllerTest : AltseedTest
 	{
+		enum Control
+		{
+			Decide, Cancel,
+			Left, Right, Up, Down
+		}
+
 		private TextObject2D textObject;
-		private BundleController<int> controller;
+		private BundleController<Control> controller;
 
 		protected override void OnStart()
 		{
@@ -22,12 +28,16 @@ namespace Nac.Altseed.Test.Input
 			};
 			Engine.AddObject2D(textObject);
 
-			var keyboard = new KeyboardController<int>();
-			keyboard.BindKey(Keys.Z, 0);
-			var joystick = new JoystickController<int>(0);
-			joystick.BindButton(0, 0);
+			var keyboard = new KeyboardController<Control>();
+			keyboard.BindKey(Keys.Z, Control.Decide);
+			keyboard.BindKey(Keys.X, Control.Cancel);
+			var joystick = new JoystickController<Control>(0);
+			joystick.BindButton(0, Control.Decide);
+			joystick.BindButton(1, Control.Cancel);
+			joystick.BindDirection(Control.Left, Control.Right, Control.Up, Control.Down);
 
-			controller = new BundleController<int>(keyboard, joystick);
+			controller = new BundleController<Control>(keyboard, joystick);
+			controller.IsChildrenUpdated = true;
 		}
 
 		protected override void OnUpdate()

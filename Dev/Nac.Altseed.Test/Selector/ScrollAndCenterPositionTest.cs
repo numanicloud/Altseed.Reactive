@@ -83,7 +83,7 @@ namespace Nac.Altseed.Test.Selector
 
 		protected override void OnUpdate()
 		{
-			if (Engine.Keyboard.GetKeyState(Keys.X) == KeyState.Push)
+			if (Engine.Keyboard.GetKeyState(Keys.X) == ButtonState.Push)
 			{
 				selector.ChangeSelection(3);
 			}

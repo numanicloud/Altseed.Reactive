@@ -24,6 +24,7 @@ namespace Nac.Altseed.UI
 
         private Selector<TChoice, TAbstractKey> Selector { get; set; }
         private LinearPanel layout { get; set; }
+		private Scene Parent { get; set; }
 
         public TextureObject2D Cursor => Selector.Cursor;
 		public ReactiveLayer2D ScrollLayer => scrollLayer_;
@@ -90,6 +91,11 @@ namespace Nac.Altseed.UI
 		/// 選択肢の端まで達していてもスクロールするかどうかの真偽値を取得または設定します。
 		/// </summary>
 	    public bool ScrollIntoVoid { get; set; }
+		public bool HideSelection
+		{
+			get { return Selector.HideSelection; }
+			set { Selector.HideSelection = value; }
+		}
 
         public Vector2DF LayoutStarting
         {
@@ -284,6 +290,7 @@ namespace Nac.Altseed.UI
 		{
 			base.OnAdded();
 			Scene.AddLayer(scrollLayer_);
+			Parent = Scene;
 		}
 
 	    /// <summary>
@@ -292,7 +299,7 @@ namespace Nac.Altseed.UI
 	    protected override void OnRemoved()
 		{
 			base.OnRemoved();
-			Scene.RemoveLayer(scrollLayer_);
+			Parent.RemoveLayer(scrollLayer_);
 		}
 
 	    /// <summary>

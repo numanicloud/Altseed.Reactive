@@ -95,7 +95,7 @@ namespace Nac.Altseed.Test
 
 		protected override void OnUpdate()
 		{
-			if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
+			if(Engine.Keyboard.GetKeyState(Keys.Q) == ButtonState.Push)
 			{
 				var index = selector.ChoiceItems.Any() ? selector.ChoiceItems.Max(x => x.Choice) + 1 : 0;
 				var obj = new ListItem()
@@ -105,7 +105,7 @@ namespace Nac.Altseed.Test
 				};
 				selector.AddChoice(index, obj);
 			}
-			else if(selector.ChoiceItems.Skip(3).Any() && Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push)
+			else if(selector.ChoiceItems.Skip(3).Any() && Engine.Keyboard.GetKeyState(Keys.W) == ButtonState.Push)
 			{
 				int index = selector.ChoiceItems.Max(x => x.Choice) + 1;
 				var obj = new ListItem()
@@ -116,9 +116,9 @@ namespace Nac.Altseed.Test
 				selector.InsertChoice(3, index, obj);
 			}
 
-			if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == KeyState.Hold)
+			if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == ButtonState.Hold)
 			{
-				if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+				if(Engine.Keyboard.GetKeyState(Keys.E) == ButtonState.Push)
 				{
 					var item = selector.ChoiceItems.Skip(3).FirstOrDefault()?.Choice;
 					if(item.HasValue)
@@ -126,18 +126,18 @@ namespace Nac.Altseed.Test
 						selector.RemoveChoice(item.Value);
 					}
 				}
-				else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+				else if(Engine.Keyboard.GetKeyState(Keys.R) == ButtonState.Push)
 				{
 					selector.ClearChoice();
 				}
 			}
 			else
 			{
-				if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+				if(Engine.Keyboard.GetKeyState(Keys.E) == ButtonState.Push)
 				{
 					selector.ChoiceItems.Skip(3).FirstOrDefault()?.Item?.Dispose();
 				}
-				else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+				else if(Engine.Keyboard.GetKeyState(Keys.R) == ButtonState.Push)
 				{
 					foreach(var item in selector.ChoiceItems)
 					{
@@ -146,7 +146,7 @@ namespace Nac.Altseed.Test
 				}
 			}
 
-			if(Engine.Keyboard.GetKeyState(Keys.Enter) == KeyState.Push)
+			if(Engine.Keyboard.GetKeyState(Keys.Enter) == ButtonState.Push)
 			{
 				selector.Dispose();
 			}

@@ -71,7 +71,7 @@ namespace Nac.Altseed.Test
 
         protected override void OnUpdate()
         {
-            if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
+            if(Engine.Keyboard.GetKeyState(Keys.Q) == ButtonState.Push)
             {
                 selector.ChoiceItems.Skip(2).FirstOrDefault()?.Item?.Dispose();
             }

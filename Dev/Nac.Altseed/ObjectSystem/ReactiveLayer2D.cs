@@ -12,6 +12,7 @@ namespace Nac.Altseed.ObjectSystem
 	{
 		private Subject<Unit> onAddedEvent_ = new Subject<Unit>();
 		private Subject<Unit> onRemovedEvent_ = new Subject<Unit>();
+		private Subject<float> onUpdatingEvent_ = new Subject<float>();
 		private Subject<float> onUpdatedEvent_ = new Subject<float>();
 		private Subject<Unit> onVanisEvent_ = new Subject<Unit>();
 
@@ -23,6 +24,10 @@ namespace Nac.Altseed.ObjectSystem
 		/// レイヤーから削除された時に通知するイベントを取得します。
 		/// </summary>
 		public IObservable<Unit> OnRemovedEvent => onRemovedEvent_;
+		/// <summary>
+		/// 更新されるときに発行されるイベント。破棄されたとき完了します。
+		/// </summary>
+		public IObservable<float> OnUpdatingEvent => onUpdatedEvent_;
 		/// <summary>
 		/// 更新されたときに発行されるイベント。破棄されたとき完了します。
 		/// </summary>
@@ -40,6 +45,11 @@ namespace Nac.Altseed.ObjectSystem
 		protected override void OnRemoved()
 		{
 			onRemovedEvent_.OnNext(Unit.Default);
+		}
+
+		protected override void OnUpdating()
+		{
+			onUpdatingEvent_.OnNext(Engine.DeltaTime);
 		}
 
 		protected override void OnUpdated()

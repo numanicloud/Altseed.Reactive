@@ -55,12 +55,12 @@ namespace Nac.Altseed.Test
 
 		protected override void OnUpdate()
 		{
-			if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
+			if(Engine.Keyboard.GetKeyState(Keys.Q) == ButtonState.Push)
 			{
 				var index = collection.Any() ? collection.Max() + 1 : 0;
 				collection.Add(index);
 			}
-			else if(collection.Skip(0).Any() && Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push)
+			else if(collection.Skip(0).Any() && Engine.Keyboard.GetKeyState(Keys.W) == ButtonState.Push)
 			{
 				collection.RemoveAt(0);
 			}

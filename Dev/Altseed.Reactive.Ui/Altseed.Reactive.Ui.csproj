@@ -54,6 +54,9 @@
     <Reference Include="System.Reactive.Windows.Threading, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Windows.Threading.3.1.1\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -74,7 +77,17 @@
     <Compile Include="Misc\MessageWindow.cs" />
     <Compile Include="Misc\ScrollLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Selector\SelectorFacade.cs" />
+    <Compile Include="Facades\SelectorFacade.cs" />
+    <Compile Include="TextWindow\Attributes\NewPageAttribute.cs" />
+    <Compile Include="TextWindow\Attributes\TalkSpeedAttribute.cs" />
+    <Compile Include="TextWindow\Attributes\TextAttribute.cs" />
+    <Compile Include="TextWindow\Attributes\AttributeFacade.cs" />
+    <Compile Include="TextWindow\Attributes\ColorAttribute.cs" />
+    <Compile Include="TextWindow\Attributes\NewLineAttribute.cs" />
+    <Compile Include="TextWindow\Attributes\WaitAttribute.cs" />
+    <Compile Include="TextWindow\MarkupTextViewer.cs" />
+    <Compile Include="TextWindow\TextSetting.cs" />
+    <Compile Include="TextWindow\TextViewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Altseed.Reactive.Easing\Altseed.Reactive.Easing.csproj">

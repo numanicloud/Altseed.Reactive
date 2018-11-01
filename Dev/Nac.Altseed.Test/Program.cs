@@ -13,7 +13,7 @@ namespace Nac.Altseed.Test
 	{
 		static void Main(string[] args)
 		{
-			AltseedTest test = new MessageWindowSkipTest();
+			var test = new Input.JoyStickTest();
 			test.Run();
 		}
 	}

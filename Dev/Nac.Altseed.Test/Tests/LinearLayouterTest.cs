@@ -36,7 +36,7 @@ namespace Nac.Altseed.Test
 
         protected override void OnUpdate()
         {
-            if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
+            if(Engine.Keyboard.GetKeyState(Keys.Q) == ButtonState.Push)
             {
                 var obj = new TextObject2D()
                 {
@@ -46,7 +46,7 @@ namespace Nac.Altseed.Test
                 layout.AddItem(obj);
                 Engine.AddObject2D(obj);
             }
-            else if(Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push && layout.Items.Skip(3).Any())
+            else if(Engine.Keyboard.GetKeyState(Keys.W) == ButtonState.Push && layout.Items.Skip(3).Any())
             {
                 var obj = new TextObject2D()
                 {
@@ -57,9 +57,9 @@ namespace Nac.Altseed.Test
                 Engine.AddObject2D(obj);
             }
 
-            if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == KeyState.Hold)
+            if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == ButtonState.Hold)
             {
-                if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+                if(Engine.Keyboard.GetKeyState(Keys.E) == ButtonState.Push)
                 {
                     var item = layout.Items.Skip(2).FirstOrDefault();
                     if(item != null)
@@ -67,18 +67,18 @@ namespace Nac.Altseed.Test
                         layout.RemoveItem(item.Object);
                     }
                 }
-                else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+                else if(Engine.Keyboard.GetKeyState(Keys.R) == ButtonState.Push)
                 {
                     layout.ClearItem();
                 }
             }
             else
             {
-                if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+                if(Engine.Keyboard.GetKeyState(Keys.E) == ButtonState.Push)
                 {
                     layout.Items.Skip(2).FirstOrDefault()?.Object?.Dispose();
                 }
-                else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+                else if(Engine.Keyboard.GetKeyState(Keys.R) == ButtonState.Push)
                 {
                     foreach(var item in layout.Items)
                     {

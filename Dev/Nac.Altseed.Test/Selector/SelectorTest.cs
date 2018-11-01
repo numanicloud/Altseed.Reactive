@@ -38,11 +38,21 @@ namespace Nac.Altseed.Test
 			var scene = new ReactiveScene();
 			var layer = new ReactiveLayer2D();
 
+			var bundle = new BundleController<int>();
             var controller = new KeyboardController<int>();
             controller.BindKey(Keys.Down, 0);
             controller.BindKey(Keys.Up, 1);
             controller.BindKey(Keys.Z, 2);
             controller.BindKey(Keys.X, 3);
+			bundle.AddController(controller);
+
+			if (asd.Engine.JoystickContainer.GetIsPresentAt(0))
+			{
+				var joystick = new JoystickController<int>(0);
+				joystick.BindButton(0, 2);
+				joystick.BindButton(1, 3);
+				bundle.AddController(joystick);
+			}
 
             var layout = new LinearPanel()
             {
@@ -50,10 +60,12 @@ namespace Nac.Altseed.Test
                 Position = new Vector2DF(20, 20),
             };
             layout.SetEasingBehaviorUp(EasingStart.StartRapidly2, EasingEnd.EndSlowly3, 10);
-            selector = new Selector<int, int>(controller, layout)
+            selector = new Selector<int, int>(bundle, layout)
             {
                 Loop = true,
                 CursorOffset = new Vector2DF(-5, -3),
+				IsActive = true,
+				IsControllerUpdated = true
             };
 			selector.Cursor.Texture = Engine.Graphics.CreateTexture2D("ListCursor.png");
 			selector.BindKey(0, 1, 2, 3);
@@ -92,7 +104,7 @@ namespace Nac.Altseed.Test
 
         protected override void OnUpdate()
         {
-            if(Engine.Keyboard.GetKeyState(Keys.Q) == KeyState.Push)
+            if(Engine.Keyboard.GetKeyState(Keys.Q) == ButtonState.Push)
             {
                 var index = selector.ChoiceItems.Any() ? selector.ChoiceItems.Max(x => x.Choice) + 1 : 0;
                 var obj = new ListItem()
@@ -102,7 +114,7 @@ namespace Nac.Altseed.Test
                 };
                 selector.AddChoice(index, obj);
             }
-            else if(selector.ChoiceItems.Skip(3).Any() && Engine.Keyboard.GetKeyState(Keys.W) == KeyState.Push)
+            else if(selector.ChoiceItems.Skip(3).Any() && Engine.Keyboard.GetKeyState(Keys.W) == ButtonState.Push)
             {
                 int index = selector.ChoiceItems.Max(x => x.Choice) + 1;
                 var obj = new ListItem()
@@ -113,9 +125,9 @@ namespace Nac.Altseed.Test
                 selector.InsertChoice(3, index, obj);
             }
 
-            if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == KeyState.Hold)
+            if(Engine.Keyboard.GetKeyState(Keys.LeftAlt) == ButtonState.Hold)
             {
-                if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+                if(Engine.Keyboard.GetKeyState(Keys.E) == ButtonState.Push)
                 {
                     var item = selector.ChoiceItems.Skip(3).FirstOrDefault()?.Choice;
                     if(item.HasValue)
@@ -123,18 +135,18 @@ namespace Nac.Altseed.Test
                         selector.RemoveChoice(item.Value);
                     }
                 }
-                else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+                else if(Engine.Keyboard.GetKeyState(Keys.R) == ButtonState.Push)
                 {
                     selector.ClearChoice();
                 }
             }
             else
             {
-                if(Engine.Keyboard.GetKeyState(Keys.E) == KeyState.Push)
+                if(Engine.Keyboard.GetKeyState(Keys.E) == ButtonState.Push)
                 {
                     selector.ChoiceItems.Skip(3).FirstOrDefault()?.Item?.Dispose();
                 }
-                else if(Engine.Keyboard.GetKeyState(Keys.R) == KeyState.Push)
+                else if(Engine.Keyboard.GetKeyState(Keys.R) == ButtonState.Push)
                 {
                     foreach(var item in selector.ChoiceItems)
                     {
@@ -143,7 +155,7 @@ namespace Nac.Altseed.Test
                 }
             }
 
-			if(Engine.Keyboard.GetKeyState(Keys.Enter) == KeyState.Push)
+			if(Engine.Keyboard.GetKeyState(Keys.Enter) == ButtonState.Push)
 			{
 				selector.Dispose();
 			}

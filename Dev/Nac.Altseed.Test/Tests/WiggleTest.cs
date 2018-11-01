@@ -36,14 +36,14 @@ namespace Nac.Altseed.Test
 
         protected override void OnUpdate()
         {
-            if(Engine.Keyboard.GetKeyState(Keys.Z) == KeyState.Push)
+            if(Engine.Keyboard.GetKeyState(Keys.Z) == ButtonState.Push)
             {
                 cancel?.Dispose();
 				cancel = UpdateManager.Instance.FrameUpdate
 					.ShortWiggle(center, new Vector2DF(10, 10), new Vector2DF(10, 7), 180)
 					.Subscribe(p => obj.Position = p);
             }
-            if(cancel != null && Engine.Keyboard.GetKeyState(Keys.X) == KeyState.Push)
+            if(cancel != null && Engine.Keyboard.GetKeyState(Keys.X) == ButtonState.Push)
             {
                 cancel.Dispose();
             }

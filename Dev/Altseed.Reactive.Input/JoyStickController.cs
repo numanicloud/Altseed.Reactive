@@ -28,7 +28,7 @@ namespace Altseed.Reactive.Input
 	{
 		abstract class JoystickInput
 		{
-			public abstract JoystickButtonState GetState(Joystick joystick);
+			public abstract ButtonState GetState(Joystick joystick);
 
 			public virtual void Update(Joystick joystick)
 			{
@@ -44,7 +44,7 @@ namespace Altseed.Reactive.Input
 				this.index = index;
 			}
 
-			public override JoystickButtonState GetState(Joystick joystick)
+			public override ButtonState GetState(Joystick joystick)
 			{
 				return joystick.GetButtonState(index);
 			}
@@ -65,15 +65,15 @@ namespace Altseed.Reactive.Input
 				currentState = false;
 			}
 
-			public override JoystickButtonState GetState(Joystick joystick)
+			public override ButtonState GetState(Joystick joystick)
 			{
 				if (currentState)
 				{
-					return previousState ? JoystickButtonState.Hold : JoystickButtonState.Push;
+					return previousState ? ButtonState.Hold : ButtonState.Push;
 				}
 				else
 				{
-					return previousState ? JoystickButtonState.Release : JoystickButtonState.Free;
+					return previousState ? ButtonState.Release : ButtonState.Free;
 				}
 			}
 
@@ -170,14 +170,14 @@ namespace Altseed.Reactive.Input
 			}
 		}
 
-		private InputState ConvertToInputState(JoystickButtonState joystickButtonState)
+		private InputState ConvertToInputState(ButtonState joystickButtonState)
 		{
 			switch (joystickButtonState)
 			{
-			case JoystickButtonState.Push: return InputState.Push;
-			case JoystickButtonState.Release: return InputState.Release;
-			case JoystickButtonState.Free: return InputState.Free;
-			case JoystickButtonState.Hold: return InputState.Hold;
+			case ButtonState.Push: return InputState.Push;
+			case ButtonState.Release: return InputState.Release;
+			case ButtonState.Free: return InputState.Free;
+			case ButtonState.Hold: return InputState.Hold;
 			default: throw new Exception();
 			}
 		}

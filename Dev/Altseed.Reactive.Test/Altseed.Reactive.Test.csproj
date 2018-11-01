@@ -65,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AltseedTest.cs" />
+    <Compile Include="Input\BundleInputTest.cs" />
+    <Compile Include="Input\JoystickInputTest.cs" />
     <Compile Include="Input\KeyboardInputTest.cs" />
     <Compile Include="Object\CompositeDisposableTest.cs" />
     <Compile Include="Object\ReactiveGeometryObject2DTest.cs" />
@@ -75,6 +77,8 @@
     <Compile Include="Object\ReactiveTextureObject2DTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ui\MarkupTextViewerTest.cs" />
+    <Compile Include="Ui\TextViewerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

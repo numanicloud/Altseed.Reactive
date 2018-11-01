@@ -43,15 +43,15 @@ namespace Nac.Altseed.Test.Easing
 
 		protected override void OnUpdate()
 		{
-			if (Engine.Keyboard.GetKeyState(Keys.Left) == KeyState.Push)
+			if (Engine.Keyboard.GetKeyState(Keys.Left) == ButtonState.Push)
 			{
 				manager.Ease("Left");
 			}
-			else if(Engine.Keyboard.GetKeyState(Keys.Right) == KeyState.Push)
+			else if(Engine.Keyboard.GetKeyState(Keys.Right) == ButtonState.Push)
 			{
 				manager.Ease("Right");
 			}
-			else if (Engine.Keyboard.GetKeyState(Keys.Up) == KeyState.Push)
+			else if (Engine.Keyboard.GetKeyState(Keys.Up) == ButtonState.Push)
 			{
 				manager.Ease("Top");
 			}

@@ -56,19 +56,19 @@ namespace Nac.Altseed.Test.Tests
 
 		protected override void OnUpdate()
 		{
-			if (Engine.Keyboard.GetKeyState(Keys.Left) == KeyState.Push)
+			if (Engine.Keyboard.GetKeyState(Keys.Left) == ButtonState.Push)
 			{
 				MoveObject(-100, 0);
 			}
-			else if (Engine.Keyboard.GetKeyState(Keys.Right) == KeyState.Push)
+			else if (Engine.Keyboard.GetKeyState(Keys.Right) == ButtonState.Push)
 			{
 				MoveObject(100, 0);
 			}
-			else if(Engine.Keyboard.GetKeyState(Keys.Up) == KeyState.Push)
+			else if(Engine.Keyboard.GetKeyState(Keys.Up) == ButtonState.Push)
 			{
 				MoveObject(0, -100);
 			}
-			else if(Engine.Keyboard.GetKeyState(Keys.Down) == KeyState.Push)
+			else if(Engine.Keyboard.GetKeyState(Keys.Down) == ButtonState.Push)
 			{
 				MoveObject(0, 100);
 			}

@@ -121,5 +121,15 @@ namespace Altseed.Reactive.Helper
 			}
 			return -1;
 		}
+
+		/// <summary>
+		/// 指定した文字のコレクションを連結してひとつの文字列として返します。
+		/// </summary>
+		/// <param name="source">文字のコレクション。</param>
+		/// <returns>連結した文字列。</returns>
+		public static string Concat(this IEnumerable<char> source)
+		{
+			return string.Concat(source);
+		}
 	}
 }

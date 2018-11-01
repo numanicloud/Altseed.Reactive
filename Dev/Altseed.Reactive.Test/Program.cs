@@ -10,8 +10,14 @@ namespace Altseed.Reactive.Test
 	{
 		static void Main(string[] args)
 		{
-			var test = new Input.KeyboardInputTest();
+			TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+			var test = new Ui.MarkupTextViewerTest();
 			test.Run();
+		}
+
+		private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+		{
+			throw e.Exception;
 		}
 	}
 }

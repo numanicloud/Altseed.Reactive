@@ -23,7 +23,7 @@ namespace Altseed.Reactive.Test
             var syncContext = new UpdatableSynchronizationContext();
             SynchronizationContext.SetSynchronizationContext(syncContext);
 
-			Engine.Initialize(this.GetType().Name, 640, 480, new EngineOption());
+			Engine.Initialize(this.GetType().Name, 960, 540, new EngineOption());
 			Engine.File.AddRootDirectory("Resources");
 
 			OnStart();
