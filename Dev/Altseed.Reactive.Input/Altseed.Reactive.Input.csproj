@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Altseed">
-      <HintPath>..\Altseed.dll</HintPath>
+      <HintPath>..\Libs\Altseed.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,10 +73,12 @@
     <Compile Include="SteppingController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Altseed_core.dll" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Content Include="Altseed_core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

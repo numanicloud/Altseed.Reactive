@@ -38,7 +38,7 @@
   <ItemGroup>
     <Reference Include="Altseed, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Altseed.dll</HintPath>
+      <HintPath>..\Libs\Altseed.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -147,7 +147,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\Altseed_core.dll">
+    <Content Include="Altseed_core.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

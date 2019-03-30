@@ -166,3 +166,5 @@ $RECYCLE.BIN/
 # Others
 # =========================
 *.sln.ide/
+.vs/
+NuGetTool/Release/
