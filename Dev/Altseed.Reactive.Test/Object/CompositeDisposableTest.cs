@@ -33,7 +33,7 @@ namespace Altseed.Reactive.Test.Object
 			while (Engine.DoEvents())
 			{
 				// Enter を押すと obj オブジェクトを破棄
-				if (Engine.Keyboard.GetKeyState(Keys.Enter) == KeyState.Push)
+				if (Engine.Keyboard.GetKeyState(Keys.Enter) == ButtonState.Push)
 				{
 					obj.Dispose();
 				}

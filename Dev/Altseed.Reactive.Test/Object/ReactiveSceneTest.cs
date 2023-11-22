@@ -92,7 +92,7 @@ namespace Altseed.Reactive.Test.Object
 
 			while (asd.Engine.DoEvents())
 			{
-				if (asd.Engine.Keyboard.GetKeyState(asd.Keys.Enter) == asd.KeyState.Push)
+				if (asd.Engine.Keyboard.GetKeyState(asd.Keys.Enter) == asd.ButtonState.Push)
 				{
 					asd.Engine.ChangeSceneWithTransition(scene2, new asd.TransitionFade(1, 1));
 				}
